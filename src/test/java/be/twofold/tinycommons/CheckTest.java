@@ -91,4 +91,60 @@ public class CheckTest {
             .hasMessage("failure argument");
     }
 
+
+    @Test
+    public void checkIndexShouldPass() {
+        assertThat(Check.index(0, 1)).isEqualTo(0);
+        assertThat(Check.index(0, 2)).isEqualTo(0);
+        assertThat(Check.index(1, 2)).isEqualTo(1);
+    }
+
+    @Test
+    public void checkIndexShouldFail() {
+        assertThatThrownBy(() -> Check.index(1, -1))
+            .isInstanceOf(IndexOutOfBoundsException.class); // negative size
+        assertThatThrownBy(() -> Check.index(-1, 1))
+            .isInstanceOf(IndexOutOfBoundsException.class); // negative index
+        assertThatThrownBy(() -> Check.index(1, 1))
+            .isInstanceOf(IndexOutOfBoundsException.class); // index >= size
+    }
+
+
+    @Test
+    public void checkPositionShouldPass() {
+        assertThat(Check.position(0, 0)).isEqualTo(0);
+        assertThat(Check.position(0, 1)).isEqualTo(0);
+        assertThat(Check.position(1, 1)).isEqualTo(1);
+    }
+
+    @Test
+    public void checkPositionShouldFail() {
+        assertThatThrownBy(() -> Check.position(1, -1))
+            .isInstanceOf(IndexOutOfBoundsException.class); // negative size
+        assertThatThrownBy(() -> Check.position(-1, 1))
+            .isInstanceOf(IndexOutOfBoundsException.class); // negative index
+        assertThatThrownBy(() -> Check.position(2, 1))
+            .isInstanceOf(IndexOutOfBoundsException.class); // index > size
+    }
+
+    @Test
+    public void checkPositionsShouldPass() {
+        Check.positions(0, 0, 0);
+        Check.positions(0, 0, 1);
+        Check.positions(0, 1, 1);
+        Check.positions(1, 1, 1);
+    }
+
+    @Test
+    public void checkPositionsShouldFail() {
+        assertThatThrownBy(() -> Check.positions(1, 1, -1))
+            .isInstanceOf(IndexOutOfBoundsException.class); // negative size
+        assertThatThrownBy(() -> Check.positions(-1, 1, 1))
+            .isInstanceOf(IndexOutOfBoundsException.class); // negative start
+        assertThatThrownBy(() -> Check.positions(0, 2, 1))
+            .isInstanceOf(IndexOutOfBoundsException.class); //   end >  size
+        assertThatThrownBy(() -> Check.positions(1, 0, 1))
+            .isInstanceOf(IndexOutOfBoundsException.class); // start >= size
+    }
+
 }

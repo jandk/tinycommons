@@ -63,4 +63,25 @@ public final class Check {
         }
     }
 
+    public static int index(int index, int size) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return index;
+    }
+
+    public static int position(int index, int size) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return index;
+    }
+
+    public static int positions(int from, int to, int size) {
+        if (from < 0 || from > to || to > size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return from;
+    }
+
 }
