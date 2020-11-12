@@ -1,4 +1,4 @@
-package be.twofold.tinycommons;
+package be.twofold.common;
 
 import org.junit.*;
 
