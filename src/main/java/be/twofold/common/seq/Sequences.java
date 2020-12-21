@@ -4,6 +4,7 @@ import be.twofold.common.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
+import java.util.function.*;
 
 final class Sequences {
     private Sequences() {
@@ -11,6 +12,82 @@ final class Sequences {
     }
 
     // region Iterators
+
+    static abstract class AbstractIterator<E> implements Iterator<E> {
+
+        private static final int Failed = -1;
+        private static final int NotReady = 0;
+        private static final int Ready = 1;
+        private static final int Done = 2;
+
+        private int state = NotReady;
+        private E next = null;
+
+        @Override
+        public boolean hasNext() {
+            switch (state) {
+                case Failed:
+                    throw new IllegalStateException();
+                case NotReady:
+                    return tryComputeNext();
+                case Ready:
+                    return true;
+                case Done:
+                    return false;
+            }
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public E next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            state = NotReady;
+            E next = this.next;
+            this.next = null;
+            return next;
+        }
+
+        private boolean tryComputeNext() {
+            state = Failed;
+            computeNext();
+            return state == Ready;
+        }
+
+        protected abstract void computeNext();
+
+        protected void setNext(E next) {
+            this.next = next;
+            state = Ready;
+        }
+
+        protected void done() {
+            state = Done;
+        }
+
+    }
+
+    static final class DistinctIterator<E> extends AbstractIterator<E> {
+        private final Set<E> seen = new HashSet<>();
+        private final Iterator<E> iterator;
+
+        DistinctIterator(Iterator<E> iterator) {
+            this.iterator = Check.notNull(iterator, "iterator");
+        }
+
+        @Override
+        protected void computeNext() {
+            while (iterator.hasNext()) {
+                E element = iterator.next();
+                if (seen.add(element)) {
+                    setNext(element);
+                    return;
+                }
+            }
+            done();
+        }
+    }
 
     static final class EnumerationIterator<E> implements Iterator<E> {
         private final Enumeration<E> enumeration;
@@ -27,6 +104,48 @@ final class Sequences {
         @Override
         public E next() {
             return enumeration.nextElement();
+        }
+    }
+
+    static final class FilterIterator<E> extends AbstractIterator<E> {
+        private final Iterator<E> iterator;
+        private final Predicate<? super E> predicate;
+
+        FilterIterator(Iterator<E> iterator, Predicate<? super E> predicate) {
+            this.iterator = Check.notNull(iterator, "iterator");
+            this.predicate = Check.notNull(predicate, "predicate");
+        }
+
+        @Override
+        protected void computeNext() {
+            while (iterator.hasNext()) {
+                E element = iterator.next();
+                if (predicate.test(element)) {
+                    setNext(element);
+                    return;
+                }
+            }
+            done();
+        }
+    }
+
+    static final class MapIterator<E, R> implements Iterator<R> {
+        private final Iterator<E> iterator;
+        private final Function<? super E, ? extends R> mapper;
+
+        MapIterator(Iterator<E> iterator, Function<? super E, ? extends R> mapper) {
+            this.iterator = Check.notNull(iterator, "iterator");
+            this.mapper = Check.notNull(mapper, "mapper");
+        }
+
+        @Override
+        public boolean hasNext() {
+            return iterator.hasNext();
+        }
+
+        @Override
+        public R next() {
+            return mapper.apply(iterator.next());
         }
     }
 

@@ -44,8 +44,38 @@ public interface Sequence<T> extends Iterable<T> {
 
     // region Intermediate Operations
 
+    default Sequence<T> distinct() {
+        return () -> new DistinctIterator<>(iterator());
+    }
+
+    default Sequence<T> filter(Predicate<? super T> predicate) {
+        Check.notNull(predicate, "predicate");
+        return () -> new FilterIterator<>(iterator(), predicate);
+    }
+
+    default <R> Sequence<R> map(Function<? super T, ? extends R> mapper) {
+        Check.notNull(mapper, "mapper");
+        return () -> new MapIterator<>(iterator(), mapper);
+    }
+
+    default Sequence<T> onEach(Consumer<? super T> action) {
+        Check.notNull(action);
+        return map(element -> {
+            action.accept(element);
+            return element;
+        });
+    }
+
     default Sequence<T> onlyOnce() {
         return new OnlyOnceSequence<>(this);
+    }
+
+    default Sequence<T> sorted(Comparator<? super T> comparator) {
+        return () -> {
+            List<T> list = toList();
+            list.sort(comparator);
+            return list.iterator();
+        };
     }
 
     // endregion
@@ -77,22 +107,6 @@ public interface Sequence<T> extends Iterable<T> {
             }
         }
         return false;
-    }
-
-
-    default boolean none() {
-        return !iterator().hasNext();
-    }
-
-    default boolean none(Predicate<? super T> predicate) {
-        Check.notNull(predicate, "predicate");
-
-        for (T element : this) {
-            if (predicate.test(element)) {
-                return false;
-            }
-        }
-        return true;
     }
 
 
@@ -162,6 +176,22 @@ public interface Sequence<T> extends Iterable<T> {
         for (T element : this) {
             consumer.accept(element);
         }
+    }
+
+
+    default boolean none() {
+        return !iterator().hasNext();
+    }
+
+    default boolean none(Predicate<? super T> predicate) {
+        Check.notNull(predicate, "predicate");
+
+        for (T element : this) {
+            if (predicate.test(element)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
