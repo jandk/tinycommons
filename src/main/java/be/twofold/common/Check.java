@@ -1,7 +1,5 @@
 package be.twofold.common;
 
-import java.util.*;
-
 /**
  * Misc routines for checking arguments to functions.
  * <p>
@@ -16,15 +14,24 @@ public final class Check {
     }
 
     public static <T> T notNull(T obj) {
-        return Objects.requireNonNull(obj);
+        if (obj == null) {
+            throw new NullPointerException();
+        }
+        return obj;
     }
 
     public static <T> T notNull(T obj, String message) {
-        return Objects.requireNonNull(obj, message);
+        if (obj == null) {
+            throw new NullPointerException(message);
+        }
+        return obj;
     }
 
     public static <T> T notNull(T obj, String message, Object... args) {
-        return Objects.requireNonNull(obj, () -> String.format(message, args));
+        if (obj == null) {
+            throw new NullPointerException(String.format(message, args));
+        }
+        return obj;
     }
 
     public static void argument(boolean expression) {
