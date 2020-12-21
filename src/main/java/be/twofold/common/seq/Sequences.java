@@ -1,7 +1,5 @@
 package be.twofold.common.seq;
 
-import be.twofold.common.*;
-
 import java.util.*;
 import java.util.concurrent.atomic.*;
 import java.util.function.*;
@@ -73,7 +71,7 @@ final class Sequences {
         private final Iterator<E> iterator;
 
         DistinctIterator(Iterator<E> iterator) {
-            this.iterator = Check.notNull(iterator, "iterator");
+            this.iterator = iterator;
         }
 
         @Override
@@ -93,7 +91,7 @@ final class Sequences {
         private final Enumeration<E> enumeration;
 
         EnumerationIterator(Enumeration<E> enumeration) {
-            this.enumeration = Check.notNull(enumeration, "enumeration");
+            this.enumeration = enumeration;
         }
 
         @Override
@@ -112,8 +110,8 @@ final class Sequences {
         private final Predicate<? super E> predicate;
 
         FilterIterator(Iterator<E> iterator, Predicate<? super E> predicate) {
-            this.iterator = Check.notNull(iterator, "iterator");
-            this.predicate = Check.notNull(predicate, "predicate");
+            this.iterator = iterator;
+            this.predicate = predicate;
         }
 
         @Override
@@ -129,13 +127,32 @@ final class Sequences {
         }
     }
 
+    static final class IndexedIterator<E> implements Iterator<Map.Entry<Integer, E>> {
+        private final Iterator<E> iterator;
+        private int index = 0;
+
+        IndexedIterator(Iterator<E> iterator) {
+            this.iterator = iterator;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return iterator.hasNext();
+        }
+
+        @Override
+        public Map.Entry<Integer, E> next() {
+            return new AbstractMap.SimpleImmutableEntry<>(index++, iterator.next());
+        }
+    }
+
     static final class MapIterator<E, R> implements Iterator<R> {
         private final Iterator<E> iterator;
         private final Function<? super E, ? extends R> mapper;
 
         MapIterator(Iterator<E> iterator, Function<? super E, ? extends R> mapper) {
-            this.iterator = Check.notNull(iterator, "iterator");
-            this.mapper = Check.notNull(mapper, "mapper");
+            this.iterator = iterator;
+            this.mapper = mapper;
         }
 
         @Override

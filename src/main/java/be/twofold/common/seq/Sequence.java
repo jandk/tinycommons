@@ -48,29 +48,66 @@ public interface Sequence<T> extends Iterable<T> {
         return () -> new DistinctIterator<>(iterator());
     }
 
+
     default Sequence<T> filter(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
         return () -> new FilterIterator<>(iterator(), predicate);
     }
+
+    default Sequence<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
+        Check.notNull(predicate, "predicate");
+        return indexed()
+            .filter(e -> predicate.test(e.getKey(), e.getValue()))
+            .map(Map.Entry::getValue);
+    }
+
+
+    default Sequence<Map.Entry<Integer, T>> indexed() {
+        return () -> new IndexedIterator<>(iterator());
+    }
+
 
     default <R> Sequence<R> map(Function<? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
         return () -> new MapIterator<>(iterator(), mapper);
     }
 
+    default <R> Sequence<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
+        Check.notNull(mapper, "mapper");
+        return indexed()
+            .map(e -> mapper.apply(e.getKey(), e.getValue()));
+    }
+
+
     default Sequence<T> onEach(Consumer<? super T> action) {
-        Check.notNull(action);
+        Check.notNull(action, "action");
         return map(element -> {
             action.accept(element);
             return element;
         });
     }
 
+    default Sequence<T> onEachIndexed(BiConsumer<Integer, ? super T> action) {
+        Check.notNull(action, "action");
+        return indexed()
+            .map(e -> {
+                action.accept(e.getKey(), e.getValue());
+                return e.getValue();
+            });
+    }
+
+
     default Sequence<T> onlyOnce() {
-        return new OnlyOnceSequence<>(this);
+        return this instanceof OnlyOnceSequence ? this : new OnlyOnceSequence<>(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    default Sequence<T> sorted() {
+        return sorted((Comparator<? super T>) Comparator.naturalOrder());
     }
 
     default Sequence<T> sorted(Comparator<? super T> comparator) {
+        Check.notNull(comparator, "comparator");
         return () -> {
             List<T> list = toList();
             list.sort(comparator);
@@ -170,11 +207,77 @@ public interface Sequence<T> extends Iterable<T> {
     }
 
 
+    default T last() {
+        Iterator<T> iterator = iterator();
+        if (!iterator.hasNext()) {
+            throw new NoSuchElementException("Empty sequence");
+        }
+        T last = iterator.next();
+        while (iterator.hasNext()) {
+            last = iterator.next();
+        }
+        return last;
+    }
+
+    default Optional<T> lastOptional() {
+        Iterator<T> iterator = iterator();
+        if (!iterator.hasNext()) {
+            return Optional.empty();
+        }
+        T last = iterator.next();
+        while (iterator.hasNext()) {
+            last = iterator.next();
+        }
+        return Optional.of(last);
+    }
+
+    default T last(Predicate<? super T> predicate) {
+        Check.notNull(predicate, "predicate");
+
+        T last = null;
+        boolean found = false;
+        for (T element : this) {
+            if (predicate.test(element)) {
+                last = element;
+                found = true;
+            }
+        }
+
+        if (!found) {
+            throw new NoSuchElementException("No matching element in sequence");
+        }
+        return last;
+    }
+
+    default Optional<T> lastOptional(Predicate<? super T> predicate) {
+        Check.notNull(predicate, "predicate");
+
+        T last = null;
+        boolean found = false;
+        for (T element : this) {
+            if (predicate.test(element)) {
+                last = element;
+                found = true;
+            }
+        }
+        return found ? Optional.of(last) : Optional.empty();
+    }
+
+
     default void forEach(Consumer<? super T> consumer) {
         Check.notNull(consumer, "consumer");
 
         for (T element : this) {
             consumer.accept(element);
+        }
+    }
+
+    default void forEachIndexed(BiConsumer<Integer, ? super T> consumer) {
+        Check.notNull(consumer);
+
+        int count = 0;
+        for (T element : this) {
+            consumer.accept(count++, element);
         }
     }
 
