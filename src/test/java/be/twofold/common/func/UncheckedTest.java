@@ -1,7 +1,7 @@
 package be.twofold.common.func;
 
 import be.twofold.common.func.fi.*;
-import org.junit.*;
+import org.junit.jupiter.api.*;
 
 import java.util.function.*;
 

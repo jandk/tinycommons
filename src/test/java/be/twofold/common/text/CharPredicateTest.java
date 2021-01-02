@@ -1,6 +1,6 @@
 package be.twofold.common.text;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
 
 import java.util.function.*;
 
