@@ -4,17 +4,22 @@ import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.*;
 
-class StringUtilsTest {
+public class StringUtilsTest {
 
     @Test
-    void testIsEmpty() {
+    public void testConstructor() {
+        TestUtils.testConstructor(StringUtils.class);
+    }
+
+    @Test
+    public void testIsEmpty() {
         assertThat(StringUtils.isEmpty(null)).isTrue();
         assertThat(StringUtils.isEmpty("")).isTrue();
         assertThat(StringUtils.isEmpty("a")).isFalse();
     }
 
     @Test
-    void testIsBlank() {
+    public void testIsBlank() {
         assertThat(StringUtils.isBlank(null)).isTrue();
         assertThat(StringUtils.isBlank("")).isTrue();
         assertThat(StringUtils.isBlank(" ")).isTrue();
@@ -22,21 +27,21 @@ class StringUtilsTest {
     }
 
     @Test
-    void testNullToEmpty() {
+    public void testNullToEmpty() {
         assertThat(StringUtils.nullToEmpty(null)).isEqualTo("");
         assertThat(StringUtils.nullToEmpty("")).isEqualTo("");
         assertThat(StringUtils.nullToEmpty("a")).isEqualTo("a");
     }
 
     @Test
-    void testEmptyToNull() {
+    public void testEmptyToNull() {
         assertThat(StringUtils.emptyToNull(null)).isNull();
         assertThat(StringUtils.emptyToNull("")).isNull();
         assertThat(StringUtils.emptyToNull("a")).isNotNull().isEqualTo("a");
     }
 
     @Test
-    void testBlankToNull() {
+    public void testBlankToNull() {
         assertThat(StringUtils.blankToNull(null)).isNull();
         assertThat(StringUtils.blankToNull("")).isNull();
         assertThat(StringUtils.blankToNull(" ")).isNull();

@@ -7,6 +7,11 @@ import static org.assertj.core.api.Assertions.*;
 public class ArrayUtilsTest {
 
     @Test
+    public void testConstructor() {
+        TestUtils.testConstructor(ArrayUtils.class);
+    }
+
+    @Test
     public void testContainsByte() {
         assertThat(ArrayUtils.contains(new byte[0], (byte) 1)).isFalse();
         assertThat(ArrayUtils.contains(new byte[]{1}, (byte) 2)).isFalse();

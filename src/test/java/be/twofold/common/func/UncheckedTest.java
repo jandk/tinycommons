@@ -1,5 +1,6 @@
 package be.twofold.common.func;
 
+import be.twofold.common.*;
 import be.twofold.common.func.fi.*;
 import org.junit.jupiter.api.*;
 
@@ -8,6 +9,11 @@ import java.util.function.*;
 import static org.assertj.core.api.Assertions.*;
 
 public class UncheckedTest {
+
+    @Test
+    public void testConstructor() {
+        TestUtils.testConstructor(Unchecked.class);
+    }
 
     @Test
     public void testCheckedConsumer() {

@@ -8,6 +8,11 @@ import static org.assertj.core.api.Assertions.*;
 public class CheckTest {
 
     @Test
+    public void testConstructor() {
+        TestUtils.testConstructor(Check.class);
+    }
+
+    @Test
     public void checkNotNullShouldPassWithTrueExpression() {
         Check.notNull(new Object());
     }

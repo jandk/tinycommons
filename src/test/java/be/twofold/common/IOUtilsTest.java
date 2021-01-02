@@ -6,10 +6,15 @@ import java.io.*;
 
 import static org.assertj.core.api.Assertions.*;
 
-class IOUtilsTest {
+public class IOUtilsTest {
 
     @Test
-    void testBufferedInputStream() {
+    public void testConstructor() {
+        TestUtils.testConstructor(IOUtils.class);
+    }
+
+    @Test
+    public void testBufferedInputStream() {
         assertThatNullPointerException()
             .isThrownBy(() -> IOUtils.buffered((InputStream) null));
 
@@ -23,7 +28,7 @@ class IOUtilsTest {
     }
 
     @Test
-    void testBufferedOutputStream() {
+    public void testBufferedOutputStream() {
         assertThatNullPointerException()
             .isThrownBy(() -> IOUtils.buffered((OutputStream) null));
 
@@ -37,7 +42,7 @@ class IOUtilsTest {
     }
 
     @Test
-    void testBufferedReader() {
+    public void testBufferedReader() {
         assertThatNullPointerException()
             .isThrownBy(() -> IOUtils.buffered((Reader) null));
 
@@ -51,7 +56,7 @@ class IOUtilsTest {
     }
 
     @Test
-    void testBufferedWriter() {
+    public void testBufferedWriter() {
         assertThatNullPointerException()
             .isThrownBy(() -> IOUtils.buffered((Writer) null));
 

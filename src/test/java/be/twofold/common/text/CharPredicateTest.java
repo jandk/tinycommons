@@ -11,7 +11,6 @@ public class CharPredicateTest {
     private static final char C1 = 'a';
     private static final char C2 = 'z';
 
-
     @Test
     public void testNegate() {
         CharPredicate predicate = CharPredicate.is(C1);
@@ -24,7 +23,6 @@ public class CharPredicateTest {
         CharPredicate predicate = CharPredicate.is(C1);
         testAllChars(predicate, predicate::test, "test");
     }
-
 
     @Test
     public void testAny() {
@@ -206,7 +204,6 @@ public class CharPredicateTest {
 
         assertThat(predicate).isEqualTo(originalPredicate);
     }
-
 
     private void testAllChars(CharPredicate actual, Predicate<Character> expected, String name) {
         for (char c = Character.MIN_VALUE; c < Character.MAX_VALUE; c++) {
