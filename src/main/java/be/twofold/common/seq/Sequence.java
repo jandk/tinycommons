@@ -12,14 +12,14 @@ public interface Sequence<T> extends Iterable<T> {
 
     // region Factory Methods
 
-    static <T> Sequence<T> empty() {
+    static <T> Sequence<T> emptySequence() {
         return Collections::emptyIterator;
     }
 
     @SafeVarargs
     static <T> Sequence<T> sequenceOf(T... values) {
         if (values == null || values.length == 0) {
-            return empty();
+            return emptySequence();
         }
         return () -> Arrays.asList(values).iterator();
     }
@@ -113,6 +113,15 @@ public interface Sequence<T> extends Iterable<T> {
             list.sort(comparator);
             return list.iterator();
         };
+    }
+
+
+    default Sequence<T> take(int count) {
+        Check.argument(count >= 0);
+        if (count == 0) {
+            return emptySequence();
+        }
+        return () -> new TakeIterator<>(iterator(), count);
     }
 
     // endregion
