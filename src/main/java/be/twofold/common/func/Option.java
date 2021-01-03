@@ -72,7 +72,7 @@ public abstract class Option<T> {
 
         @Override
         public boolean equals(Object obj) {
-            return this == obj || obj instanceof Some;
+            return obj instanceof None;
         }
 
         @Override
