@@ -82,7 +82,7 @@ public abstract class Option<T> {
 
         @Override
         public String toString() {
-            return "None()";
+            return "None";
         }
     }
 

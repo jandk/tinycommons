@@ -24,7 +24,7 @@ public abstract class Either<L, R> {
     }
 
     public boolean isRight() {
-        return this instanceof Left;
+        return this instanceof Right;
     }
 
     static final class Left<L, R> extends Either<L, R> {

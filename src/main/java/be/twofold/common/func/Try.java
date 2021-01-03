@@ -23,11 +23,25 @@ public abstract class Try<T> {
         return this instanceof Failure;
     }
 
+    public abstract T getResult();
+
+    public abstract Throwable getCause();
+
     static final class Success<T> extends Try<T> {
         private final T result;
 
         Success(T result) {
             this.result = result;
+        }
+
+        @Override
+        public T getResult() {
+            return result;
+        }
+
+        @Override
+        public Throwable getCause() {
+            throw new NoSuchElementException();
         }
 
         @Override
@@ -52,6 +66,16 @@ public abstract class Try<T> {
 
         Failure(Throwable cause) {
             this.cause = cause;
+        }
+
+        @Override
+        public T getResult() {
+            throw new NoSuchElementException();
+        }
+
+        @Override
+        public Throwable getCause() {
+            return cause;
         }
 
         @Override
