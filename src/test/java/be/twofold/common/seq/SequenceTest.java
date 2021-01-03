@@ -11,6 +11,18 @@ import static org.assertj.core.api.Assertions.*;
 public class SequenceTest {
 
     @Test
+    public void testConstructedFromEnumerator() {
+        Vector<String> strings = new Vector<>();
+        strings.add("one");
+        strings.add("two");
+        strings.add("three");
+
+        Enumeration<String> enumeration = strings.elements();
+        assertThat(sequence(enumeration).toList())
+            .containsExactly("one", "two", "three");
+    }
+
+    @Test
     public void testFilter() {
         assertThatNullPointerException()
             .isThrownBy(() -> emptySequence().filter(null));
