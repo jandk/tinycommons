@@ -16,7 +16,7 @@ public class UncheckedTest {
     }
 
     @Test
-    public void testCheckedConsumer() {
+    public void testConsumer() {
         CheckedConsumer<Object> checkedConsumer = o -> {
             throw new Exception(String.valueOf(o));
         };
