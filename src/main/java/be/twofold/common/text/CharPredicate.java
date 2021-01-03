@@ -43,28 +43,8 @@ public abstract class CharPredicate implements Predicate<Character> {
             : new From(predicate);
     }
 
+
     public abstract boolean matches(char c);
-
-    @Override
-    @Deprecated
-    public final boolean test(Character c) {
-        return matches(c);
-    }
-
-    @Override
-    public CharPredicate and(Predicate<? super Character> other) {
-        return and(from(other));
-    }
-
-    @Override
-    public CharPredicate or(Predicate<? super Character> other) {
-        return or(from(other));
-    }
-
-    @Override
-    public CharPredicate negate() {
-        return not();
-    }
 
     public CharPredicate and(CharPredicate other) {
         return new And(this, other);
@@ -74,8 +54,15 @@ public abstract class CharPredicate implements Predicate<Character> {
         return new Or(this, other);
     }
 
-    public CharPredicate not() {
+    @Override
+    public CharPredicate negate() {
         return new Not(this);
+    }
+
+    @Override
+    @Deprecated
+    public final boolean test(Character c) {
+        return matches(c);
     }
 
 
@@ -142,7 +129,7 @@ public abstract class CharPredicate implements Predicate<Character> {
         }
 
         @Override
-        public CharPredicate not() {
+        public CharPredicate negate() {
             return CharPredicate.none();
         }
     }
@@ -171,13 +158,13 @@ public abstract class CharPredicate implements Predicate<Character> {
         }
 
         @Override
-        public CharPredicate not() {
+        public CharPredicate negate() {
             return any();
         }
     }
 
     static final class Is extends CharPredicate {
-        private final char match;
+        final char match;
 
         Is(char match) {
             this.match = match;
@@ -276,7 +263,7 @@ public abstract class CharPredicate implements Predicate<Character> {
         }
 
         @Override
-        public CharPredicate not() {
+        public CharPredicate negate() {
             return predicate;
         }
     }

@@ -12,12 +12,6 @@ public class CharPredicateTest {
     private static final char C2 = 'z';
 
     @Test
-    public void testNegate() {
-        CharPredicate predicate = CharPredicate.is(C1);
-        testAllChars(predicate.negate(), c -> c != C1, "negate");
-    }
-
-    @Test
     @SuppressWarnings({"deprecation", "FunctionalExpressionCanBeFolded"})
     public void testTest() {
         CharPredicate predicate = CharPredicate.is(C1);
@@ -49,6 +43,9 @@ public class CharPredicateTest {
 
     @Test
     public void testRange() {
+        assertThatIllegalArgumentException()
+            .isThrownBy(() -> CharPredicate.range(C2, C1));
+
         CharPredicate predicate = CharPredicate.range(C1, C2);
 
         testAllChars(predicate, c -> c >= C1 && c <= C2, "range");
@@ -56,6 +53,17 @@ public class CharPredicateTest {
 
     @Test
     public void testAmong() {
+        assertThatNullPointerException()
+            .isThrownBy(() -> CharPredicate.among(null));
+
+        assertThat(CharPredicate.among(""))
+            .isEqualTo(CharPredicate.none());
+
+        assertThat(CharPredicate.among("a"))
+            .isInstanceOfSatisfying(CharPredicate.Is.class, predicate -> {
+                assertThat(predicate.match).isEqualTo('a');
+            });
+
         CharPredicate predicate = CharPredicate.among("abc");
 
         testAllChars(predicate, c -> c == 'a' || c == 'b' || c == 'c', "among");
@@ -88,9 +96,9 @@ public class CharPredicateTest {
 
     @Test
     public void testNot() {
-        CharPredicate predicate = CharPredicate.range(C1, C2).not();
+        CharPredicate predicate = CharPredicate.is(C1).negate();
 
-        testAllChars(predicate, c -> c < C1 || c > C2, "not");
+        testAllChars(predicate, c -> c != C1, "not");
     }
 
 
@@ -165,7 +173,7 @@ public class CharPredicateTest {
     public void testAnyNot() {
         CharPredicate predicate = CharPredicate.any();
 
-        assertThat(predicate.not()).isEqualTo(CharPredicate.none());
+        assertThat(predicate.negate()).isEqualTo(CharPredicate.none());
     }
 
     @Test
@@ -187,14 +195,14 @@ public class CharPredicateTest {
     public void testNoneNot() {
         CharPredicate predicate = CharPredicate.none();
 
-        assertThat(predicate.not()).isEqualTo(CharPredicate.any());
+        assertThat(predicate.negate()).isEqualTo(CharPredicate.any());
     }
 
     @Test
     public void testNotNot() {
         CharPredicate predicate = CharPredicate.range(C1, C2);
 
-        assertThat(predicate.not().not()).isEqualTo(predicate);
+        assertThat(predicate.negate().negate()).isEqualTo(predicate);
     }
 
     @Test
