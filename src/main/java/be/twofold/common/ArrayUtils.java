@@ -1,5 +1,6 @@
 package be.twofold.common;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 public final class ArrayUtils {
@@ -48,10 +49,6 @@ public final class ArrayUtils {
         return indexOf(array, value) >= 0;
     }
 
-    public static <T> boolean contains(T[] array, T value) {
-        return indexOf(array, value) >= 0;
-    }
-
 
     public static int indexOf(boolean[] array, boolean value) {
         return indexOf(array, value, 0, array.length);
@@ -82,10 +79,6 @@ public final class ArrayUtils {
     }
 
     public static int indexOf(double[] array, double value) {
-        return indexOf(array, value, 0, array.length);
-    }
-
-    public static <T> int indexOf(T[] array, T value) {
         return indexOf(array, value, 0, array.length);
     }
 
@@ -178,17 +171,6 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static <T> int indexOf(T[] array, T value, int from, int to) {
-        Check.positions(from, to, array.length);
-
-        for (int i = from; i < to; i++) {
-            if (Objects.equals(array[i], value)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
 
     public static int lastIndexOf(boolean[] array, boolean value) {
         return lastIndexOf(array, value, 0, array.length);
@@ -219,10 +201,6 @@ public final class ArrayUtils {
     }
 
     public static int lastIndexOf(double[] array, double value) {
-        return lastIndexOf(array, value, 0, array.length);
-    }
-
-    public static <T> int lastIndexOf(T[] array, T value) {
         return lastIndexOf(array, value, 0, array.length);
     }
 
@@ -315,21 +293,9 @@ public final class ArrayUtils {
         return -1;
     }
 
-    public static <T> int lastIndexOf(T[] array, T value, int from, int to) {
-        Check.positions(from, to, array.length);
-
-        for (int i = to - 1; i >= from; i--) {
-            if (Objects.equals(array[i], value)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
 
     public static byte max(byte... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         byte max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -340,22 +306,8 @@ public final class ArrayUtils {
         return max;
     }
 
-    public static char max(char... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
-
-        char max = array[0];
-        for (int i = 1; i < array.length; i++) {
-            if (array[i] > max) {
-                max = array[i];
-            }
-        }
-        return max;
-    }
-
     public static short max(short... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         short max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -367,8 +319,7 @@ public final class ArrayUtils {
     }
 
     public static int max(int... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         int max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -378,8 +329,7 @@ public final class ArrayUtils {
     }
 
     public static long max(long... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         long max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -389,8 +339,7 @@ public final class ArrayUtils {
     }
 
     public static float max(float... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         float max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -400,8 +349,7 @@ public final class ArrayUtils {
     }
 
     public static double max(double... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         double max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -412,8 +360,7 @@ public final class ArrayUtils {
 
 
     public static byte min(byte... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         byte min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -424,22 +371,8 @@ public final class ArrayUtils {
         return min;
     }
 
-    public static char min(char... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
-
-        char min = array[0];
-        for (int i = 1; i < array.length; i++) {
-            if (array[i] < min) {
-                min = array[i];
-            }
-        }
-        return min;
-    }
-
     public static short min(short... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         short min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -451,8 +384,7 @@ public final class ArrayUtils {
     }
 
     public static int min(int... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         int min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -462,8 +394,7 @@ public final class ArrayUtils {
     }
 
     public static long min(long... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         long min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -473,8 +404,7 @@ public final class ArrayUtils {
     }
 
     public static float min(float... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         float min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -484,8 +414,7 @@ public final class ArrayUtils {
     }
 
     public static double min(double... array) {
-        Check.notNull(array);
-        Check.argument(array.length > 0);
+        verifyNonEmptyArray(array);
 
         double min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -707,6 +636,11 @@ public final class ArrayUtils {
         Check.positions(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
+    }
+
+    private static void verifyNonEmptyArray(Object array) {
+        Check.notNull(array, "array");
+        Check.argument(Array.getLength(array) > 0, "array is empty");
     }
 
 }
