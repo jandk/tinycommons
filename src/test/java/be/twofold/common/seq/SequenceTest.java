@@ -1,9 +1,11 @@
 package be.twofold.common.seq;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Vector;
+import java.util.stream.Stream;
 
 import static be.twofold.common.seq.Sequence.*;
 import static org.assertj.core.api.Assertions.*;
@@ -50,15 +52,15 @@ public class SequenceTest {
         sequence.toList();
         sequence.toList();
 
-        Sequence<Integer> sequenceOnce = sequence.onlyOnce();
+        Sequence<Integer> sequenceOnce = sequence.once();
         sequenceOnce.toList();
 
         assertThatIllegalStateException()
-            .isThrownBy(sequenceOnce::toList);
+                .isThrownBy(sequenceOnce::toList);
 
-        Sequence<Object> once = emptySequence().onlyOnce();
-        assertThat(once.onlyOnce())
-            .isSameAs(once);
+        Sequence<Object> once = emptySequence().once();
+        assertThat(once.once())
+                .isSameAs(once);
     }
 
     @Test
@@ -67,7 +69,7 @@ public class SequenceTest {
             .isThrownBy(() -> emptySequence().take(-1));
 
         assertThat(emptySequence().take(0))
-            .isSameAs(emptySequence());
+                .isEqualTo(emptySequence());
 
         assertThat(aSequence().take(5).toList())
             .containsExactly(0, 2, 4, 6, 8);
