@@ -48,7 +48,8 @@ public abstract class Sequence<T> implements Iterable<T> {
     // region Intermediate Operations
 
     public final Sequence<T> distinct() {
-        return wrap(() -> new DistinctItr<>(iterator()));
+        Set<T> seen = new HashSet<>();
+        return filter(seen::add);
     }
 
 
