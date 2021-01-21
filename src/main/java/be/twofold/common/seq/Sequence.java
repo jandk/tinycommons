@@ -10,10 +10,13 @@ import java.util.stream.Stream;
 
 public abstract class Sequence<T> implements Iterable<T> {
 
+    private static final Sequence<?> Empty = wrap(Collections::emptyIterator);
+
     // region Factory Methods
 
+    @SuppressWarnings("unchecked")
     public static <T> Sequence<T> emptySequence() {
-        return wrap(Collections::emptyIterator);
+        return (Sequence<T>) Empty;
     }
 
     @SafeVarargs
@@ -25,7 +28,7 @@ public abstract class Sequence<T> implements Iterable<T> {
     }
 
     public static <T> Sequence<T> sequence(Enumeration<T> enumeration) {
-        return wrap(() -> new EnumItr<>(enumeration)).once();
+        return wrap(() -> new EnumerationIterator<>(enumeration)).once();
     }
 
     public static <T> Sequence<T> sequence(Iterable<T> iterable) {
@@ -41,7 +44,7 @@ public abstract class Sequence<T> implements Iterable<T> {
     }
 
     private static <T> Sequence<T> wrap(Iterable<T> iterable) {
-        return new IterableSeq<>(iterable);
+        return new IterableSequence<>(iterable);
     }
 
     // endregion
@@ -75,7 +78,7 @@ public abstract class Sequence<T> implements Iterable<T> {
 
     public final <R> Sequence<R> map(Function<? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
-        return wrap(() -> new MapItr<>(iterator(), mapper));
+        return wrap(() -> new MapIterator<>(iterator(), mapper));
     }
 
     public final <R> Sequence<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
@@ -106,7 +109,7 @@ public abstract class Sequence<T> implements Iterable<T> {
 
 
     public final Sequence<T> once() {
-        return this instanceof OnceSeq ? this : new OnceSeq<>(this);
+        return this instanceof OnceSequence ? this : new OnceSequence<>(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -129,7 +132,7 @@ public abstract class Sequence<T> implements Iterable<T> {
         if (count == 0) {
             return emptySequence();
         }
-        return wrap(() -> new TakeItr<>(iterator(), count));
+        return wrap(() -> new TakeIterator<>(iterator(), count));
     }
 
     // endregion
