@@ -56,7 +56,7 @@ public abstract class Sequence<T> implements Iterable<T> {
 
     public final Sequence<T> filter(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
-        return wrap(() -> new FilterItr<>(iterator(), predicate));
+        return wrap(() -> new FilterIterator<>(iterator(), predicate));
     }
 
     public final Sequence<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
