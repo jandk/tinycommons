@@ -4,6 +4,7 @@ import be.twofold.common.Check;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Stream;
 
@@ -60,14 +61,15 @@ public abstract class Sequence<T> implements Iterable<T> {
 
     public final Sequence<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
         Check.notNull(predicate, "predicate");
-        return indexed()
-                .filter(e -> predicate.test(e.getKey(), e.getValue()))
-                .map(Entry::getValue);
+
+        AtomicInteger index = new AtomicInteger();
+        return filter(t -> predicate.test(index.getAndIncrement(), t));
     }
 
 
     public final Sequence<Entry<Integer, T>> indexed() {
-        return wrap(() -> new IndexedItr<>(iterator()));
+        AtomicInteger index = new AtomicInteger();
+        return map(t -> new AbstractMap.SimpleImmutableEntry<>(index.getAndIncrement(), t));
     }
 
 
@@ -78,8 +80,9 @@ public abstract class Sequence<T> implements Iterable<T> {
 
     public final <R> Sequence<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
-        return indexed()
-                .map(e -> mapper.apply(e.getKey(), e.getValue()));
+
+        AtomicInteger index = new AtomicInteger();
+        return map(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
 
@@ -93,11 +96,12 @@ public abstract class Sequence<T> implements Iterable<T> {
 
     public final Sequence<T> onEachIndexed(BiConsumer<Integer, ? super T> action) {
         Check.notNull(action, "action");
-        return indexed()
-                .map(e -> {
-                    action.accept(e.getKey(), e.getValue());
-                    return e.getValue();
-                });
+
+        AtomicInteger index = new AtomicInteger();
+        return map(t -> {
+            action.accept(index.getAndIncrement(), t);
+            return t;
+        });
     }
 
 
@@ -143,182 +147,71 @@ public abstract class Sequence<T> implements Iterable<T> {
         return true;
     }
 
-
     public final boolean any() {
         return iterator().hasNext();
     }
 
     public final boolean any(Predicate<? super T> predicate) {
-        Check.notNull(predicate, "predicate");
-
-        for (T element : this) {
-            if (predicate.test(element)) {
-                return true;
-            }
-        }
-        return false;
+        return filter(predicate).any();
     }
-
-
-    public final int count() {
-        int count = 0;
-        for (T ignored : this) {
-            count++;
-        }
-        return count;
-    }
-
-    public final int count(Predicate<? super T> predicate) {
-        Check.notNull(predicate, "predicate");
-
-        int count = 0;
-        for (T element : this) {
-            if (predicate.test(element)) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-
-    public final T first() {
-        Iterator<T> iterator = iterator();
-        if (!iterator.hasNext()) {
-            throw new NoSuchElementException("Empty sequence");
-        }
-        return iterator.next();
-    }
-
-    public final Optional<T> firstOptional() {
-        Iterator<T> iterator = iterator();
-        if (!iterator.hasNext()) {
-            return Optional.empty();
-        }
-        return Optional.of(iterator.next());
-    }
-
-    public final T first(Predicate<? super T> predicate) {
-        Check.notNull(predicate, "predicate");
-
-        for (T element : this) {
-            if (predicate.test(element)) {
-                return element;
-            }
-        }
-        throw new NoSuchElementException("No matching element in sequence");
-    }
-
-    public final Optional<T> firstOptional(Predicate<? super T> predicate) {
-        Check.notNull(predicate, "predicate");
-
-        for (T element : this) {
-            if (predicate.test(element)) {
-                return Optional.of(element);
-            }
-        }
-        return Optional.empty();
-    }
-
-
-    public final T last() {
-        Iterator<T> iterator = iterator();
-        if (!iterator.hasNext()) {
-            throw new NoSuchElementException("Empty sequence");
-        }
-        T last = iterator.next();
-        while (iterator.hasNext()) {
-            last = iterator.next();
-        }
-        return last;
-    }
-
-    public final Optional<T> lastOptional() {
-        Iterator<T> iterator = iterator();
-        if (!iterator.hasNext()) {
-            return Optional.empty();
-        }
-        T last = iterator.next();
-        while (iterator.hasNext()) {
-            last = iterator.next();
-        }
-        return Optional.of(last);
-    }
-
-    public final T last(Predicate<? super T> predicate) {
-        Check.notNull(predicate, "predicate");
-
-        T last = null;
-        boolean found = false;
-        for (T element : this) {
-            if (predicate.test(element)) {
-                last = element;
-                found = true;
-            }
-        }
-
-        if (!found) {
-            throw new NoSuchElementException("No matching element in sequence");
-        }
-        return last;
-    }
-
-    public final Optional<T> lastOptional(Predicate<? super T> predicate) {
-        Check.notNull(predicate, "predicate");
-
-        T last = null;
-        boolean found = false;
-        for (T element : this) {
-            if (predicate.test(element)) {
-                last = element;
-                found = true;
-            }
-        }
-        return found ? Optional.of(last) : Optional.empty();
-    }
-
-
-    public final void forEach(Consumer<? super T> consumer) {
-        Check.notNull(consumer, "consumer");
-
-        for (T element : this) {
-            consumer.accept(element);
-        }
-    }
-
-    public final void forEachIndexed(BiConsumer<Integer, ? super T> consumer) {
-        Check.notNull(consumer);
-
-        int count = 0;
-        for (T element : this) {
-            consumer.accept(count++, element);
-        }
-    }
-
 
     public final boolean none() {
         return !iterator().hasNext();
     }
 
     public final boolean none(Predicate<? super T> predicate) {
-        Check.notNull(predicate, "predicate");
+        return filter(predicate).none();
+    }
 
+
+    public final int count() {
+        int count = 0;
         for (T element : this) {
-            if (predicate.test(element)) {
-                return false;
-            }
+            count++;
         }
-        return true;
+        return count;
+    }
+
+    public final int count(Predicate<? super T> predicate) {
+        return filter(predicate).count();
+    }
+
+
+    public final T first() {
+        Iterator<T> iterator = nonEmptyIterator();
+        return iterator.next();
+    }
+
+    public final T first(Predicate<? super T> predicate) {
+        return filter(predicate).first();
+    }
+
+    public final T last() {
+        Iterator<T> iterator = nonEmptyIterator();
+        T last = iterator.next();
+        while (iterator.hasNext()) {
+            last = iterator.next();
+        }
+        return last;
+    }
+
+    public final T last(Predicate<? super T> predicate) {
+        return filter(predicate).last();
+    }
+
+
+    public final void forEachIndexed(BiConsumer<Integer, ? super T> consumer) {
+        Check.notNull(consumer);
+
+        AtomicInteger index = new AtomicInteger();
+        forEach(t -> consumer.accept(index.getAndIncrement(), t));
     }
 
 
     public final T reduce(BinaryOperator<T> operation) {
         Check.notNull(operation, "operation");
 
-        Iterator<T> iterator = iterator();
-        if (!iterator.hasNext()) {
-            throw new NoSuchElementException("Empty sequence");
-        }
-
+        Iterator<T> iterator = nonEmptyIterator();
         T result = iterator.next();
         while (iterator.hasNext()) {
             result = operation.apply(result, iterator.next());
@@ -326,10 +219,10 @@ public abstract class Sequence<T> implements Iterable<T> {
         return result;
     }
 
-    public final <R> R reduce(R identity, BiFunction<R, ? super T, R> operation) {
+    public final <R> R reduce(R initial, BiFunction<R, ? super T, R> operation) {
         Check.notNull(operation, "operation");
 
-        R result = identity;
+        R result = initial;
         for (T element : this) {
             result = operation.apply(result, element);
         }
@@ -350,6 +243,10 @@ public abstract class Sequence<T> implements Iterable<T> {
         return toCollection(new ArrayList<>());
     }
 
+    public final Set<T> toSet() {
+        return toCollection(new HashSet<>());
+    }
+
     public final List<T> toUnmodifiableList() {
         ArrayList<T> list = toCollection(new ArrayList<>());
         switch (list.size()) {
@@ -363,12 +260,8 @@ public abstract class Sequence<T> implements Iterable<T> {
         }
     }
 
-    public final Set<T> toSet() {
-        return toCollection(new HashSet<>());
-    }
-
     public final Set<T> toUnmodifiableSet() {
-        HashSet<T> set = toCollection(new HashSet<>());
+        Set<T> set = toCollection(new HashSet<>());
         switch (set.size()) {
             case 0:
                 return Collections.emptySet();
@@ -377,6 +270,18 @@ public abstract class Sequence<T> implements Iterable<T> {
             default:
                 return Collections.unmodifiableSet(set);
         }
+    }
+
+    // endregion
+
+    // region Helpers
+
+    private Iterator<T> nonEmptyIterator() {
+        Iterator<T> iterator = iterator();
+        if (!iterator.hasNext()) {
+            throw new NoSuchElementException("Empty sequence");
+        }
+        return iterator;
     }
 
     // endregion
