@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Vector;
 import java.util.stream.Stream;
 
-import static be.twofold.common.seq.Sequence.*;
 import static org.assertj.core.api.Assertions.*;
 
 public class SequenceTest {
@@ -20,19 +19,19 @@ public class SequenceTest {
         strings.add("three");
 
         Enumeration<String> enumeration = strings.elements();
-        assertThat(sequence(enumeration).toList())
-            .containsExactly("one", "two", "three");
+        assertThat(Sequence.sequence(enumeration).toList())
+                .containsExactly("one", "two", "three");
     }
 
     @Test
     public void testFilter() {
         assertThatNullPointerException()
-            .isThrownBy(() -> emptySequence().filter(null));
+                .isThrownBy(() -> Sequence.empty().filter(null));
 
-        assertThat(emptySequence().filter(o -> true).count()).isEqualTo(0);
-        assertThat(emptySequence().filter(o -> false).count()).isEqualTo(0);
+        assertThat(Sequence.empty().filter(o -> true).count()).isEqualTo(0);
+        assertThat(Sequence.empty().filter(o -> false).count()).isEqualTo(0);
 
-        Sequence<String> sequence = sequenceOf("aaa", null, "bbb", null, "ccc");
+        Sequence<String> sequence = Sequence.of("aaa", null, "bbb", null, "ccc");
         List<String> filtered = sequence.filter(s -> s == null || s.startsWith("b")).toList();
         assertThat(filtered).containsExactly(null, "bbb", null);
     }
@@ -40,15 +39,15 @@ public class SequenceTest {
     @Test
     public void testFilterIndexed() {
         List<Integer> list = aSequence()
-            .filterIndexed((index, __) -> index % 2 == 0)
-            .take(5).toList();
+                .filterIndexed((index, __) -> index % 2 == 0)
+                .take(5).toList();
 
         assertThat(list).containsExactly(0, 4, 8, 12, 16);
     }
 
     @Test
     public void testOnlyOnce() {
-        Sequence<Integer> sequence = sequenceOf(1, 2, 3);
+        Sequence<Integer> sequence = Sequence.of(1, 2, 3);
         sequence.toList();
         sequence.toList();
 
@@ -58,7 +57,7 @@ public class SequenceTest {
         assertThatIllegalStateException()
                 .isThrownBy(sequenceOnce::toList);
 
-        Sequence<Object> once = emptySequence().once();
+        Sequence<Object> once = Sequence.empty().once();
         assertThat(once.once())
                 .isSameAs(once);
     }
@@ -66,18 +65,18 @@ public class SequenceTest {
     @Test
     public void testTake() {
         assertThatIllegalArgumentException()
-            .isThrownBy(() -> emptySequence().take(-1));
+                .isThrownBy(() -> Sequence.empty().take(-1));
 
-        assertThat(emptySequence().take(0))
-                .isEqualTo(emptySequence());
+        assertThat(Sequence.empty().take(0))
+                .isEqualTo(Sequence.empty());
 
         assertThat(aSequence().take(5).toList())
-            .containsExactly(0, 2, 4, 6, 8);
+                .containsExactly(0, 2, 4, 6, 8);
     }
 
     private Sequence<Integer> aSequence() {
         // For now generate via stream as we don't have our own generate methods yet
-        return sequence(Stream.iterate(0, i -> i + 2));
+        return Sequence.sequence(Stream.iterate(0, i -> i + 2));
     }
 
 }
