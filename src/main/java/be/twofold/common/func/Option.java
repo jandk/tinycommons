@@ -22,11 +22,11 @@ public abstract class Option<T> {
 
     public abstract T get();
 
-    public boolean isPresent() {
+    public boolean isDefined() {
         return this instanceof Some;
     }
 
-    public boolean isAbsent() {
+    public boolean isEmpty() {
         return this instanceof None;
     }
 
@@ -67,17 +67,7 @@ public abstract class Option<T> {
 
         @Override
         public Void get() {
-            throw new NoSuchElementException();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof None;
-        }
-
-        @Override
-        public int hashCode() {
-            return 1;
+            throw new NoSuchElementException("No value present");
         }
 
         @Override
