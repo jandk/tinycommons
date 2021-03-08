@@ -1,7 +1,11 @@
 package be.twofold.common.func;
 
 import java.util.*;
+import java.util.function.*;
 
+/**
+ * Replacement for {@link Optional} following monadic rules.
+ */
 public abstract class Option<T> {
 
     Option() {
@@ -20,14 +24,31 @@ public abstract class Option<T> {
         return value != null ? some(value) : none();
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static <T> Option<T> ofOptional(Optional<? extends T> optional) {
+        return Objects.requireNonNull(optional, "optional is null")
+            .<Option<T>>map(Option::of)
+            .orElseGet(Option::none);
+    }
+
     public abstract T get();
 
-    public boolean isDefined() {
+    public final boolean isDefined() {
         return this instanceof Some;
     }
 
-    public boolean isEmpty() {
+    public final boolean isEmpty() {
         return this instanceof None;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final <R> Option<R> flatMap(Function<? super T, ? extends Option<? extends R>> mapper) {
+        Objects.requireNonNull(mapper, "mapper is null");
+        if (isEmpty()) {
+            return none();
+        }
+        Option<R> result = (Option<R>) mapper.apply(get());
+        return Objects.requireNonNull(result);
     }
 
     static final class Some<T> extends Option<T> {
