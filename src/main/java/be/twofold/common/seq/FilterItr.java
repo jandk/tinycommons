@@ -1,16 +1,15 @@
 package be.twofold.common.seq;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.function.Predicate;
+import java.util.*;
+import java.util.function.*;
 
-final class FilterIterator<T> implements Iterator<T> {
+final class FilterItr<T> implements Iterator<T> {
     private final Iterator<T> iterator;
     private final Predicate<? super T> predicate;
     private int state; // 0 = not ready, 1 = ready, 2 = done
     private T next;
 
-    FilterIterator(Iterator<T> iterator, Predicate<? super T> predicate) {
+    FilterItr(Iterator<T> iterator, Predicate<? super T> predicate) {
         this.iterator = iterator;
         this.predicate = predicate;
     }

@@ -1,12 +1,11 @@
 package be.twofold.common.seq;
 
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.*;
 
-final class EnumerationIterator<E> implements Iterator<E> {
+final class EnumerationItr<E> implements Iterator<E> {
     private final Enumeration<E> enumeration;
 
-    EnumerationIterator(Enumeration<E> enumeration) {
+    EnumerationItr(Enumeration<E> enumeration) {
         this.enumeration = enumeration;
     }
 

@@ -27,7 +27,7 @@ public abstract class Seq<T> implements Iterable<T> {
 
     public static <T> Seq<T> seq(Enumeration<T> enumeration) {
         Objects.requireNonNull(enumeration);
-        return seq(() -> new EnumerationIterator<>(enumeration)).once();
+        return seq(() -> new EnumerationItr<>(enumeration)).once();
     }
 
     public static <T> Seq<T> seq(Iterable<T> iterable) {
@@ -60,7 +60,7 @@ public abstract class Seq<T> implements Iterable<T> {
 
     public final Seq<T> filter(Predicate<? super T> predicate) {
         Objects.requireNonNull(predicate);
-        return seq(() -> new FilterIterator<>(iterator(), predicate));
+        return seq(() -> new FilterItr<>(iterator(), predicate));
     }
 
     public final Seq<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
@@ -79,7 +79,7 @@ public abstract class Seq<T> implements Iterable<T> {
 
     public final <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
         Objects.requireNonNull(mapper);
-        return seq(() -> new MapIterator<>(iterator(), mapper));
+        return seq(() -> new MapItr<>(iterator(), mapper));
     }
 
     public final <R> Seq<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
@@ -134,7 +134,7 @@ public abstract class Seq<T> implements Iterable<T> {
         } else if (count == 0) {
             return empty();
         } else {
-            return seq(() -> new TakeIterator<>(iterator(), count));
+            return seq(() -> new TakeItr<>(iterator(), count));
         }
     }
 
