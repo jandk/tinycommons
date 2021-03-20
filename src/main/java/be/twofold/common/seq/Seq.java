@@ -1,38 +1,38 @@
 package be.twofold.common.seq;
 
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map.*;
+import java.util.concurrent.atomic.*;
 import java.util.function.*;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
-public abstract class Sequence<T> implements Iterable<T> {
+public abstract class Seq<T> implements Iterable<T> {
 
-    private static final Sequence<?> Empty = sequence(Collections::emptyIterator);
+    private static final Seq<?> Empty = seq(Collections::emptyIterator);
 
     // region Factory Methods
 
     @SuppressWarnings("unchecked")
-    public static <T> Sequence<T> empty() {
-        return (Sequence<T>) Empty;
+    public static <T> Seq<T> empty() {
+        return (Seq<T>) Empty;
     }
 
     @SafeVarargs
-    public static <T> Sequence<T> of(T... values) {
+    public static <T> Seq<T> of(T... values) {
         if (Objects.requireNonNull(values).length == 0) {
             return empty();
         }
-        return sequence(() -> Arrays.asList(values).iterator());
+        return seq(() -> Arrays.asList(values).iterator());
     }
 
-    public static <T> Sequence<T> sequence(Enumeration<T> enumeration) {
+    public static <T> Seq<T> seq(Enumeration<T> enumeration) {
         Objects.requireNonNull(enumeration);
-        return sequence(() -> new EnumerationIterator<>(enumeration)).once();
+        return seq(() -> new EnumerationIterator<>(enumeration)).once();
     }
 
-    public static <T> Sequence<T> sequence(Iterable<T> iterable) {
+    public static <T> Seq<T> seq(Iterable<T> iterable) {
         Objects.requireNonNull(iterable);
-        return new Sequence<T>() {
+        return new Seq<T>() {
             @Override
             public Iterator<T> iterator() {
                 return iterable.iterator();
@@ -40,30 +40,30 @@ public abstract class Sequence<T> implements Iterable<T> {
         };
     }
 
-    public static <T> Sequence<T> sequence(Iterator<T> iterator) {
-        return sequence(() -> iterator).once();
+    public static <T> Seq<T> seq(Iterator<T> iterator) {
+        return seq(() -> iterator).once();
     }
 
-    public static <T> Sequence<T> sequence(Stream<T> stream) {
-        return sequence(stream::iterator).once();
+    public static <T> Seq<T> seq(Stream<T> stream) {
+        return seq(stream::iterator).once();
     }
 
     // endregion
 
     // region Intermediate Operations
 
-    public final Sequence<T> distinct() {
+    public final Seq<T> distinct() {
         Set<T> seen = new HashSet<>();
         return filter(seen::add);
     }
 
 
-    public final Sequence<T> filter(Predicate<? super T> predicate) {
+    public final Seq<T> filter(Predicate<? super T> predicate) {
         Objects.requireNonNull(predicate);
-        return sequence(() -> new FilterIterator<>(iterator(), predicate));
+        return seq(() -> new FilterIterator<>(iterator(), predicate));
     }
 
-    public final Sequence<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
+    public final Seq<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
         Objects.requireNonNull(predicate);
 
         AtomicInteger index = new AtomicInteger();
@@ -71,18 +71,18 @@ public abstract class Sequence<T> implements Iterable<T> {
     }
 
 
-    public final Sequence<Entry<Integer, T>> indexed() {
+    public final Seq<Entry<Integer, T>> indexed() {
         AtomicInteger index = new AtomicInteger();
         return map(t -> new AbstractMap.SimpleImmutableEntry<>(index.getAndIncrement(), t));
     }
 
 
-    public final <R> Sequence<R> map(Function<? super T, ? extends R> mapper) {
+    public final <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
         Objects.requireNonNull(mapper);
-        return sequence(() -> new MapIterator<>(iterator(), mapper));
+        return seq(() -> new MapIterator<>(iterator(), mapper));
     }
 
-    public final <R> Sequence<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
+    public final <R> Seq<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
         Objects.requireNonNull(mapper);
 
         AtomicInteger index = new AtomicInteger();
@@ -90,7 +90,7 @@ public abstract class Sequence<T> implements Iterable<T> {
     }
 
 
-    public final Sequence<T> onEach(Consumer<? super T> action) {
+    public final Seq<T> onEach(Consumer<? super T> action) {
         Objects.requireNonNull(action);
         return map(element -> {
             action.accept(element);
@@ -98,7 +98,7 @@ public abstract class Sequence<T> implements Iterable<T> {
         });
     }
 
-    public final Sequence<T> onEachIndexed(BiConsumer<Integer, ? super T> action) {
+    public final Seq<T> onEachIndexed(BiConsumer<Integer, ? super T> action) {
         Objects.requireNonNull(action);
 
         AtomicInteger index = new AtomicInteger();
@@ -109,18 +109,18 @@ public abstract class Sequence<T> implements Iterable<T> {
     }
 
 
-    public final Sequence<T> once() {
-        return this instanceof OnceSequence ? this : new OnceSequence<>(this);
+    public final Seq<T> once() {
+        return this instanceof OnceSeq ? this : new OnceSeq<>(this);
     }
 
     @SuppressWarnings("unchecked")
-    public final Sequence<T> sorted() {
+    public final Seq<T> sorted() {
         return sorted((Comparator<? super T>) Comparator.naturalOrder());
     }
 
-    public final Sequence<T> sorted(Comparator<? super T> comparator) {
+    public final Seq<T> sorted(Comparator<? super T> comparator) {
         Objects.requireNonNull(comparator);
-        return sequence(() -> {
+        return seq(() -> {
             List<T> list = toList();
             list.sort(comparator);
             return list.iterator();
@@ -128,13 +128,13 @@ public abstract class Sequence<T> implements Iterable<T> {
     }
 
 
-    public final Sequence<T> take(int count) {
+    public final Seq<T> take(int count) {
         if (count < 0) {
             throw new IllegalArgumentException("Negative count");
         } else if (count == 0) {
             return empty();
         } else {
-            return sequence(() -> new TakeIterator<>(iterator(), count));
+            return seq(() -> new TakeIterator<>(iterator(), count));
         }
     }
 
