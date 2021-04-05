@@ -131,9 +131,8 @@ public abstract class Seq<T> implements Iterable<T> {
 
 
     public final Seq<T> take(int count) {
-        if (count < 0) {
-            throw new IllegalArgumentException("Negative count");
-        } else if (count == 0) {
+        Check.argument(count >= 0, "Negative count");
+        if (count == 0) {
             return empty();
         } else {
             return seq(() -> new TakeItr<>(iterator(), count));

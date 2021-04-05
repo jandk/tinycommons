@@ -10,42 +10,42 @@ public final class ArrayUtils {
     }
 
     public static boolean contains(boolean[] array, boolean value) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         return indexOf(array, value) >= 0;
     }
 
     public static boolean contains(byte[] array, byte value) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         return indexOf(array, value) >= 0;
     }
 
     public static boolean contains(char[] array, char value) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         return indexOf(array, value) >= 0;
     }
 
     public static boolean contains(short[] array, short value) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         return indexOf(array, value) >= 0;
     }
 
     public static boolean contains(int[] array, int value) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         return indexOf(array, value) >= 0;
     }
 
     public static boolean contains(long[] array, long value) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         return indexOf(array, value) >= 0;
     }
 
     public static boolean contains(float[] array, float value) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         return indexOf(array, value) >= 0;
     }
 
     public static boolean contains(double[] array, double value) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         return indexOf(array, value) >= 0;
     }
 
@@ -425,47 +425,47 @@ public final class ArrayUtils {
 
 
     public static void reverse(boolean[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         reverse(array, 0, array.length);
     }
 
     public static void reverse(byte[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         reverse(array, 0, array.length);
     }
 
     public static void reverse(char[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         reverse(array, 0, array.length);
     }
 
     public static void reverse(short[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         reverse(array, 0, array.length);
     }
 
     public static void reverse(int[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         reverse(array, 0, array.length);
     }
 
     public static void reverse(long[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         reverse(array, 0, array.length);
     }
 
     public static void reverse(float[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         reverse(array, 0, array.length);
     }
 
     public static void reverse(double[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         reverse(array, 0, array.length);
     }
 
     public static void reverse(boolean[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
@@ -476,7 +476,7 @@ public final class ArrayUtils {
     }
 
     public static void reverse(byte[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
@@ -487,7 +487,7 @@ public final class ArrayUtils {
     }
 
     public static void reverse(char[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
@@ -498,7 +498,7 @@ public final class ArrayUtils {
     }
 
     public static void reverse(short[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
@@ -509,7 +509,7 @@ public final class ArrayUtils {
     }
 
     public static void reverse(int[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
@@ -520,7 +520,7 @@ public final class ArrayUtils {
     }
 
     public static void reverse(long[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
@@ -531,7 +531,7 @@ public final class ArrayUtils {
     }
 
     public static void reverse(float[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
@@ -542,7 +542,7 @@ public final class ArrayUtils {
     }
 
     public static void reverse(double[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
@@ -554,85 +554,85 @@ public final class ArrayUtils {
 
 
     public static void sortDescending(byte[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(char[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(short[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(int[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(long[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(float[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(double[] array) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         sortDescending(array, 0, array.length);
     }
 
 
     public static void sortDescending(byte[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(char[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(short[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(int[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(long[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(float[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(double[] array, int from, int to) {
-        Check.notNull(array);
+        Check.notNull(array, "array");
         Check.positions(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
