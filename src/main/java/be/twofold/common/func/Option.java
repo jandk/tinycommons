@@ -1,5 +1,7 @@
 package be.twofold.common.func;
 
+import be.twofold.common.*;
+
 import java.util.*;
 import java.util.function.*;
 
@@ -26,7 +28,7 @@ public abstract class Option<T> {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public static <T> Option<T> ofOptional(Optional<? extends T> optional) {
-        return Objects.requireNonNull(optional, "optional is null")
+        return Check.notNull(optional, "optional")
             .<Option<T>>map(Option::of)
             .orElseGet(Option::none);
     }
@@ -43,12 +45,12 @@ public abstract class Option<T> {
 
     @SuppressWarnings("unchecked")
     public final <R> Option<R> flatMap(Function<? super T, ? extends Option<? extends R>> mapper) {
-        Objects.requireNonNull(mapper, "mapper is null");
+        Check.notNull(mapper, "mapper");
         if (isEmpty()) {
             return none();
         }
         Option<R> result = (Option<R>) mapper.apply(get());
-        return Objects.requireNonNull(result);
+        return Check.notNull(result, "result");
     }
 
     static final class Some<T> extends Option<T> {

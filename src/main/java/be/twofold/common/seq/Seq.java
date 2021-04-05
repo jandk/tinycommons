@@ -21,19 +21,19 @@ public abstract class Seq<T> implements Iterable<T> {
 
     @SafeVarargs
     public static <T> Seq<T> of(T... values) {
-        if (Objects.requireNonNull(values).length == 0) {
+        if (Check.notNull(values, "values").length == 0) {
             return empty();
         }
         return seq(() -> Arrays.asList(values).iterator());
     }
 
     public static <T> Seq<T> seq(Enumeration<T> enumeration) {
-        Objects.requireNonNull(enumeration);
+        Check.notNull(enumeration, "enumeration");
         return seq(() -> new EnumerationItr<>(enumeration)).once();
     }
 
     public static <T> Seq<T> seq(Iterable<T> iterable) {
-        Objects.requireNonNull(iterable);
+        Check.notNull(iterable, "iterable");
         return new Seq<T>() {
             @Override
             public Iterator<T> iterator() {
@@ -61,12 +61,12 @@ public abstract class Seq<T> implements Iterable<T> {
 
 
     public final Seq<T> filter(Predicate<? super T> predicate) {
-        Objects.requireNonNull(predicate);
+        Check.notNull(predicate, "predicate");
         return seq(() -> new FilterItr<>(iterator(), predicate));
     }
 
     public final Seq<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
-        Objects.requireNonNull(predicate);
+        Check.notNull(predicate, "predicate");
 
         AtomicInteger index = new AtomicInteger();
         return filter(t -> predicate.test(index.getAndIncrement(), t));
@@ -80,12 +80,12 @@ public abstract class Seq<T> implements Iterable<T> {
 
 
     public final <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
-        Objects.requireNonNull(mapper);
+        Check.notNull(mapper, "mapper");
         return seq(() -> new MapItr<>(iterator(), mapper));
     }
 
     public final <R> Seq<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
-        Objects.requireNonNull(mapper);
+        Check.notNull(mapper, "mapper");
 
         AtomicInteger index = new AtomicInteger();
         return map(t -> mapper.apply(index.getAndIncrement(), t));
@@ -93,7 +93,7 @@ public abstract class Seq<T> implements Iterable<T> {
 
 
     public final Seq<T> onEach(Consumer<? super T> action) {
-        Objects.requireNonNull(action);
+        Check.notNull(action, "action");
         return map(element -> {
             action.accept(element);
             return element;
@@ -101,7 +101,7 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
     public final Seq<T> onEachIndexed(BiConsumer<Integer, ? super T> action) {
-        Objects.requireNonNull(action);
+        Check.notNull(action, "action");
 
         AtomicInteger index = new AtomicInteger();
         return map(t -> {
@@ -121,7 +121,7 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
     public final Seq<T> sorted(Comparator<? super T> comparator) {
-        Objects.requireNonNull(comparator);
+        Check.notNull(comparator, "comparator");
         return seq(() -> {
             List<T> list = toList();
             list.sort(comparator);
@@ -145,7 +145,7 @@ public abstract class Seq<T> implements Iterable<T> {
     // region Terminal Operations
 
     public final boolean all(Predicate<? super T> predicate) {
-        Objects.requireNonNull(predicate);
+        Check.notNull(predicate, "predicate");
 
         for (T element : this) {
             if (!predicate.test(element)) {
@@ -209,7 +209,7 @@ public abstract class Seq<T> implements Iterable<T> {
 
 
     public final void forEachIndexed(BiConsumer<Integer, ? super T> consumer) {
-        Objects.requireNonNull(consumer);
+        Check.notNull(consumer, "consumer");
 
         AtomicInteger index = new AtomicInteger();
         forEach(t -> consumer.accept(index.getAndIncrement(), t));
@@ -217,7 +217,7 @@ public abstract class Seq<T> implements Iterable<T> {
 
 
     public final T reduce(BinaryOperator<T> operation) {
-        Objects.requireNonNull(operation);
+        Check.notNull(operation, "operation");
 
         Iterator<T> iterator = nonEmptyIterator();
         T result = iterator.next();
@@ -228,7 +228,7 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
     public final <R> R reduce(R initial, BiFunction<R, ? super T, R> operation) {
-        Objects.requireNonNull(operation);
+        Check.notNull(operation, "operation");
 
         R result = initial;
         for (T element : this) {
@@ -239,7 +239,7 @@ public abstract class Seq<T> implements Iterable<T> {
 
 
     public final <C extends Collection<? super T>> C toCollection(C collection) {
-        Objects.requireNonNull(collection);
+        Check.notNull(collection, "collection");
 
         for (T element : this) {
             collection.add(element);
