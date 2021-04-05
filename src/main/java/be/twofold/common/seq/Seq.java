@@ -237,13 +237,13 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
 
-    public final <C extends Collection<? super T>> C toCollection(C collection) {
-        Check.notNull(collection, "collection");
+    public final <C extends Collection<? super T>> C toCollection(C destination) {
+        Check.notNull(destination, "destination");
 
         for (T element : this) {
-            collection.add(element);
+            destination.add(element);
         }
-        return collection;
+        return destination;
     }
 
     public final List<T> toList() {
@@ -262,6 +262,27 @@ public abstract class Seq<T> implements Iterable<T> {
     public final Set<T> toUnmodifiableSet() {
         Set<T> set = toCollection(new HashSet<>());
         return CollectionUtils.toUnmodifiableSet(set);
+    }
+
+    public final <K, V, M extends Map<K, V>> M toMap(
+        Function<? super T, ? extends K> keyMapper,
+        Function<? super T, ? extends V> valueMapper,
+        M destination
+    ) {
+        Check.notNull(keyMapper, "keyMapper");
+        Check.notNull(valueMapper, "valueMapper");
+        Check.notNull(destination, "destination");
+
+        for (T element : this) {
+            K key = keyMapper.apply(element);
+            V value = valueMapper.apply(element);
+            V oldValue = destination.putIfAbsent(key, value);
+            if (oldValue != null) {
+                throw new IllegalStateException("Duplicate key: " + key);
+            }
+        }
+
+        return destination;
     }
 
     // endregion
