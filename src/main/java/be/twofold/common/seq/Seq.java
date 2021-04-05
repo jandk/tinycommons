@@ -1,5 +1,7 @@
 package be.twofold.common.seq;
 
+import be.twofold.common.*;
+
 import java.util.*;
 import java.util.Map.*;
 import java.util.concurrent.atomic.*;
@@ -254,28 +256,13 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
     public final List<T> toUnmodifiableList() {
-        ArrayList<T> list = toCollection(new ArrayList<>());
-        switch (list.size()) {
-            case 0:
-                return Collections.emptyList();
-            case 1:
-                return Collections.singletonList(list.get(0));
-            default:
-                list.trimToSize();
-                return Collections.unmodifiableList(list);
-        }
+        List<T> list = toCollection(new ArrayList<>());
+        return CollectionUtils.toUnmodifiableList(list);
     }
 
     public final Set<T> toUnmodifiableSet() {
         Set<T> set = toCollection(new HashSet<>());
-        switch (set.size()) {
-            case 0:
-                return Collections.emptySet();
-            case 1:
-                return Collections.singleton(set.iterator().next());
-            default:
-                return Collections.unmodifiableSet(set);
-        }
+        return CollectionUtils.toUnmodifiableSet(set);
     }
 
     // endregion
