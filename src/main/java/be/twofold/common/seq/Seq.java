@@ -73,6 +73,13 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
 
+    public final <R> Seq<R> flatMap(Function<? super T, ? extends Iterable<? extends R>> mapper) {
+        Check.notNull(mapper, "mapper");
+
+        return seq(() -> new FlatMapIterator<>(iterator(), mapper));
+    }
+
+
     public final Seq<Entry<Integer, T>> indexed() {
         AtomicInteger index = new AtomicInteger();
         return map(t -> new AbstractMap.SimpleImmutableEntry<>(index.getAndIncrement(), t));
