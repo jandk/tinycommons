@@ -137,6 +137,15 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
 
+    public final Seq<T> drop(int count) {
+        Check.argument(count >= 0, "Negative count");
+        if (count == 0) {
+            return this;
+        } else {
+            return seq(() -> new DropItr<>(iterator(), count));
+        }
+    }
+
     public final Seq<T> take(int count) {
         Check.argument(count >= 0, "Negative count");
         if (count == 0) {
