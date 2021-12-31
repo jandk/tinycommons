@@ -1,8 +1,9 @@
 package be.twofold.common.tuple;
 
+import java.io.*;
 import java.util.*;
 
-public final class Pair<T, U> {
+public final class Pair<T, U> implements Serializable {
 
     private final T first;
     private final U second;
@@ -10,10 +11,6 @@ public final class Pair<T, U> {
     public Pair(T first, U second) {
         this.first = first;
         this.second = second;
-    }
-
-    public static <T, U> Pair<T, U> pair(T first, U second) {
-        return new Pair<>(first, second);
     }
 
     public T getFirst() {
@@ -29,9 +26,9 @@ public final class Pair<T, U> {
         if (this == obj) return true;
         if (!(obj instanceof Pair)) return false;
 
-        Pair<?, ?> pair = (Pair<?, ?>) obj;
-        return Objects.equals(first, pair.first)
-            && Objects.equals(second, pair.second);
+        Pair<?, ?> other = (Pair<?, ?>) obj;
+        return Objects.equals(first, other.first)
+            && Objects.equals(second, other.second);
     }
 
     @Override
