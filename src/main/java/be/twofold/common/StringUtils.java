@@ -6,33 +6,24 @@ public final class StringUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static boolean isEmpty(CharSequence cs) {
-        return cs == null || cs.length() == 0;
+    public static boolean isEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 
-    public static boolean isBlank(CharSequence cs) {
-        if (isEmpty(cs)) {
-            return true;
-        }
-
-        for (int i = 0; i < cs.length(); i++) {
-            if (!Character.isWhitespace(cs.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+    public static boolean isBlank(String s) {
+        return s == null || s.isBlank();
     }
 
     public static String nullToEmpty(String s) {
         return s == null ? "" : s;
     }
 
-    public static String emptyToNull(CharSequence cs) {
-        return isEmpty(cs) ? null : cs.toString();
+    public static String emptyToNull(String s) {
+        return isEmpty(s) ? null : s;
     }
 
-    public static String blankToNull(CharSequence cs) {
-        return isBlank(cs) ? null : cs.toString();
+    public static String blankToNull(String s) {
+        return isBlank(s) ? null : s;
     }
 
 }
