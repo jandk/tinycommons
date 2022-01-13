@@ -34,7 +34,7 @@ public abstract class Seq<T> implements Iterable<T> {
 
     public static <T> Seq<T> seq(Iterable<T> iterable) {
         Check.notNull(iterable, "iterable");
-        return new Seq<T>() {
+        return new Seq<>() {
             @Override
             public Iterator<T> iterator() {
                 return iterable.iterator();
@@ -271,13 +271,11 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
     public final List<T> toUnmodifiableList() {
-        List<T> list = toCollection(new ArrayList<>());
-        return CollectionUtils.toUnmodifiableList(list);
+        return List.copyOf(toList());
     }
 
     public final Set<T> toUnmodifiableSet() {
-        Set<T> set = toCollection(new HashSet<>());
-        return CollectionUtils.toUnmodifiableSet(set);
+        return Set.copyOf(toList());
     }
 
     public final <K, V, M extends Map<K, V>> M toMap(
