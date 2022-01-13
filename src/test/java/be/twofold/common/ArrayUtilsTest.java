@@ -3,7 +3,6 @@ package be.twofold.common;
 import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings({"RedundantCast", "ResultOfMethodCallIgnored"})
 public class ArrayUtilsTest {
@@ -446,9 +445,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.min(new byte[0]));
 
-        assertEquals((byte) 1, ArrayUtils.min((byte) 1));
-        assertEquals((byte) -2, ArrayUtils.min((byte) -2, (byte) -1, (byte) 0, (byte) 1, (byte) 2));
-        assertEquals((byte) -2, ArrayUtils.min((byte) 0, (byte) -1, (byte) -2, (byte) 1, (byte) 2));
+        assertThat(ArrayUtils.min((byte) 1)).isEqualTo((byte) 1);
+        assertThat(ArrayUtils.min((byte) -2, (byte) -1, (byte) 0, (byte) 1, (byte) 2)).isEqualTo((byte) -2);
+        assertThat(ArrayUtils.min((byte) 0, (byte) -1, (byte) -2, (byte) 1, (byte) 2)).isEqualTo((byte) -2);
     }
 
     @Test
@@ -458,9 +457,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.min(new short[0]));
 
-        assertEquals((short) 1, ArrayUtils.min((short) 1));
-        assertEquals((short) -2, ArrayUtils.min((short) -2, (short) -1, (short) 0, (short) 1, (short) 2));
-        assertEquals((short) -2, ArrayUtils.min((short) 0, (short) -1, (short) -2, (short) 1, (short) 2));
+        assertThat(ArrayUtils.min((short) 1)).isEqualTo((short) 1);
+        assertThat(ArrayUtils.min((short) -2, (short) -1, (short) 0, (short) 1, (short) 2)).isEqualTo((short) -2);
+        assertThat(ArrayUtils.min((short) 0, (short) -1, (short) -2, (short) 1, (short) 2)).isEqualTo((short) -2);
     }
 
     @Test
@@ -470,9 +469,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.min(new int[0]));
 
-        assertEquals(1, ArrayUtils.min(1));
-        assertEquals(-2, ArrayUtils.min(-2, -1, 0, 1, 2));
-        assertEquals(-2, ArrayUtils.min(0, -1, -2, 1, 2));
+        assertThat(ArrayUtils.min(1)).isEqualTo(1);
+        assertThat(ArrayUtils.min(-2, -1, 0, 1, 2)).isEqualTo(-2);
+        assertThat(ArrayUtils.min(0, -1, -2, 1, 2)).isEqualTo(-2);
     }
 
     @Test
@@ -482,9 +481,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.min(new long[0]));
 
-        assertEquals(1L, ArrayUtils.min(1L));
-        assertEquals(-2L, ArrayUtils.min(-2L, -1L, 0L, 1L, 2L));
-        assertEquals(-2L, ArrayUtils.min(0L, -1L, -2L, 1L, 2L));
+        assertThat(ArrayUtils.min(1L)).isEqualTo(1L);
+        assertThat(ArrayUtils.min(-2L, -1L, 0L, 1L, 2L)).isEqualTo(-2L);
+        assertThat(ArrayUtils.min(0L, -1L, -2L, 1L, 2L)).isEqualTo(-2L);
     }
 
     @Test
@@ -494,9 +493,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.min(new float[0]));
 
-        assertEquals(1f, ArrayUtils.min(1f));
-        assertEquals(-2f, ArrayUtils.min(-2f, -1f, 0f, 1f, 2f));
-        assertEquals(-2f, ArrayUtils.min(0f, -1f, -2f, 1f, 2f));
+        assertThat(ArrayUtils.min(1f)).isEqualTo(1f);
+        assertThat(ArrayUtils.min(-2f, -1f, 0f, 1f, 2f)).isEqualTo(-2f);
+        assertThat(ArrayUtils.min(0f, -1f, -2f, 1f, 2f)).isEqualTo(-2f);
     }
 
     @Test
@@ -506,9 +505,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.min(new double[0]));
 
-        assertEquals(1d, ArrayUtils.min(1d));
-        assertEquals(-2d, ArrayUtils.min(-2d, -1d, 0d, 1d, 2d));
-        assertEquals(-2d, ArrayUtils.min(0d, -1d, -2d, 1d, 2d));
+        assertThat(ArrayUtils.min(1d)).isEqualTo(1d);
+        assertThat(ArrayUtils.min(-2d, -1d, 0d, 1d, 2d)).isEqualTo(-2d);
+        assertThat(ArrayUtils.min(0d, -1d, -2d, 1d, 2d)).isEqualTo(-2d);
     }
 
     // endregion
@@ -522,9 +521,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.max(new byte[0]));
 
-        assertEquals((byte) 1, ArrayUtils.max((byte) 1));
-        assertEquals((byte) 2, ArrayUtils.max((byte) -2, (byte) -1, (byte) 0, (byte) 1, (byte) 2));
-        assertEquals((byte) 2, ArrayUtils.max((byte) -2, (byte) -1, (byte) 2, (byte) 0, (byte) 1));
+        assertThat(ArrayUtils.max((byte) 1)).isEqualTo((byte) 1);
+        assertThat(ArrayUtils.max((byte) -2, (byte) -1, (byte) 0, (byte) 1, (byte) 2)).isEqualTo((byte) 2);
+        assertThat(ArrayUtils.max((byte) -2, (byte) -1, (byte) 2, (byte) 0, (byte) 1)).isEqualTo((byte) 2);
     }
 
     @Test
@@ -534,9 +533,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.max(new short[0]));
 
-        assertEquals((short) 1, ArrayUtils.max((short) 1));
-        assertEquals((short) 2, ArrayUtils.max((short) -2, (short) -1, (short) 0, (short) 1, (short) 2));
-        assertEquals((short) 2, ArrayUtils.max((short) -2, (short) -1, (short) 2, (short) 0, (short) 1));
+        assertThat(ArrayUtils.max((short) 1)).isEqualTo((short) 1);
+        assertThat(ArrayUtils.max((short) -2, (short) -1, (short) 0, (short) 1, (short) 2)).isEqualTo((short) 2);
+        assertThat(ArrayUtils.max((short) -2, (short) -1, (short) 2, (short) 0, (short) 1)).isEqualTo((short) 2);
     }
 
     @Test
@@ -546,9 +545,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.max(new int[0]));
 
-        assertEquals(1, ArrayUtils.max(1));
-        assertEquals(2, ArrayUtils.max(-2, -1, 0, 1, 2));
-        assertEquals(2, ArrayUtils.max(-2, -1, 2, 0, 1));
+        assertThat(ArrayUtils.max(1)).isEqualTo(1);
+        assertThat(ArrayUtils.max(-2, -1, 0, 1, 2)).isEqualTo(2);
+        assertThat(ArrayUtils.max(-2, -1, 2, 0, 1)).isEqualTo(2);
     }
 
     @Test
@@ -558,9 +557,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.max(new long[0]));
 
-        assertEquals(1L, ArrayUtils.max(1L));
-        assertEquals(2L, ArrayUtils.max(-2L, -1L, 0L, 1L, 2L));
-        assertEquals(2L, ArrayUtils.max(-2L, -1L, 2L, 0L, 1L));
+        assertThat(ArrayUtils.max(1L)).isEqualTo(1L);
+        assertThat(ArrayUtils.max(-2L, -1L, 0L, 1L, 2L)).isEqualTo(2L);
+        assertThat(ArrayUtils.max(-2L, -1L, 2L, 0L, 1L)).isEqualTo(2L);
     }
 
     @Test
@@ -570,9 +569,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.max(new float[0]));
 
-        assertEquals(1f, ArrayUtils.max(1f));
-        assertEquals(2f, ArrayUtils.max(-2f, -1f, 0f, 1f, 2f));
-        assertEquals(2f, ArrayUtils.max(-2f, -1f, 2f, 0f, 1f));
+        assertThat(ArrayUtils.max(1f)).isEqualTo(1f);
+        assertThat(ArrayUtils.max(-2f, -1f, 0f, 1f, 2f)).isEqualTo(2f);
+        assertThat(ArrayUtils.max(-2f, -1f, 2f, 0f, 1f)).isEqualTo(2f);
     }
 
     @Test
@@ -582,9 +581,9 @@ public class ArrayUtilsTest {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> ArrayUtils.max(new double[0]));
 
-        assertEquals(1d, ArrayUtils.max(1d));
-        assertEquals(2d, ArrayUtils.max(-2d, -1d, 0d, 1d, 2d));
-        assertEquals(2d, ArrayUtils.max(-2d, -1d, 2d, 0d, 1d));
+        assertThat(ArrayUtils.max(1d)).isEqualTo(1d);
+        assertThat(ArrayUtils.max(-2d, -1d, 0d, 1d, 2d)).isEqualTo(2d);
+        assertThat(ArrayUtils.max(-2d, -1d, 2d, 0d, 1d)).isEqualTo(2d);
     }
 
     // endregion
