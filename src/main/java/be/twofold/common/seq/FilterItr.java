@@ -15,7 +15,7 @@ final class FilterItr<T> implements Iterator<T> {
     }
 
     @Override
-    public final boolean hasNext() {
+    public boolean hasNext() {
         if (state != 0) {
             return state == 1;
         }
@@ -34,7 +34,7 @@ final class FilterItr<T> implements Iterator<T> {
     }
 
     @Override
-    public final T next() {
+    public T next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
