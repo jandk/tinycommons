@@ -1,6 +1,4 @@
 module tinycommons {
-    requires java.base;
-
     // Only used by the ArrayUtilsGenerator in test
     requires java.compiler;
 
