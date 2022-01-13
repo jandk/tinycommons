@@ -84,7 +84,7 @@ public final class ArrayUtils {
 
 
     public static int indexOf(boolean[] array, boolean value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from; i < to; i++) {
             if (array[i] == value) {
@@ -95,7 +95,7 @@ public final class ArrayUtils {
     }
 
     public static int indexOf(byte[] array, byte value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from; i < to; i++) {
             if (array[i] == value) {
@@ -106,7 +106,7 @@ public final class ArrayUtils {
     }
 
     public static int indexOf(char[] array, char value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from; i < to; i++) {
             if (array[i] == value) {
@@ -117,7 +117,7 @@ public final class ArrayUtils {
     }
 
     public static int indexOf(short[] array, short value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from; i < to; i++) {
             if (array[i] == value) {
@@ -128,7 +128,7 @@ public final class ArrayUtils {
     }
 
     public static int indexOf(int[] array, int value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from; i < to; i++) {
             if (array[i] == value) {
@@ -139,7 +139,7 @@ public final class ArrayUtils {
     }
 
     public static int indexOf(long[] array, long value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from; i < to; i++) {
             if (array[i] == value) {
@@ -150,7 +150,7 @@ public final class ArrayUtils {
     }
 
     public static int indexOf(float[] array, float value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from; i < to; i++) {
             if (Float.floatToIntBits(array[i]) == Float.floatToIntBits(value)) {
@@ -161,7 +161,7 @@ public final class ArrayUtils {
     }
 
     public static int indexOf(double[] array, double value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from; i < to; i++) {
             if (Double.doubleToLongBits(array[i]) == Double.doubleToLongBits(value)) {
@@ -206,7 +206,7 @@ public final class ArrayUtils {
 
 
     public static int lastIndexOf(boolean[] array, boolean value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = to - 1; i >= from; i--) {
             if (array[i] == value) {
@@ -217,7 +217,7 @@ public final class ArrayUtils {
     }
 
     public static int lastIndexOf(byte[] array, byte value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = to - 1; i >= from; i--) {
             if (array[i] == value) {
@@ -228,7 +228,7 @@ public final class ArrayUtils {
     }
 
     public static int lastIndexOf(char[] array, char value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = to - 1; i >= from; i--) {
             if (array[i] == value) {
@@ -239,7 +239,7 @@ public final class ArrayUtils {
     }
 
     public static int lastIndexOf(short[] array, short value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = to - 1; i >= from; i--) {
             if (array[i] == value) {
@@ -250,7 +250,7 @@ public final class ArrayUtils {
     }
 
     public static int lastIndexOf(int[] array, int value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = to - 1; i >= from; i--) {
             if (array[i] == value) {
@@ -261,7 +261,7 @@ public final class ArrayUtils {
     }
 
     public static int lastIndexOf(long[] array, long value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = to - 1; i >= from; i--) {
             if (array[i] == value) {
@@ -272,7 +272,7 @@ public final class ArrayUtils {
     }
 
     public static int lastIndexOf(float[] array, float value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = to - 1; i >= from; i--) {
             if (Float.floatToIntBits(array[i]) == Float.floatToIntBits(value)) {
@@ -283,7 +283,7 @@ public final class ArrayUtils {
     }
 
     public static int lastIndexOf(double[] array, double value, int from, int to) {
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = to - 1; i >= from; i--) {
             if (Double.doubleToLongBits(array[i]) == Double.doubleToLongBits(value)) {
@@ -466,7 +466,7 @@ public final class ArrayUtils {
 
     public static void reverse(boolean[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
             boolean tmp = array[i];
@@ -477,7 +477,7 @@ public final class ArrayUtils {
 
     public static void reverse(byte[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
             byte tmp = array[i];
@@ -488,7 +488,7 @@ public final class ArrayUtils {
 
     public static void reverse(char[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
             char tmp = array[i];
@@ -499,7 +499,7 @@ public final class ArrayUtils {
 
     public static void reverse(short[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
             short tmp = array[i];
@@ -510,7 +510,7 @@ public final class ArrayUtils {
 
     public static void reverse(int[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
             int tmp = array[i];
@@ -521,7 +521,7 @@ public final class ArrayUtils {
 
     public static void reverse(long[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
             long tmp = array[i];
@@ -532,7 +532,7 @@ public final class ArrayUtils {
 
     public static void reverse(float[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
             float tmp = array[i];
@@ -543,7 +543,7 @@ public final class ArrayUtils {
 
     public static void reverse(double[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
 
         for (int i = from, j = to - 1; i < j; i++, j--) {
             double tmp = array[i];
@@ -591,49 +591,49 @@ public final class ArrayUtils {
 
     public static void sortDescending(byte[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(char[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(short[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(int[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(long[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(float[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }
 
     public static void sortDescending(double[] array, int from, int to) {
         Check.notNull(array, "array");
-        Check.positions(from, to, array.length);
+        Check.fromToIndex(from, to, array.length);
         Arrays.sort(array, from, to);
         reverse(array, from, to);
     }

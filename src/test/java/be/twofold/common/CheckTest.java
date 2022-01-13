@@ -25,9 +25,9 @@ public class CheckTest {
             .isThrownBy(() -> Check.notNull(null, "object"))
             .withMessage("object");
 
-        assertThat(Check.notNull(object, "%s is null", "object")).isSameAs(object);
+        assertThat(Check.notNull(object, () -> String.format("%s is null", "object"))).isSameAs(object);
         assertThatNullPointerException()
-            .isThrownBy(() -> Check.notNull(null, "%s is null", "object"))
+            .isThrownBy(() -> Check.notNull(null, () -> String.format("%s is null", "object")))
             .withMessage("object is null");
     }
 
@@ -45,9 +45,9 @@ public class CheckTest {
             .withMessage("failure");
 
         assertThatNoException()
-            .isThrownBy(() -> Check.argument(true, "failure %s", "argument"));
+            .isThrownBy(() -> Check.argument(true, () -> String.format("failure %s", "argument")));
         assertThatIllegalArgumentException()
-            .isThrownBy(() -> Check.argument(false, "failure %s", "argument"))
+            .isThrownBy(() -> Check.argument(false, () -> String.format("failure %s", "argument")))
             .withMessage("failure argument");
     }
 
@@ -65,9 +65,9 @@ public class CheckTest {
             .withMessage("failure");
 
         assertThatNoException()
-            .isThrownBy(() -> Check.state(true, "failure %s", "state"));
+            .isThrownBy(() -> Check.state(true, () -> String.format("failure %s", "state")));
         assertThatIllegalStateException()
-            .isThrownBy(() -> Check.state(false, "failure %s", "state"))
+            .isThrownBy(() -> Check.state(false, () -> String.format("failure %s", "state")))
             .withMessage("failure state");
     }
 
@@ -88,41 +88,23 @@ public class CheckTest {
             .isInstanceOf(IndexOutOfBoundsException.class); // index >= size
     }
 
-
     @Test
-    public void testCheckPositionShouldPass() {
-        assertThat(Check.position(0, 0)).isEqualTo(0);
-        assertThat(Check.position(0, 1)).isEqualTo(0);
-        assertThat(Check.position(1, 1)).isEqualTo(1);
+    public void testCheckFromToIndexShouldPass() {
+        Check.fromToIndex(0, 0, 0);
+        Check.fromToIndex(0, 0, 1);
+        Check.fromToIndex(0, 1, 1);
+        Check.fromToIndex(1, 1, 1);
     }
 
     @Test
-    public void testCheckPositionShouldFail() {
-        assertThatThrownBy(() -> Check.position(1, -1))
+    public void testCheckFromToIndexShouldFail() {
+        assertThatThrownBy(() -> Check.fromToIndex(1, 1, -1))
             .isInstanceOf(IndexOutOfBoundsException.class); // negative size
-        assertThatThrownBy(() -> Check.position(-1, 1))
-            .isInstanceOf(IndexOutOfBoundsException.class); // negative index
-        assertThatThrownBy(() -> Check.position(2, 1))
-            .isInstanceOf(IndexOutOfBoundsException.class); // index > size
-    }
-
-    @Test
-    public void testCheckPositionsShouldPass() {
-        Check.positions(0, 0, 0);
-        Check.positions(0, 0, 1);
-        Check.positions(0, 1, 1);
-        Check.positions(1, 1, 1);
-    }
-
-    @Test
-    public void testCheckPositionsShouldFail() {
-        assertThatThrownBy(() -> Check.positions(1, 1, -1))
-            .isInstanceOf(IndexOutOfBoundsException.class); // negative size
-        assertThatThrownBy(() -> Check.positions(-1, 1, 1))
+        assertThatThrownBy(() -> Check.fromToIndex(-1, 1, 1))
             .isInstanceOf(IndexOutOfBoundsException.class); // negative start
-        assertThatThrownBy(() -> Check.positions(0, 2, 1))
+        assertThatThrownBy(() -> Check.fromToIndex(0, 2, 1))
             .isInstanceOf(IndexOutOfBoundsException.class); //   end >  size
-        assertThatThrownBy(() -> Check.positions(1, 0, 1))
+        assertThatThrownBy(() -> Check.fromToIndex(1, 0, 1))
             .isInstanceOf(IndexOutOfBoundsException.class); // start >= size
     }
 

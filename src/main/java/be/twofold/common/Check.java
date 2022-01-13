@@ -1,5 +1,8 @@
 package be.twofold.common;
 
+import java.util.*;
+import java.util.function.*;
+
 /**
  * Misc routines for checking arguments to functions.
  * <p>
@@ -14,24 +17,15 @@ public final class Check {
     }
 
     public static <T> T notNull(T obj) {
-        if (obj == null) {
-            throw new NullPointerException();
-        }
-        return obj;
+        return Objects.requireNonNull(obj);
     }
 
     public static <T> T notNull(T obj, String message) {
-        if (obj == null) {
-            throw new NullPointerException(message);
-        }
-        return obj;
+        return Objects.requireNonNull(obj, message);
     }
 
-    public static <T> T notNull(T obj, String message, Object... args) {
-        if (obj == null) {
-            throw new NullPointerException(String.format(message, args));
-        }
-        return obj;
+    public static <T> T notNull(T obj, Supplier<String> messageSupplier) {
+        return Objects.requireNonNull(obj, messageSupplier);
     }
 
     public static void argument(boolean expression) {
@@ -46,9 +40,9 @@ public final class Check {
         }
     }
 
-    public static void argument(boolean expression, String message, Object... args) {
+    public static void argument(boolean expression, Supplier<String> messageSupplier) {
         if (!expression) {
-            throw new IllegalArgumentException(String.format(message, args));
+            throw new IllegalArgumentException(messageSupplier == null ? null : messageSupplier.get());
         }
     }
 
@@ -64,31 +58,18 @@ public final class Check {
         }
     }
 
-    public static void state(boolean expression, String message, Object... args) {
+    public static void state(boolean expression, Supplier<String> messageSupplier) {
         if (!expression) {
-            throw new IllegalStateException(String.format(message, args));
+            throw new IllegalStateException(messageSupplier == null ? null : messageSupplier.get());
         }
     }
 
     public static int index(int index, int size) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        return index;
+        return Objects.checkIndex(index, size);
     }
 
-    public static int position(int index, int size) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException();
-        }
-        return index;
-    }
-
-    public static int positions(int from, int to, int size) {
-        if (from < 0 || from > to || to > size) {
-            throw new IndexOutOfBoundsException();
-        }
-        return from;
+    public static int fromToIndex(int from, int to, int size) {
+        return Objects.checkFromToIndex(from, to, size);
     }
 
 }
