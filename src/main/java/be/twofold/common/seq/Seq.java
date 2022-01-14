@@ -1,6 +1,7 @@
 package be.twofold.common.seq;
 
 import be.twofold.common.*;
+import be.twofold.common.seq.internal.*;
 
 import java.util.*;
 import java.util.Map.*;

@@ -1,15 +1,15 @@
-package be.twofold.common.seq;
+package be.twofold.common.seq.internal;
 
 import java.util.*;
 import java.util.function.*;
 
-final class FlatMapItr<E, R> implements Iterator<R> {
+public final class FlatMapItr<E, R> implements Iterator<R> {
 
     private final Iterator<E> iterator;
     private final Function<? super E, ? extends Iterable<? extends R>> mapper;
     private Iterator<? extends R> itemIterator = Collections.emptyIterator();
 
-    FlatMapItr(Iterator<E> iterator, Function<? super E, ? extends Iterable<? extends R>> mapper) {
+    public FlatMapItr(Iterator<E> iterator, Function<? super E, ? extends Iterable<? extends R>> mapper) {
         this.iterator = iterator;
         this.mapper = mapper;
     }
