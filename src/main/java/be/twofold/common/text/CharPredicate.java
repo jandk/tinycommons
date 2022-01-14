@@ -1,6 +1,6 @@
 package be.twofold.common.text;
 
-import be.twofold.common.text.predicates.*;
+import be.twofold.common.text.internal.*;
 
 import java.util.function.*;
 

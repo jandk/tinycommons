@@ -1,4 +1,4 @@
-package be.twofold.common.text.predicates;
+package be.twofold.common.text.internal;
 
 import be.twofold.common.text.*;
 
