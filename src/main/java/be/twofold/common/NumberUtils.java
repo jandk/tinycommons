@@ -8,6 +8,8 @@ public final class NumberUtils {
         throw new UnsupportedOperationException();
     }
 
+    // region max
+
     public static byte max(byte... array) {
         check(array);
 
@@ -86,6 +88,10 @@ public final class NumberUtils {
         return max;
     }
 
+    // endregion
+
+    // region min
+
     public static byte min(byte... array) {
         check(array);
 
@@ -163,6 +169,85 @@ public final class NumberUtils {
 
         return min;
     }
+
+    // endregion
+
+    // region tryParse
+
+    public static Byte tryParseByte(String s) {
+        if (s == null) {
+            return null;
+        }
+
+        try {
+            return Byte.parseByte(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public static Short tryParseShort(String s) {
+        if (s == null) {
+            return null;
+        }
+
+        try {
+            return Short.parseShort(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public static Integer tryParseInt(String s) {
+        if (s == null) {
+            return null;
+        }
+
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public static Long tryParseLong(String s) {
+        if (s == null) {
+            return null;
+        }
+
+        try {
+            return Long.parseLong(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public static Float tryParseFloat(String s) {
+        if (s == null) {
+            return null;
+        }
+
+        try {
+            return Float.parseFloat(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public static Double tryParseDouble(String s) {
+        if (s == null) {
+            return null;
+        }
+
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            return null;
+
+        }
+    }
+
+    // endregion
 
     private static void check(Object array) {
         Check.notNull(array, "array");

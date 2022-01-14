@@ -4,13 +4,58 @@ import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class NumberUtilsTest {
+class NumberUtilsTest {
 
+    // region testTryParse
+
+    @Test
+    void testTryParseByte() {
+        assertThat(NumberUtils.tryParseByte(null)).isNull();
+        assertThat(NumberUtils.tryParseByte("foo")).isNull();
+        assertThat(NumberUtils.tryParseByte("123")).isEqualTo((byte) 123);
+    }
+
+    @Test
+    void testTryParseShort() {
+        assertThat(NumberUtils.tryParseShort(null)).isNull();
+        assertThat(NumberUtils.tryParseShort("foo")).isNull();
+        assertThat(NumberUtils.tryParseShort("12345")).isEqualTo((short) 12345);
+    }
+
+    @Test
+    void testTryParseInt() {
+        assertThat(NumberUtils.tryParseInt(null)).isNull();
+        assertThat(NumberUtils.tryParseInt("foo")).isNull();
+        assertThat(NumberUtils.tryParseInt("123456789")).isEqualTo(123456789);
+    }
+
+    @Test
+    void testTryParseLong() {
+        assertThat(NumberUtils.tryParseLong(null)).isNull();
+        assertThat(NumberUtils.tryParseLong("foo")).isNull();
+        assertThat(NumberUtils.tryParseLong("123456789012")).isEqualTo(123456789012L);
+    }
+
+    @Test
+    void testTryParseFloat() {
+        assertThat(NumberUtils.tryParseFloat(null)).isNull();
+        assertThat(NumberUtils.tryParseFloat("foo")).isNull();
+        assertThat(NumberUtils.tryParseFloat("123.456")).isEqualTo(123.456f);
+    }
+
+    @Test
+    void testTryParseDouble() {
+        assertThat(NumberUtils.tryParseDouble(null)).isNull();
+        assertThat(NumberUtils.tryParseDouble("foo")).isNull();
+        assertThat(NumberUtils.tryParseDouble("123.456")).isEqualTo(123.456);
+    }
+
+    // endregion
 
     // region testMin
 
     @Test
-    public void testMinByte() {
+    void testMinByte() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.min((byte[]) null));
         assertThatIllegalArgumentException()
@@ -22,7 +67,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMinShort() {
+    void testMinShort() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.min((short[]) null));
         assertThatIllegalArgumentException()
@@ -34,7 +79,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMinInt() {
+    void testMinInt() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.min((int[]) null));
         assertThatIllegalArgumentException()
@@ -46,7 +91,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMinLong() {
+    void testMinLong() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.min((long[]) null));
         assertThatIllegalArgumentException()
@@ -58,7 +103,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMinFloat() {
+    void testMinFloat() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.min((float[]) null));
         assertThatIllegalArgumentException()
@@ -70,7 +115,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMinDouble() {
+    void testMinDouble() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.min((double[]) null));
         assertThatIllegalArgumentException()
@@ -86,7 +131,7 @@ public class NumberUtilsTest {
     // region testMax
 
     @Test
-    public void testMaxByte() {
+    void testMaxByte() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.max((byte[]) null));
         assertThatIllegalArgumentException()
@@ -98,7 +143,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMaxShort() {
+    void testMaxShort() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.max((short[]) null));
         assertThatIllegalArgumentException()
@@ -110,7 +155,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMaxInt() {
+    void testMaxInt() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.max((int[]) null));
         assertThatIllegalArgumentException()
@@ -122,7 +167,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMaxLong() {
+    void testMaxLong() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.max((long[]) null));
         assertThatIllegalArgumentException()
@@ -134,7 +179,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMaxFloat() {
+    void testMaxFloat() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.max((float[]) null));
         assertThatIllegalArgumentException()
@@ -146,7 +191,7 @@ public class NumberUtilsTest {
     }
 
     @Test
-    public void testMaxDouble() {
+    void testMaxDouble() {
         assertThatNullPointerException()
             .isThrownBy(() -> NumberUtils.max((double[]) null));
         assertThatIllegalArgumentException()
