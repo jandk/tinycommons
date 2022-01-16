@@ -3,6 +3,11 @@ package be.twofold.common;
 import java.lang.reflect.*;
 import java.util.*;
 
+/**
+ * Operations on arrays, mostly primitive arrays.
+ * <p>
+ * {@code null} is not allowed as a parameter, and will throw {@link NullPointerException}
+ */
 public final class ArrayUtils {
 
     private static final int NOT_FOUND = -1;
@@ -13,41 +18,101 @@ public final class ArrayUtils {
 
     // region contains
 
+    /**
+     * Check if the value is present in the array.
+     *
+     * @param array An array of values
+     * @param value A value to find
+     * @return {@code true} if the value is present
+     */
     public static boolean contains(byte[] array, byte value) {
         check(array);
         return indexOf(array, value) >= 0;
     }
 
+    /**
+     * Check if the value is present in the array.
+     *
+     * @param array An array of values
+     * @param value A value to find
+     * @return {@code true} if the value is present
+     */
     public static boolean contains(short[] array, short value) {
         check(array);
         return indexOf(array, value) >= 0;
     }
 
+    /**
+     * Check if the value is present in the array.
+     *
+     * @param array An array of values
+     * @param value A value to find
+     * @return {@code true} if the value is present
+     */
     public static boolean contains(int[] array, int value) {
         check(array);
         return indexOf(array, value) >= 0;
     }
 
+    /**
+     * Check if the value is present in the array.
+     *
+     * @param array An array of values
+     * @param value A value to find
+     * @return {@code true} if the value is present
+     */
     public static boolean contains(long[] array, long value) {
         check(array);
         return indexOf(array, value) >= 0;
     }
 
+    /**
+     * Check if the value is present in the array.
+     * <p>
+     * Note: {@code NaN} will work as well.
+     *
+     * @param array An array of values
+     * @param value A value to find
+     * @return {@code true} if the value is present
+     */
     public static boolean contains(float[] array, float value) {
         check(array);
         return indexOf(array, value) >= 0;
     }
 
+    /**
+     * Check if the value is present in the array.
+     * <p>
+     * Note: {@code NaN} will work as well.
+     *
+     * @param array An array of values
+     * @param value A value to find
+     * @return {@code true} if the value is present
+     */
     public static boolean contains(double[] array, double value) {
         check(array);
         return indexOf(array, value) >= 0;
     }
 
+    /**
+     * Check if the value is present in the array.
+     *
+     * @param array An array of values
+     * @param value A value to find
+     * @return {@code true} if the value is present
+     */
     public static boolean contains(char[] array, char value) {
         check(array);
         return indexOf(array, value) >= 0;
     }
 
+    /**
+     * Check if the value is present in the array.
+     *
+     * @param array An array of values
+     * @param value A value to find
+     * @return {@code true} if the value is present
+     */
     public static boolean contains(boolean[] array, boolean value) {
         check(array);
         return indexOf(array, value) >= 0;
@@ -57,11 +122,31 @@ public final class ArrayUtils {
 
     // region indexOf
 
+    /**
+     * Finds the index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(byte[] array, byte value) {
         check(array);
         return indexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(byte[] array, byte value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -75,11 +160,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(short[] array, short value) {
         check(array);
         return indexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(short[] array, short value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -93,11 +198,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(int[] array, int value) {
         check(array);
         return indexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(int[] array, int value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -111,11 +236,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(long[] array, long value) {
         check(array);
         return indexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(long[] array, long value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -129,11 +274,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(float[] array, float value) {
         check(array);
         return indexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(float[] array, float value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -147,11 +312,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(double[] array, double value) {
         check(array);
         return indexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(double[] array, double value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -165,11 +350,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(char[] array, char value) {
         check(array);
         return indexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(char[] array, char value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -183,11 +388,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(boolean[] array, boolean value) {
         check(array);
         return indexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int indexOf(boolean[] array, boolean value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -204,11 +429,31 @@ public final class ArrayUtils {
 
     // region lastIndexOf
 
+    /**
+     * Finds the last index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through, backwards
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(byte[] array, byte value) {
         check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the last index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through, backwards
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(byte[] array, byte value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -222,11 +467,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the last index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through, backwards
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(short[] array, short value) {
         check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the last index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through, backwards
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(short[] array, short value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -240,11 +505,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the last index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through, backwards
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(int[] array, int value) {
         check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the last index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through, backwards
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(int[] array, int value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -258,11 +543,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the last index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through, backwards
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(long[] array, long value) {
         check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the last index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through, backwards
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(long[] array, long value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -276,11 +581,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the last index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through, backwards
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(float[] array, float value) {
         check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the last index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through, backwards
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(float[] array, float value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -294,11 +619,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the last index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through, backwards
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(double[] array, double value) {
         check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the last index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through, backwards
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(double[] array, double value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -312,11 +657,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the last index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through, backwards
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(char[] array, char value) {
         check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the last index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through, backwards
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(char[] array, char value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
@@ -330,11 +695,31 @@ public final class ArrayUtils {
     }
 
 
+    /**
+     * Finds the last index of the value in the array.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array The array to search through, backwards
+     * @param value The value to find
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(boolean[] array, boolean value) {
         check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
+    /**
+     * Finds the last index of the value in the array, in the specified range.
+     * <p>
+     * If the value does not appear, {@code -1} is returned.
+     *
+     * @param array     The array to search through, backwards
+     * @param value     The value to find
+     * @param fromIndex The index to start searching at
+     * @param toIndex   The index to end searching at
+     * @return The index, or {@code -1} if not found
+     */
     public static int lastIndexOf(boolean[] array, boolean value, int fromIndex, int toIndex) {
         check(array, fromIndex, toIndex);
 
