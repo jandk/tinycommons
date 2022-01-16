@@ -5,163 +5,127 @@ import org.junit.jupiter.api.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SuppressWarnings("RedundantCast")
-public class ArrayUtilsTest {
+class ArrayUtilsTest {
 
-    private static final float[] SpecialFloats = new float[]{
-        Float.NaN,
-        Float.POSITIVE_INFINITY,
-        Float.NEGATIVE_INFINITY,
-        Float.MAX_VALUE,
-        -Float.MAX_VALUE,
-        Float.MIN_VALUE,
-        -Float.MIN_VALUE,
-        Float.MIN_NORMAL,
-        -Float.MIN_NORMAL,
-        0f,
-        -0f,
-    };
-
-    private static final double[] SpecialDoubles = new double[]{
-        Double.NaN,
-        Double.POSITIVE_INFINITY,
-        Double.NEGATIVE_INFINITY,
-        Double.MAX_VALUE,
-        -Double.MAX_VALUE,
-        Double.MIN_VALUE,
-        -Double.MIN_VALUE,
-        Double.MIN_NORMAL,
-        -Double.MIN_NORMAL,
-        0d,
-        -0d,
-    };
+    public static final float[] SpecialFloats = {Float.NEGATIVE_INFINITY, Float.NaN, Float.POSITIVE_INFINITY};
+    public static final double[] SpecialDoubles = {Double.NEGATIVE_INFINITY, Double.NaN, Double.POSITIVE_INFINITY};
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         TestUtils.testConstructor(ArrayUtils.class);
     }
 
     // region testContains
 
     @Test
-    public void testContainsByte() {
+    void testContainsByte() {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.contains((byte[]) null, (byte) 0));
 
-        assertThat(ArrayUtils.contains(new byte[]{}, (byte) 1)).isFalse();
-        assertThat(ArrayUtils.contains(new byte[]{1}, (byte) 2)).isFalse();
-        assertThat(ArrayUtils.contains(new byte[]{-1}, (byte) -1)).isTrue();
-        assertThat(ArrayUtils.contains(new byte[]{2, 3, 4}, (byte) 1)).isFalse();
-        assertThat(ArrayUtils.contains(new byte[]{2, 3, 4}, (byte) 2)).isTrue();
-        assertThat(ArrayUtils.contains(new byte[]{2, 3, 4}, (byte) 3)).isTrue();
-        assertThat(ArrayUtils.contains(new byte[]{2, 3, 4}, (byte) 4)).isTrue();
+        byte[] array = {0, 1, 2, 3};
+        assertThat(ArrayUtils.contains(array, (byte) 0)).isTrue();
+        assertThat(ArrayUtils.contains(array, (byte) 1)).isTrue();
+        assertThat(ArrayUtils.contains(array, (byte) 2)).isTrue();
+        assertThat(ArrayUtils.contains(array, (byte) 3)).isTrue();
+        assertThat(ArrayUtils.contains(array, (byte) 9)).isFalse();
     }
 
     @Test
-    public void testContainsShort() {
+    void testContainsShort() {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.contains((short[]) null, (short) 0));
 
-        assertThat(ArrayUtils.contains(new short[]{}, (short) 1)).isFalse();
-        assertThat(ArrayUtils.contains(new short[]{1}, (short) 2)).isFalse();
-        assertThat(ArrayUtils.contains(new short[]{-1}, (short) -1)).isTrue();
-        assertThat(ArrayUtils.contains(new short[]{2, 3, 4}, (short) 1)).isFalse();
-        assertThat(ArrayUtils.contains(new short[]{2, 3, 4}, (short) 2)).isTrue();
-        assertThat(ArrayUtils.contains(new short[]{2, 3, 4}, (short) 3)).isTrue();
-        assertThat(ArrayUtils.contains(new short[]{2, 3, 4}, (short) 4)).isTrue();
+        short[] array = {0, 1, 2, 3};
+        assertThat(ArrayUtils.contains(array, (short) 0)).isTrue();
+        assertThat(ArrayUtils.contains(array, (short) 1)).isTrue();
+        assertThat(ArrayUtils.contains(array, (short) 2)).isTrue();
+        assertThat(ArrayUtils.contains(array, (short) 3)).isTrue();
+        assertThat(ArrayUtils.contains(array, (short) 9)).isFalse();
     }
 
     @Test
-    public void testContainsInt() {
+    void testContainsInt() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.contains((int[]) null, 0));
+            .isThrownBy(() -> ArrayUtils.contains((int[]) null, (int) 0));
 
-        assertThat(ArrayUtils.contains(new int[]{}, 1)).isFalse();
-        assertThat(ArrayUtils.contains(new int[]{1}, 2)).isFalse();
-        assertThat(ArrayUtils.contains(new int[]{-1}, -1)).isTrue();
-        assertThat(ArrayUtils.contains(new int[]{2, 3, 4}, 1)).isFalse();
-        assertThat(ArrayUtils.contains(new int[]{2, 3, 4}, 2)).isTrue();
-        assertThat(ArrayUtils.contains(new int[]{2, 3, 4}, 3)).isTrue();
-        assertThat(ArrayUtils.contains(new int[]{2, 3, 4}, 4)).isTrue();
+        int[] array = {0, 1, 2, 3};
+        assertThat(ArrayUtils.contains(array, (int) 0)).isTrue();
+        assertThat(ArrayUtils.contains(array, (int) 1)).isTrue();
+        assertThat(ArrayUtils.contains(array, (int) 2)).isTrue();
+        assertThat(ArrayUtils.contains(array, (int) 3)).isTrue();
+        assertThat(ArrayUtils.contains(array, (int) 9)).isFalse();
     }
 
     @Test
-    public void testContainsLong() {
+    void testContainsLong() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.contains((long[]) null, 0L));
+            .isThrownBy(() -> ArrayUtils.contains((long[]) null, (long) 0));
 
-        assertThat(ArrayUtils.contains(new long[]{}, 1L)).isFalse();
-        assertThat(ArrayUtils.contains(new long[]{1L}, 2L)).isFalse();
-        assertThat(ArrayUtils.contains(new long[]{-1L}, -1L)).isTrue();
-        assertThat(ArrayUtils.contains(new long[]{2L, 3L, 4L}, 1L)).isFalse();
-        assertThat(ArrayUtils.contains(new long[]{2L, 3L, 4L}, 2L)).isTrue();
-        assertThat(ArrayUtils.contains(new long[]{2L, 3L, 4L}, 3L)).isTrue();
-        assertThat(ArrayUtils.contains(new long[]{2L, 3L, 4L}, 4L)).isTrue();
+        long[] array = {0, 1, 2, 3};
+        assertThat(ArrayUtils.contains(array, (long) 0)).isTrue();
+        assertThat(ArrayUtils.contains(array, (long) 1)).isTrue();
+        assertThat(ArrayUtils.contains(array, (long) 2)).isTrue();
+        assertThat(ArrayUtils.contains(array, (long) 3)).isTrue();
+        assertThat(ArrayUtils.contains(array, (long) 9)).isFalse();
     }
 
     @Test
-    public void testContainsFloat() {
+    void testContainsFloat() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.contains((float[]) null, 0f));
+            .isThrownBy(() -> ArrayUtils.contains((float[]) null, (float) 0));
 
-        assertThat(ArrayUtils.contains(new float[]{}, 1f)).isFalse();
-        assertThat(ArrayUtils.contains(new float[]{1f}, 2f)).isFalse();
-        assertThat(ArrayUtils.contains(new float[]{-1f}, -1f)).isTrue();
-        assertThat(ArrayUtils.contains(new float[]{2f, 3f, 4f}, 1f)).isFalse();
-        assertThat(ArrayUtils.contains(new float[]{2f, 3f, 4f}, 2f)).isTrue();
-        assertThat(ArrayUtils.contains(new float[]{2f, 3f, 4f}, 3f)).isTrue();
-        assertThat(ArrayUtils.contains(new float[]{2f, 3f, 4f}, 4f)).isTrue();
+        float[] array = {0, 1, 2, 3};
+        assertThat(ArrayUtils.contains(array, (float) 0)).isTrue();
+        assertThat(ArrayUtils.contains(array, (float) 1)).isTrue();
+        assertThat(ArrayUtils.contains(array, (float) 2)).isTrue();
+        assertThat(ArrayUtils.contains(array, (float) 3)).isTrue();
+        assertThat(ArrayUtils.contains(array, (float) 9)).isFalse();
 
-        for (float value : SpecialFloats) {
-            assertThat(ArrayUtils.contains(new float[]{5f, value}, value))
-                .withFailMessage(Float.toString(value))
-                .isTrue();
-        }
+        float[] special = SpecialFloats;
+        assertThat(ArrayUtils.contains(special, Float.NEGATIVE_INFINITY)).isTrue();
+        assertThat(ArrayUtils.contains(special, Float.POSITIVE_INFINITY)).isTrue();
+        assertThat(ArrayUtils.contains(special, Float.NaN)).isTrue();
     }
 
     @Test
-    public void testContainsDouble() {
+    void testContainsDouble() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.contains((double[]) null, 0d));
+            .isThrownBy(() -> ArrayUtils.contains((double[]) null, (double) 0));
 
-        assertThat(ArrayUtils.contains(new double[]{}, 1d)).isFalse();
-        assertThat(ArrayUtils.contains(new double[]{1f}, 2d)).isFalse();
-        assertThat(ArrayUtils.contains(new double[]{-1f}, -1d)).isTrue();
-        assertThat(ArrayUtils.contains(new double[]{2d, 3d, 4d}, 1d)).isFalse();
-        assertThat(ArrayUtils.contains(new double[]{2d, 3d, 4d}, 2d)).isTrue();
-        assertThat(ArrayUtils.contains(new double[]{2d, 3d, 4d}, 3d)).isTrue();
-        assertThat(ArrayUtils.contains(new double[]{2d, 3d, 4d}, 4d)).isTrue();
+        double[] array = {0, 1, 2, 3};
+        assertThat(ArrayUtils.contains(array, (double) 0)).isTrue();
+        assertThat(ArrayUtils.contains(array, (double) 1)).isTrue();
+        assertThat(ArrayUtils.contains(array, (double) 2)).isTrue();
+        assertThat(ArrayUtils.contains(array, (double) 3)).isTrue();
+        assertThat(ArrayUtils.contains(array, (double) 9)).isFalse();
 
-        for (double value : SpecialDoubles) {
-            assertThat(ArrayUtils.contains(new double[]{5d, value}, value))
-                .withFailMessage(Double.toString(value))
-                .isTrue();
-        }
+        double[] special = SpecialDoubles;
+        assertThat(ArrayUtils.contains(special, Double.NEGATIVE_INFINITY)).isTrue();
+        assertThat(ArrayUtils.contains(special, Double.POSITIVE_INFINITY)).isTrue();
+        assertThat(ArrayUtils.contains(special, Double.NaN)).isTrue();
     }
 
     @Test
-    public void testContainsChar() {
+    void testContainsChar() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.contains((char[]) null, (char) 0));
+            .isThrownBy(() -> ArrayUtils.contains((char[]) null, 'a'));
 
-        assertThat(ArrayUtils.contains(new char[]{}, (char) 1)).isFalse();
-        assertThat(ArrayUtils.contains(new char[]{1}, (char) 2)).isFalse();
-        assertThat(ArrayUtils.contains(new char[]{(char) -1}, (char) -1)).isTrue();
-        assertThat(ArrayUtils.contains(new char[]{2, 3, 4}, (char) 1)).isFalse();
-        assertThat(ArrayUtils.contains(new char[]{2, 3, 4}, (char) 2)).isTrue();
-        assertThat(ArrayUtils.contains(new char[]{2, 3, 4}, (char) 3)).isTrue();
-        assertThat(ArrayUtils.contains(new char[]{2, 3, 4}, (char) 4)).isTrue();
+        char[] array = {'a', 'b', 'c', 'd'};
+        assertThat(ArrayUtils.contains(array, 'a')).isTrue();
+        assertThat(ArrayUtils.contains(array, 'b')).isTrue();
+        assertThat(ArrayUtils.contains(array, 'c')).isTrue();
+        assertThat(ArrayUtils.contains(array, 'd')).isTrue();
+        assertThat(ArrayUtils.contains(array, 'z')).isFalse();
     }
 
     @Test
-    public void testContainsBoolean() {
+    void testContainsBoolean() {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.contains((boolean[]) null, false));
 
-        assertThat(ArrayUtils.contains(new boolean[]{}, false)).isFalse();
-        assertThat(ArrayUtils.contains(new boolean[]{false}, true)).isFalse();
-        assertThat(ArrayUtils.contains(new boolean[]{false}, false)).isTrue();
-        assertThat(ArrayUtils.contains(new boolean[]{false, true}, false)).isTrue();
-        assertThat(ArrayUtils.contains(new boolean[]{false, true}, true)).isTrue();
+        boolean[] array = new boolean[]{false};
+        assertThat(ArrayUtils.contains(array, false)).isTrue();
+        assertThat(ArrayUtils.contains(array, true)).isFalse();
     }
 
     // endregion
@@ -169,134 +133,115 @@ public class ArrayUtilsTest {
     // region testIndexOf
 
     @Test
-    public void testIndexOfByte() {
+    void testIndexOfByte() {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.indexOf((byte[]) null, (byte) 0));
 
-        assertThat(ArrayUtils.indexOf(new byte[]{}, (byte) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new byte[]{1}, (byte) 2)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new byte[]{-1}, (byte) -1)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new byte[]{2, 3, 4}, (byte) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new byte[]{2, 3, 4}, (byte) 2)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new byte[]{2, 3, 4}, (byte) 3)).isEqualTo(1);
-        assertThat(ArrayUtils.indexOf(new byte[]{2, 3, 4}, (byte) 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(new byte[]{2, 3, 2, 3}, (byte) 3)).isEqualTo(1);
+        byte[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.indexOf(array, (byte) 1)).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(array, (byte) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.indexOf(array, (byte) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, (byte) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, (byte) 9)).isEqualTo(-1);
     }
 
     @Test
-    public void testIndexOfShort() {
+    void testIndexOfShort() {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.indexOf((short[]) null, (short) 0));
 
-        assertThat(ArrayUtils.indexOf(new short[]{}, (short) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new short[]{1}, (short) 2)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new short[]{-1}, (short) -1)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new short[]{2, 3, 4}, (short) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new short[]{2, 3, 4}, (short) 2)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new short[]{2, 3, 4}, (short) 3)).isEqualTo(1);
-        assertThat(ArrayUtils.indexOf(new short[]{2, 3, 4}, (short) 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(new short[]{2, 3, 2, 3}, (short) 3)).isEqualTo(1);
+        short[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.indexOf(array, (short) 1)).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(array, (short) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.indexOf(array, (short) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, (short) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, (short) 9)).isEqualTo(-1);
     }
 
     @Test
-    public void testIndexOfInt() {
+    void testIndexOfInt() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((int[]) null, 0));
+            .isThrownBy(() -> ArrayUtils.indexOf((int[]) null, (int) 0));
 
-        assertThat(ArrayUtils.indexOf(new int[]{}, 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new int[]{1}, 2)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new int[]{-1}, -1)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new int[]{2, 3, 4}, 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new int[]{2, 3, 4}, 2)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new int[]{2, 3, 4}, 3)).isEqualTo(1);
-        assertThat(ArrayUtils.indexOf(new int[]{2, 3, 4}, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(new int[]{2, 3, 2, 3}, 3)).isEqualTo(1);
+        int[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.indexOf(array, (int) 1)).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(array, (int) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.indexOf(array, (int) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, (int) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, (int) 9)).isEqualTo(-1);
     }
 
     @Test
-    public void testIndexOfLong() {
+    void testIndexOfLong() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((long[]) null, 0L));
+            .isThrownBy(() -> ArrayUtils.indexOf((long[]) null, (long) 0));
 
-        assertThat(ArrayUtils.indexOf(new long[]{}, 1L)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new long[]{1L}, 2L)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new long[]{-1L}, -1L)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new long[]{2L, 3L, 4L}, 1L)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new long[]{2L, 3L, 4L}, 2L)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new long[]{2L, 3L, 4L}, 3L)).isEqualTo(1);
-        assertThat(ArrayUtils.indexOf(new long[]{2L, 3L, 4L}, 4L)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(new long[]{2L, 3L, 2L, 3L}, 3L)).isEqualTo(1);
+        long[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.indexOf(array, (long) 1)).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(array, (long) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.indexOf(array, (long) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, (long) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, (long) 9)).isEqualTo(-1);
     }
 
+
     @Test
-    public void testIndexOfFloat() {
+    void testIndexOfFloat() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((float[]) null, 0f));
+            .isThrownBy(() -> ArrayUtils.indexOf((float[]) null, (float) 0));
 
-        assertThat(ArrayUtils.indexOf(new float[]{}, 1f)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new float[]{1f}, 2f)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new float[]{-1f}, -1f)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new float[]{2f, 3f, 4f}, 1f)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new float[]{2f, 3f, 4f}, 2f)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new float[]{2f, 3f, 4f}, 3f)).isEqualTo(1);
-        assertThat(ArrayUtils.indexOf(new float[]{2f, 3f, 4f}, 4f)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(new float[]{2f, 3f, 2f, 3f}, 3f)).isEqualTo(1);
+        float[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.indexOf(array, (float) 1)).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(array, (float) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.indexOf(array, (float) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, (float) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, (float) 9)).isEqualTo(-1);
 
-        for (float value : SpecialFloats) {
-            assertThat(ArrayUtils.indexOf(new float[]{5f, value}, value))
-                .withFailMessage(Float.toString(value))
-                .isEqualTo(1);
-        }
+        float[] special = SpecialFloats;
+        assertThat(ArrayUtils.indexOf(special, Float.NEGATIVE_INFINITY)).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(special, Float.POSITIVE_INFINITY)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(special, Float.NaN)).isEqualTo(1);
     }
 
     @Test
-    public void testIndexOfDouble() {
+    void testIndexOfDouble() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((double[]) null, 0d));
+            .isThrownBy(() -> ArrayUtils.indexOf((double[]) null, (double) 0));
 
-        assertThat(ArrayUtils.indexOf(new double[]{}, 1d)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new double[]{1f}, 2d)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new double[]{-1f}, -1d)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new double[]{2d, 3d, 4d}, 1d)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new double[]{2d, 3d, 4d}, 2d)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new double[]{2d, 3d, 4d}, 3d)).isEqualTo(1);
-        assertThat(ArrayUtils.indexOf(new double[]{2d, 3d, 4d}, 4d)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(new double[]{2d, 3d, 2d, 3d}, 3d)).isEqualTo(1);
+        double[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.indexOf(array, (double) 1)).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(array, (double) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.indexOf(array, (double) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, (double) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, (double) 9)).isEqualTo(-1);
 
-        for (double value : SpecialDoubles) {
-            assertThat(ArrayUtils.indexOf(new double[]{5d, value}, value))
-                .withFailMessage(Double.toString(value))
-                .isEqualTo(1);
-        }
+        double[] special = SpecialDoubles;
+        assertThat(ArrayUtils.indexOf(special, Double.NEGATIVE_INFINITY)).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(special, Double.POSITIVE_INFINITY)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(special, Double.NaN)).isEqualTo(1);
     }
 
     @Test
-    public void testIndexOfChar() {
+    void testIndexOfChar() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((char[]) null, (char) 0));
+            .isThrownBy(() -> ArrayUtils.indexOf((char[]) null, 'a'));
 
-        assertThat(ArrayUtils.indexOf(new char[]{}, (char) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new char[]{1}, (char) 2)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new char[]{(char) -1}, (char) -1)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new char[]{2, 3, 4}, (char) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new char[]{2, 3, 4}, (char) 2)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new char[]{2, 3, 4}, (char) 3)).isEqualTo(1);
-        assertThat(ArrayUtils.indexOf(new char[]{2, 3, 4}, (char) 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(new char[]{(char) 2, (char) 3, (char) 2, (char) 3}, (char) 3)).isEqualTo(1);
+        char[] array = {'a', 'b', 'c', 'd', 'a'};
+        assertThat(ArrayUtils.indexOf(array, 'a')).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(array, 'b')).isEqualTo(1);
+        assertThat(ArrayUtils.indexOf(array, 'c')).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, 'd')).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, 'z')).isEqualTo(-1);
     }
 
     @Test
-    public void testIndexOfBoolean() {
+    void testIndexOfBoolean() {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.indexOf((boolean[]) null, false));
 
-        assertThat(ArrayUtils.indexOf(new boolean[]{}, false)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new boolean[]{false}, true)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new boolean[]{false, false}, true)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(new boolean[]{false}, false)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new boolean[]{false, true}, false)).isEqualTo(0);
-        assertThat(ArrayUtils.indexOf(new boolean[]{false, true}, true)).isEqualTo(1);
-        assertThat(ArrayUtils.indexOf(new boolean[]{true, false, false}, false)).isEqualTo(1);
+        boolean[] array = new boolean[]{false, true, false};
+        assertThat(ArrayUtils.indexOf(array, false)).isEqualTo(0);
+        assertThat(ArrayUtils.indexOf(array, true)).isEqualTo(1);
     }
 
     // endregion
@@ -304,134 +249,115 @@ public class ArrayUtilsTest {
     // region testLastIndexOf
 
     @Test
-    public void testLastIndexOfByte() {
+    void testLastIndexOfByte() {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.lastIndexOf((byte[]) null, (byte) 0));
 
-        assertThat(ArrayUtils.lastIndexOf(new byte[]{}, (byte) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new byte[]{1}, (byte) 2)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new byte[]{-1}, (byte) -1)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new byte[]{2, 3, 4}, (byte) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new byte[]{2, 3, 4}, (byte) 2)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new byte[]{2, 3, 4}, (byte) 3)).isEqualTo(1);
-        assertThat(ArrayUtils.lastIndexOf(new byte[]{2, 3, 4}, (byte) 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(new byte[]{2, 3, 2, 3}, (byte) 3)).isEqualTo(3);
+        byte[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.lastIndexOf(array, (byte) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, (byte) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.lastIndexOf(array, (byte) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, (byte) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, (byte) 9)).isEqualTo(-1);
     }
 
     @Test
-    public void testLastIndexOfShort() {
+    void testLastIndexOfShort() {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.lastIndexOf((short[]) null, (short) 0));
 
-        assertThat(ArrayUtils.lastIndexOf(new short[]{}, (short) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new short[]{1}, (short) 2)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new short[]{-1}, (short) -1)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new short[]{2, 3, 4}, (short) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new short[]{2, 3, 4}, (short) 2)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new short[]{2, 3, 4}, (short) 3)).isEqualTo(1);
-        assertThat(ArrayUtils.lastIndexOf(new short[]{2, 3, 4}, (short) 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(new short[]{2, 3, 2, 3}, (short) 3)).isEqualTo(3);
+        short[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.lastIndexOf(array, (short) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, (short) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.lastIndexOf(array, (short) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, (short) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, (short) 9)).isEqualTo(-1);
     }
 
     @Test
-    public void testLastIndexOfInt() {
+    void testLastIndexOfInt() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((int[]) null, 0));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((int[]) null, (int) 0));
 
-        assertThat(ArrayUtils.lastIndexOf(new int[]{}, 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new int[]{1}, 2)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new int[]{-1}, -1)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new int[]{2, 3, 4}, 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new int[]{2, 3, 4}, 2)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new int[]{2, 3, 4}, 3)).isEqualTo(1);
-        assertThat(ArrayUtils.lastIndexOf(new int[]{2, 3, 4}, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(new int[]{2, 3, 2, 3}, 3)).isEqualTo(3);
+        int[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.lastIndexOf(array, (int) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, (int) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.lastIndexOf(array, (int) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, (int) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, (int) 9)).isEqualTo(-1);
     }
 
     @Test
-    public void testLastIndexOfLong() {
+    void testLastIndexOfLong() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((long[]) null, 0L));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((long[]) null, (long) 0));
 
-        assertThat(ArrayUtils.lastIndexOf(new long[]{}, 1L)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new long[]{1L}, 2L)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new long[]{-1L}, -1L)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new long[]{2L, 3L, 4L}, 1L)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new long[]{2L, 3L, 4L}, 2L)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new long[]{2L, 3L, 4L}, 3L)).isEqualTo(1);
-        assertThat(ArrayUtils.lastIndexOf(new long[]{2L, 3L, 4L}, 4L)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(new long[]{2L, 3L, 2L, 3L}, 3L)).isEqualTo(3);
+        long[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.lastIndexOf(array, (long) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, (long) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.lastIndexOf(array, (long) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, (long) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, (long) 9)).isEqualTo(-1);
     }
 
+
     @Test
-    public void testLastIndexOfFloat() {
+    void testLastIndexOfFloat() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((float[]) null, 0f));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((float[]) null, (float) 0));
 
-        assertThat(ArrayUtils.lastIndexOf(new float[]{}, 1f)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new float[]{1f}, 2f)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new float[]{-1f}, -1f)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new float[]{2f, 3f, 4f}, 1f)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new float[]{2f, 3f, 4f}, 2f)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new float[]{2f, 3f, 4f}, 3f)).isEqualTo(1);
-        assertThat(ArrayUtils.lastIndexOf(new float[]{2f, 3f, 4f}, 4f)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(new float[]{2f, 3f, 2f, 3f}, 3f)).isEqualTo(3);
+        float[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.lastIndexOf(array, (float) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, (float) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.lastIndexOf(array, (float) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, (float) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, (float) 9)).isEqualTo(-1);
 
-        for (float value : SpecialFloats) {
-            assertThat(ArrayUtils.lastIndexOf(new float[]{value, 5f}, value))
-                .withFailMessage(Float.toString(value))
-                .isEqualTo(0);
-        }
+        float[] special = SpecialFloats;
+        assertThat(ArrayUtils.lastIndexOf(special, Float.NEGATIVE_INFINITY)).isEqualTo(0);
+        assertThat(ArrayUtils.lastIndexOf(special, Float.POSITIVE_INFINITY)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(special, Float.NaN)).isEqualTo(1);
     }
 
     @Test
-    public void testLastIndexOfDouble() {
+    void testLastIndexOfDouble() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((double[]) null, 0d));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((double[]) null, (double) 0));
 
-        assertThat(ArrayUtils.lastIndexOf(new double[]{}, 1d)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new double[]{1f}, 2d)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new double[]{-1f}, -1d)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new double[]{2d, 3d, 4d}, 1d)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new double[]{2d, 3d, 4d}, 2d)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new double[]{2d, 3d, 4d}, 3d)).isEqualTo(1);
-        assertThat(ArrayUtils.lastIndexOf(new double[]{2d, 3d, 4d}, 4d)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(new double[]{2d, 3d, 2d, 3d}, 3d)).isEqualTo(3);
+        double[] array = {1, 2, 3, 4, 1};
+        assertThat(ArrayUtils.lastIndexOf(array, (double) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, (double) 2)).isEqualTo(1);
+        assertThat(ArrayUtils.lastIndexOf(array, (double) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, (double) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, (double) 9)).isEqualTo(-1);
 
-        for (double value : SpecialDoubles) {
-            assertThat(ArrayUtils.lastIndexOf(new double[]{value, 5d}, value))
-                .withFailMessage(Double.toString(value))
-                .isEqualTo(0);
-        }
+        double[] special = SpecialDoubles;
+        assertThat(ArrayUtils.lastIndexOf(special, Double.NEGATIVE_INFINITY)).isEqualTo(0);
+        assertThat(ArrayUtils.lastIndexOf(special, Double.POSITIVE_INFINITY)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(special, Double.NaN)).isEqualTo(1);
     }
 
     @Test
-    public void testLastIndexOfChar() {
+    void testLastIndexOfChar() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((char[]) null, (char) 0));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((char[]) null, 'a'));
 
-        assertThat(ArrayUtils.lastIndexOf(new char[]{}, (char) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new char[]{1}, (char) 2)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new char[]{(char) -1}, (char) -1)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new char[]{2, 3, 4}, (char) 1)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new char[]{2, 3, 4}, (char) 2)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new char[]{2, 3, 4}, (char) 3)).isEqualTo(1);
-        assertThat(ArrayUtils.lastIndexOf(new char[]{2, 3, 4}, (char) 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(new char[]{(char) 2, (char) 3, (char) 2, (char) 3}, (char) 3)).isEqualTo(3);
+        char[] array = {'a', 'b', 'c', 'd', 'a'};
+        assertThat(ArrayUtils.lastIndexOf(array, 'a')).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, 'b')).isEqualTo(1);
+        assertThat(ArrayUtils.lastIndexOf(array, 'c')).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, 'd')).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, 'z')).isEqualTo(-1);
     }
 
     @Test
-    public void testLastIndexOfBoolean() {
+    void testLastIndexOfBoolean() {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.lastIndexOf((boolean[]) null, false));
 
-        assertThat(ArrayUtils.lastIndexOf(new boolean[]{}, false)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new boolean[]{false}, true)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new boolean[]{false, false}, true)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(new boolean[]{false}, false)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new boolean[]{false, true}, false)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(new boolean[]{false, true}, true)).isEqualTo(1);
-        assertThat(ArrayUtils.lastIndexOf(new boolean[]{true, true, false}, true)).isEqualTo(1);
+        boolean[] array = new boolean[]{false, true, false};
+        assertThat(ArrayUtils.lastIndexOf(array, false)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, true)).isEqualTo(1);
     }
 
     // endregion
