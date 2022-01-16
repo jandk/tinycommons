@@ -11,7 +11,7 @@ public abstract class Try<T> {
         return new Success<>(result);
     }
 
-    public static <T> Failure<T> failure(Throwable cause) {
+    public static <T> Try<T> failure(Throwable cause) {
         return new Failure<>(cause);
     }
 
