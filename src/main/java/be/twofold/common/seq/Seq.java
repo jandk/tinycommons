@@ -2,9 +2,9 @@ package be.twofold.common.seq;
 
 import be.twofold.common.*;
 import be.twofold.common.seq.internal.*;
+import be.twofold.common.tuple.*;
 
 import java.util.*;
-import java.util.Map.*;
 import java.util.concurrent.atomic.*;
 import java.util.function.*;
 import java.util.stream.*;
@@ -20,7 +20,7 @@ public interface Seq<T> extends Iterable<T> {
         if (values == null || values.length == 0) {
             return empty();
         }
-        return seq(() -> Arrays.asList(values).iterator());
+        return () -> Arrays.asList(values).iterator();
     }
 
     static <T> Seq<T> seq(Iterator<T> iterator) {
@@ -47,7 +47,8 @@ public interface Seq<T> extends Iterable<T> {
 
     default Seq<T> filter(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
-        return seq(() -> new FilterItr<>(iterator(), predicate));
+
+        return () -> new FilterItr<>(iterator(), predicate);
     }
 
     default Seq<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
@@ -61,19 +62,27 @@ public interface Seq<T> extends Iterable<T> {
     default <R> Seq<R> flatMap(Function<? super T, ? extends Iterable<? extends R>> mapper) {
         Check.notNull(mapper, "mapper");
 
-        return seq(() -> new FlatMapItr<>(iterator(), mapper));
+        return () -> new FlatMapItr<>(iterator(), mapper);
+    }
+
+    default <R> Seq<R> flatMapIndexed(BiFunction<Integer, ? super T, ? extends Iterable<? extends R>> mapper) {
+        Check.notNull(mapper, "mapper");
+
+        AtomicInteger index = new AtomicInteger();
+        return flatMap(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
 
-    default Seq<Entry<Integer, T>> indexed() {
+    default Seq<Pair<Integer, T>> indexed() {
         AtomicInteger index = new AtomicInteger();
-        return map(t -> new AbstractMap.SimpleImmutableEntry<>(index.getAndIncrement(), t));
+        return map(t -> new Pair<>(index.getAndIncrement(), t));
     }
 
 
     default <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
-        return seq(() -> new MapItr<>(iterator(), mapper));
+
+        return () -> new MapItr<>(iterator(), mapper);
     }
 
     default <R> Seq<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
@@ -86,6 +95,7 @@ public interface Seq<T> extends Iterable<T> {
 
     default Seq<T> onEach(Consumer<? super T> action) {
         Check.notNull(action, "action");
+
         return map(element -> {
             action.accept(element);
             return element;
@@ -107,6 +117,7 @@ public interface Seq<T> extends Iterable<T> {
         return this instanceof OnceSeq ? this : new OnceSeq<>(this);
     }
 
+
     @SuppressWarnings("unchecked")
     default Seq<T> sorted() {
         return sorted((Comparator<? super T>) Comparator.naturalOrder());
@@ -114,11 +125,12 @@ public interface Seq<T> extends Iterable<T> {
 
     default Seq<T> sorted(Comparator<? super T> comparator) {
         Check.notNull(comparator, "comparator");
-        return seq(() -> {
+
+        return () -> {
             List<T> list = toList();
             list.sort(comparator);
             return list.iterator();
-        });
+        };
     }
 
 
@@ -126,18 +138,16 @@ public interface Seq<T> extends Iterable<T> {
         Check.argument(count >= 0, "Negative count");
         if (count == 0) {
             return this;
-        } else {
-            return seq(() -> new DropItr<>(iterator(), count));
         }
+        return () -> new DropItr<>(iterator(), count);
     }
 
     default Seq<T> take(int count) {
         Check.argument(count >= 0, "Negative count");
         if (count == 0) {
             return empty();
-        } else {
-            return seq(() -> new TakeItr<>(iterator(), count));
         }
+        return () -> new TakeItr<>(iterator(), count);
     }
 
     // endregion
@@ -174,7 +184,7 @@ public interface Seq<T> extends Iterable<T> {
 
     default int count() {
         int count = 0;
-        for (T element : this) {
+        for (T ignored : this) {
             count++;
         }
         return count;
@@ -186,8 +196,7 @@ public interface Seq<T> extends Iterable<T> {
 
 
     default T first() {
-        Iterator<T> iterator = nonEmptyIterator();
-        return iterator.next();
+        return nonEmptyIterator().next();
     }
 
     default T first(Predicate<? super T> predicate) {
@@ -207,6 +216,14 @@ public interface Seq<T> extends Iterable<T> {
         return filter(predicate).last();
     }
 
+
+    default void forEach(Consumer<? super T> consumer) {
+        Check.notNull(consumer, "consumer");
+
+        for (T element : this) {
+            consumer.accept(element);
+        }
+    }
 
     default void forEachIndexed(BiConsumer<Integer, ? super T> consumer) {
         Check.notNull(consumer, "consumer");
@@ -237,6 +254,9 @@ public interface Seq<T> extends Iterable<T> {
         return result;
     }
 
+    // endregion
+
+    // region Collectors
 
     default <C extends Collection<? super T>> C toCollection(C destination) {
         Check.notNull(destination, "destination");
@@ -286,16 +306,12 @@ public interface Seq<T> extends Iterable<T> {
 
     // endregion
 
-    // region Helpers
-
     private Iterator<T> nonEmptyIterator() {
         Iterator<T> iterator = iterator();
         if (!iterator.hasNext()) {
-            throw new NoSuchElementException("Empty sequence");
+            throw new NoSuchElementException("Empty seq");
         }
         return iterator;
     }
-
-    // endregion
 
 }
