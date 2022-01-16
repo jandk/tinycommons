@@ -10,18 +10,6 @@ import static org.assertj.core.api.Assertions.*;
 public class SeqTest {
 
     @Test
-    public void testConstructedFromEnumerator() {
-        Vector<String> strings = new Vector<>();
-        strings.add("one");
-        strings.add("two");
-        strings.add("three");
-
-        Enumeration<String> enumeration = strings.elements();
-        assertThat(Seq.seq(enumeration).toList())
-                .containsExactly("one", "two", "three");
-    }
-
-    @Test
     public void testFilter() {
         assertThatNullPointerException()
             .isThrownBy(() -> Seq.empty().filter(null));

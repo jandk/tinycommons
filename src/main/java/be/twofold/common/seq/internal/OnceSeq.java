@@ -5,7 +5,7 @@ import be.twofold.common.seq.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
-public final class OnceSeq<T> extends Seq<T> {
+public final class OnceSeq<T> implements Seq<T> {
     private final AtomicReference<Seq<T>> reference;
 
     public OnceSeq(Seq<T> seq) {
