@@ -6,24 +6,36 @@ public final class StringUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static boolean isEmpty(String s) {
-        return s == null || s.isEmpty();
+    /**
+     * Check if a string is null or empty.
+     *
+     * @param string The string to check
+     * @return {@code true} if the string is null or empty
+     */
+    public static boolean isEmpty(String string) {
+        return string == null || string.isEmpty();
     }
 
-    public static boolean isBlank(String s) {
-        return s == null || s.isBlank();
+    /**
+     * Check if a string is null or blank.
+     *
+     * @param string The string to check
+     * @return {@code true} if the string is null or blank
+     */
+    public static boolean isBlank(String string) {
+        return string == null || string.isBlank();
     }
 
-    public static String nullToEmpty(String s) {
-        return s == null ? "" : s;
+    public static String nullToEmpty(String string) {
+        return string == null ? "" : string;
     }
 
-    public static String emptyToNull(String s) {
-        return isEmpty(s) ? null : s;
+    public static String emptyToNull(String string) {
+        return isEmpty(string) ? null : string;
     }
 
-    public static String blankToNull(String s) {
-        return isBlank(s) ? null : s;
+    public static String blankToNull(String string) {
+        return isBlank(string) ? null : string;
     }
 
 }
