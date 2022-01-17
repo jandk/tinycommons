@@ -6,6 +6,11 @@ import static org.assertj.core.api.Assertions.*;
 
 class NumberUtilsTest {
 
+    @Test
+    void testConstructor() {
+        TestUtils.testConstructor(NumberUtils.class);
+    }
+
     // region testTryParse
 
     @Test

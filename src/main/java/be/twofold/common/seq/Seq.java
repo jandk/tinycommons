@@ -75,7 +75,7 @@ public interface Seq<T> extends Iterable<T> {
 
     default Seq<Pair<Integer, T>> indexed() {
         AtomicInteger index = new AtomicInteger();
-        return map(t -> new Pair<>(index.getAndIncrement(), t));
+        return map(t -> Pair.of(index.getAndIncrement(), t));
     }
 
 

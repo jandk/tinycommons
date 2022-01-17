@@ -7,35 +7,40 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SuppressWarnings("ConstantConditions")
-public class CollectionUtilsTest {
+class CollectionUtilsTest {
 
     @Test
-    public void testIsEmptyCollectionNull() {
+    void testConstructor() {
+        TestUtils.testConstructor(CollectionUtils.class);
+    }
+
+    @Test
+    void testIsEmptyCollectionNull() {
         assertThat(CollectionUtils.isEmpty((Collection<?>) null)).isTrue();
     }
 
     @Test
-    public void testIsEmptyCollectionEmpty() {
+    void testIsEmptyCollectionEmpty() {
         assertThat(CollectionUtils.isEmpty(Collections.emptyList())).isTrue();
     }
 
     @Test
-    public void testIsEmptyCollectionNotEmpty() {
+    void testIsEmptyCollectionNotEmpty() {
         assertThat(CollectionUtils.isEmpty(Collections.singletonList("foo"))).isFalse();
     }
 
     @Test
-    public void testIsEmptyMapNull() {
+    void testIsEmptyMapNull() {
         assertThat(CollectionUtils.isEmpty((Map<?, ?>) null)).isTrue();
     }
 
     @Test
-    public void testIsEmptyMapEmpty() {
+    void testIsEmptyMapEmpty() {
         assertThat(CollectionUtils.isEmpty(Collections.emptyMap())).isTrue();
     }
 
     @Test
-    public void testIsEmptyMapNotEmpty() {
+    void testIsEmptyMapNotEmpty() {
         assertThat(CollectionUtils.isEmpty(Collections.singletonMap("foo", "bar"))).isFalse();
     }
 
