@@ -1,13 +1,13 @@
-package be.twofold.common.seq.internal;
+package be.twofold.common.seq;
 
 import java.util.*;
 import java.util.function.*;
 
-public final class MapItr<E, R> implements Iterator<R> {
+final class ItrMap<E, R> implements Iterator<R> {
     private final Iterator<E> iterator;
     private final Function<? super E, ? extends R> mapper;
 
-    public MapItr(Iterator<E> iterator, Function<? super E, ? extends R> mapper) {
+    ItrMap(Iterator<E> iterator, Function<? super E, ? extends R> mapper) {
         this.iterator = iterator;
         this.mapper = mapper;
     }

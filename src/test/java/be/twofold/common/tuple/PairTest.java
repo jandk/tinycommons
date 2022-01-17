@@ -15,7 +15,7 @@ public class PairTest {
 
     @Test
     public void testBasics() {
-        Pair<String, String> pair = new Pair<>("first", "second");
+        Pair<String, String> pair = Pair.of("first", "second");
         assertThat(pair.getFirst()).isEqualTo("first");
         assertThat(pair.getSecond()).isEqualTo("second");
         assertThat(pair.toString()).isEqualTo("(first, second)");

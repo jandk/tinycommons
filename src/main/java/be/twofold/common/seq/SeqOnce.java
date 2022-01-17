@@ -1,14 +1,12 @@
-package be.twofold.common.seq.internal;
-
-import be.twofold.common.seq.*;
+package be.twofold.common.seq;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
-public final class OnceSeq<T> implements Seq<T> {
+final class SeqOnce<T> implements Seq<T> {
     private final AtomicReference<Seq<T>> reference;
 
-    public OnceSeq(Seq<T> seq) {
+    SeqOnce(Seq<T> seq) {
         this.reference = new AtomicReference<>(seq);
     }
 

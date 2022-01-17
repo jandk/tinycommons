@@ -1,7 +1,6 @@
 package be.twofold.common.seq;
 
 import be.twofold.common.*;
-import be.twofold.common.seq.internal.*;
 import be.twofold.common.tuple.*;
 
 import java.util.*;
@@ -48,7 +47,7 @@ public interface Seq<T> extends Iterable<T> {
     default Seq<T> filter(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
 
-        return () -> new FilterItr<>(iterator(), predicate);
+        return () -> new ItrFilter<>(iterator(), predicate);
     }
 
     default Seq<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
@@ -62,7 +61,7 @@ public interface Seq<T> extends Iterable<T> {
     default <R> Seq<R> flatMap(Function<? super T, ? extends Iterable<? extends R>> mapper) {
         Check.notNull(mapper, "mapper");
 
-        return () -> new FlatMapItr<>(iterator(), mapper);
+        return () -> new ItrFlatMap<>(iterator(), mapper);
     }
 
     default <R> Seq<R> flatMapIndexed(BiFunction<Integer, ? super T, ? extends Iterable<? extends R>> mapper) {
@@ -82,7 +81,7 @@ public interface Seq<T> extends Iterable<T> {
     default <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
 
-        return () -> new MapItr<>(iterator(), mapper);
+        return () -> new ItrMap<>(iterator(), mapper);
     }
 
     default <R> Seq<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
@@ -114,7 +113,7 @@ public interface Seq<T> extends Iterable<T> {
 
 
     default Seq<T> once() {
-        return this instanceof OnceSeq ? this : new OnceSeq<>(this);
+        return this instanceof SeqOnce ? this : new SeqOnce<>(this);
     }
 
 
@@ -139,7 +138,7 @@ public interface Seq<T> extends Iterable<T> {
         if (count == 0) {
             return this;
         }
-        return () -> new DropItr<>(iterator(), count);
+        return () -> new ItrDrop<>(iterator(), count);
     }
 
     default Seq<T> take(int count) {
@@ -147,7 +146,7 @@ public interface Seq<T> extends Iterable<T> {
         if (count == 0) {
             return empty();
         }
-        return () -> new TakeItr<>(iterator(), count);
+        return () -> new ItrTake<>(iterator(), count);
     }
 
     // endregion

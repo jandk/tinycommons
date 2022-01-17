@@ -1,12 +1,12 @@
-package be.twofold.common.seq.internal;
+package be.twofold.common.seq;
 
 import java.util.*;
 
-public final class TakeItr<T> implements Iterator<T> {
+final class ItrTake<T> implements Iterator<T> {
     private final Iterator<T> iterator;
     private int left;
 
-    public TakeItr(Iterator<T> iterator, int count) {
+    ItrTake(Iterator<T> iterator, int count) {
         this.iterator = iterator;
         this.left = count;
     }

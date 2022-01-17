@@ -1,12 +1,12 @@
-package be.twofold.common.seq.internal;
+package be.twofold.common.seq;
 
 import java.util.*;
 
-public final class DropItr<E> implements Iterator<E> {
+final class ItrDrop<E> implements Iterator<E> {
     private final Iterator<E> iterator;
     private int left;
 
-    public DropItr(Iterator<E> iterator, int left) {
+    ItrDrop(Iterator<E> iterator, int left) {
         this.iterator = iterator;
         this.left = left;
     }

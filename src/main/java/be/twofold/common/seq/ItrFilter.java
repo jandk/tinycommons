@@ -1,15 +1,15 @@
-package be.twofold.common.seq.internal;
+package be.twofold.common.seq;
 
 import java.util.*;
 import java.util.function.*;
 
-public final class FilterItr<T> implements Iterator<T> {
+final class ItrFilter<T> implements Iterator<T> {
     private final Iterator<T> iterator;
     private final Predicate<? super T> predicate;
     private int state; // 0 = not ready, 1 = ready, 2 = done
     private T next;
 
-    public FilterItr(Iterator<T> iterator, Predicate<? super T> predicate) {
+    ItrFilter(Iterator<T> iterator, Predicate<? super T> predicate) {
         this.iterator = iterator;
         this.predicate = predicate;
     }
