@@ -222,7 +222,7 @@ public interface Seq<T> extends Iterable<T> {
 
 
     default T first() {
-        return nonEmptyIterator().next();
+        return nonEmpty(iterator()).next();
     }
 
     default T first(Predicate<? super T> predicate) {
@@ -230,12 +230,7 @@ public interface Seq<T> extends Iterable<T> {
     }
 
     default T last() {
-        Iterator<T> iterator = nonEmptyIterator();
-        T last = iterator.next();
-        while (iterator.hasNext()) {
-            last = iterator.next();
-        }
-        return last;
+        return reduce((first, second) -> second);
     }
 
     default T last(Predicate<? super T> predicate) {
@@ -259,25 +254,12 @@ public interface Seq<T> extends Iterable<T> {
     }
 
 
-    default T reduce(BinaryOperator<T> operation) {
-        Check.notNull(operation, "operation");
-
-        Iterator<T> iterator = nonEmptyIterator();
-        T result = iterator.next();
-        while (iterator.hasNext()) {
-            result = operation.apply(result, iterator.next());
-        }
-        return result;
+    default <R> R fold(R initial, BiFunction<R, ? super T, ? extends R> operation) {
+        return fold(iterator(), initial, operation);
     }
 
-    default <R> R reduce(R initial, BiFunction<R, ? super T, R> operation) {
-        Check.notNull(operation, "operation");
-
-        R result = initial;
-        for (T element : this) {
-            result = operation.apply(result, element);
-        }
-        return result;
+    default T reduce(BinaryOperator<T> operation) {
+        return reduce(iterator(), operation);
     }
 
     // endregion
@@ -332,10 +314,23 @@ public interface Seq<T> extends Iterable<T> {
 
     // endregion
 
-    private Iterator<T> nonEmptyIterator() {
-        Iterator<T> iterator = iterator();
+    private static <E, R> R fold(Iterator<E> iterator, R initial, BiFunction<R, ? super E, ? extends R> operation) {
+        Check.notNull(operation, "operation");
+
+        R accumulator = initial;
+        while (iterator.hasNext()) {
+            accumulator = operation.apply(accumulator, iterator.next());
+        }
+        return accumulator;
+    }
+
+    private static <E> E reduce(Iterator<E> iterator, BinaryOperator<E> operator) {
+        return fold(nonEmpty(iterator), iterator.next(), operator);
+    }
+
+    private static <E> Iterator<E> nonEmpty(Iterator<E> iterator) {
         if (!iterator.hasNext()) {
-            throw new NoSuchElementException("Empty seq");
+            throw new NoSuchElementException();
         }
         return iterator;
     }
