@@ -7,10 +7,16 @@ import java.util.stream.*;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class SeqTest {
+class SeqTest {
 
     @Test
-    public void testFilter() {
+    void testOf() {
+        assertThatNullPointerException()
+            .isThrownBy(() -> Seq.of((Object[]) null));
+    }
+
+    @Test
+    void testFilter() {
         assertThatNullPointerException()
             .isThrownBy(() -> Seq.empty().filter(null));
 
@@ -23,16 +29,16 @@ public class SeqTest {
     }
 
     @Test
-    public void testFilterIndexed() {
+    void testFilterIndexed() {
         List<Integer> list = aSequence()
-                .filterIndexed((index, __) -> index % 2 == 0)
-                .take(5).toList();
+            .filterIndexed((index, __) -> index % 2 == 0)
+            .take(5).toList();
 
         assertThat(list).containsExactly(0, 4, 8, 12, 16);
     }
 
     @Test
-    public void testOnlyOnce() {
+    void testOnlyOnce() {
         Seq<Integer> seq = Seq.of(1, 2, 3);
         seq.toList();
         seq.toList();
@@ -49,7 +55,7 @@ public class SeqTest {
     }
 
     @Test
-    public void testTake() {
+    void testTake() {
         assertThatIllegalArgumentException()
             .isThrownBy(() -> Seq.empty().take(-1));
 

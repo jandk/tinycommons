@@ -8,18 +8,48 @@ import java.util.concurrent.atomic.*;
 import java.util.function.*;
 import java.util.stream.*;
 
+/**
+ * A {@link Seq} is a sequence, supporting aggregate operations, like {@link Stream}.
+ * <p>
+ * Unlike Stream, it is only sequential.
+ *
+ * @param <T> The type of elements in this Seq
+ */
 public interface Seq<T> extends Iterable<T> {
 
+    // region Construction
+
+    /**
+     * Creates a new empty Seq
+     *
+     * @param <T> The type of the elements
+     * @return The new Seq
+     */
     static <T> Seq<T> empty() {
         return Collections::emptyIterator;
     }
 
+    /**
+     * Creates a new Seq from the specified values.
+     *
+     * @param <T> The type of the elements
+     * @return The new Seq
+     */
     @SafeVarargs
     static <T> Seq<T> of(T... values) {
-        if (values == null || values.length == 0) {
+        Check.notNull(values, "values");
+        if (values.length == 0) {
             return empty();
         }
         return () -> Arrays.asList(values).iterator();
+    }
+
+    /**
+     * Creates a new Seq from an existing iterable
+     */
+    static <T> Seq<T> seq(Iterable<T> iterable) {
+        Check.notNull(iterable, "iterable");
+        return iterable::iterator;
     }
 
     static <T> Seq<T> seq(Iterator<T> iterator) {
@@ -27,14 +57,11 @@ public interface Seq<T> extends Iterable<T> {
         return ((Seq<T>) () -> iterator).once();
     }
 
-    static <T> Seq<T> seq(Iterable<T> iterable) {
-        Check.notNull(iterable, "iterable");
-        return iterable::iterator;
-    }
-
     static <T> Seq<T> seq(Stream<T> stream) {
         return ((Seq<T>) stream::iterator).once();
     }
+
+    // endregion
 
     // region Intermediate Operations
 
