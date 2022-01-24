@@ -63,13 +63,20 @@ public interface Seq<T> extends Iterable<T> {
 
     // endregion
 
-    // region Intermediate Operations
+    // region Intermediate
 
     default Seq<T> distinct() {
         Set<T> seen = new HashSet<>();
         return filter(seen::add);
     }
 
+    default Seq<T> drop(int count) {
+        Check.argument(count >= 0, "Negative count");
+        if (count == 0) {
+            return this;
+        }
+        return () -> new ItrDrop<>(iterator(), count);
+    }
 
     default Seq<T> filter(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
@@ -84,7 +91,6 @@ public interface Seq<T> extends Iterable<T> {
         return filter(t -> predicate.test(index.getAndIncrement(), t));
     }
 
-
     default <R> Seq<R> flatMap(Function<? super T, ? extends Iterable<? extends R>> mapper) {
         Check.notNull(mapper, "mapper");
 
@@ -98,12 +104,10 @@ public interface Seq<T> extends Iterable<T> {
         return flatMap(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
-
     default Seq<Pair<Integer, T>> indexed() {
         AtomicInteger index = new AtomicInteger();
         return map(t -> Pair.of(index.getAndIncrement(), t));
     }
-
 
     default <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
@@ -118,6 +122,9 @@ public interface Seq<T> extends Iterable<T> {
         return map(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
+    default Seq<T> once() {
+        return this instanceof SeqOnce ? this : new SeqOnce<>(this);
+    }
 
     default Seq<T> onEach(Consumer<? super T> action) {
         Check.notNull(action, "action");
@@ -138,12 +145,6 @@ public interface Seq<T> extends Iterable<T> {
         });
     }
 
-
-    default Seq<T> once() {
-        return this instanceof SeqOnce ? this : new SeqOnce<>(this);
-    }
-
-
     @SuppressWarnings("unchecked")
     default Seq<T> sorted() {
         return sorted((Comparator<? super T>) Comparator.naturalOrder());
@@ -159,15 +160,6 @@ public interface Seq<T> extends Iterable<T> {
         };
     }
 
-
-    default Seq<T> drop(int count) {
-        Check.argument(count >= 0, "Negative count");
-        if (count == 0) {
-            return this;
-        }
-        return () -> new ItrDrop<>(iterator(), count);
-    }
-
     default Seq<T> take(int count) {
         Check.argument(count >= 0, "Negative count");
         if (count == 0) {
@@ -178,7 +170,7 @@ public interface Seq<T> extends Iterable<T> {
 
     // endregion
 
-    // region Terminal Operations
+    // region Terminal
 
     default boolean all(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
@@ -199,15 +191,6 @@ public interface Seq<T> extends Iterable<T> {
         return filter(predicate).any();
     }
 
-    default boolean none() {
-        return !iterator().hasNext();
-    }
-
-    default boolean none(Predicate<? super T> predicate) {
-        return filter(predicate).none();
-    }
-
-
     default int count() {
         int count = 0;
         for (T ignored : this) {
@@ -220,7 +203,6 @@ public interface Seq<T> extends Iterable<T> {
         return filter(predicate).count();
     }
 
-
     default T first() {
         return nonEmpty(iterator()).next();
     }
@@ -228,15 +210,6 @@ public interface Seq<T> extends Iterable<T> {
     default T first(Predicate<? super T> predicate) {
         return filter(predicate).first();
     }
-
-    default T last() {
-        return reduce((first, second) -> second);
-    }
-
-    default T last(Predicate<? super T> predicate) {
-        return filter(predicate).last();
-    }
-
 
     default void forEach(Consumer<? super T> consumer) {
         Check.notNull(consumer, "consumer");
@@ -253,9 +226,24 @@ public interface Seq<T> extends Iterable<T> {
         forEach(t -> consumer.accept(index.getAndIncrement(), t));
     }
 
-
     default <R> R fold(R initial, BiFunction<R, ? super T, ? extends R> operation) {
         return fold(iterator(), initial, operation);
+    }
+
+    default T last() {
+        return reduce((first, second) -> second);
+    }
+
+    default T last(Predicate<? super T> predicate) {
+        return filter(predicate).last();
+    }
+
+    default boolean none() {
+        return !iterator().hasNext();
+    }
+
+    default boolean none(Predicate<? super T> predicate) {
+        return filter(predicate).none();
     }
 
     default T reduce(BinaryOperator<T> operation) {
