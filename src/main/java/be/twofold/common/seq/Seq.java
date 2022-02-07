@@ -54,7 +54,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * Creates a new Seq from an existing iterable
      */
     public static <T> Seq<T> seq(Iterable<T> iterable) {
-        return new SeqImpl<>(iterable);
+        return new IterableSeq<>(iterable);
     }
 
     public static <T> Seq<T> seq(Iterator<T> iterator) {
@@ -324,10 +324,10 @@ public abstract class Seq<T> implements Iterable<T> {
 
     // Implementations
 
-    private static final class SeqImpl<T> extends Seq<T> {
+    private static final class IterableSeq<T> extends Seq<T> {
         private final Iterable<T> iterable;
 
-        private SeqImpl(Iterable<T> iterable) {
+        private IterableSeq(Iterable<T> iterable) {
             this.iterable = Check.notNull(iterable, "iterable is null");
         }
 
