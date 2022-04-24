@@ -427,7 +427,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * or an empty {@link Optional} if the sequence is empty.
      */
     public final Optional<T> lastOptional() {
-        return optional(iterator()).map(this::last);
+        return optional(iterator()).map(Seq::last);
     }
 
     /**
@@ -440,12 +440,98 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(predicate).lastOptional();
     }
 
-    private T last(Iterator<T> iterator) {
+    private static <T> T last(Iterator<T> iterator) {
         T last = iterator.next();
         while (iterator.hasNext()) {
             last = iterator.next();
         }
         return last;
+    }
+
+
+    // max
+
+    /**
+     * Returns the maximum element in the sequence.
+     */
+    @SuppressWarnings("unchecked")
+    public final T max() {
+        return max((Comparator<? super T>) Comparator.naturalOrder());
+    }
+
+    /**
+     * Returns the maximum element in the sequence, using the given comparator.
+     *
+     * @param comparator The comparator to use.
+     */
+    public final T max(Comparator<? super T> comparator) {
+        return max(iterator(), comparator);
+    }
+
+    /**
+     * Returns the maximum element in the sequence,
+     * or an empty {@link Optional} if the sequence is empty.
+     */
+    @SuppressWarnings("unchecked")
+    public final Optional<T> maxOptional() {
+        return maxOptional((Comparator<? super T>) Comparator.naturalOrder());
+    }
+
+    /**
+     * Returns the maximum element in the sequence, using the given comparator,
+     * or an empty {@link Optional} if the sequence is empty.
+     *
+     * @param comparator The comparator to use.
+     */
+    public final Optional<T> maxOptional(Comparator<? super T> comparator) {
+        return optional(iterator()).map(it -> max(it, comparator));
+    }
+
+    private static <T> T max(Iterator<T> iterator, Comparator<? super T> comparator) {
+        return reduce(iterator, (a, b) -> comparator.compare(a, b) > 0 ? a : b);
+    }
+
+
+    // min
+
+    /**
+     * Returns the minimum element in the sequence.
+     */
+    @SuppressWarnings("unchecked")
+    public final T min() {
+        return min((Comparator<? super T>) Comparator.naturalOrder());
+    }
+
+    /**
+     * Returns the minimum element in the sequence, using the given comparator.
+     *
+     * @param comparator The comparator to use.
+     */
+    public final T min(Comparator<? super T> comparator) {
+        return min(iterator(), comparator);
+    }
+
+    /**
+     * Returns the minimum element in the sequence,
+     * or an empty {@link Optional} if the sequence is empty.
+     */
+    @SuppressWarnings("unchecked")
+    public final Optional<T> minOptional() {
+        return minOptional((Comparator<? super T>) Comparator.naturalOrder());
+    }
+
+    /**
+     * Returns the minimum element in the sequence, using the given comparator,
+     * or an empty {@link Optional} if the sequence is empty.
+     *
+     * @param comparator The comparator to use.
+     */
+    public final Optional<T> minOptional(Comparator<? super T> comparator) {
+        return optional(iterator()).map(it -> min(it, comparator));
+    }
+
+    private static <T> T min(Iterator<T> iterator, Comparator<? super T> comparator) {
+        return reduce(iterator, (a, b) -> comparator.compare(a, b) < 0 ? a : b);
     }
 
 
@@ -519,7 +605,7 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(predicate).singleOptional();
     }
 
-    private T single(Iterator<T> it, boolean throwException) {
+    private static <T> T single(Iterator<T> it, boolean throwException) {
         T result = it.next();
         if (!it.hasNext()) {
             return result;
