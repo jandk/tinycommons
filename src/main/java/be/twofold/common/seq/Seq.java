@@ -300,6 +300,69 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
 
+    // average
+
+    public final double average(ToIntFunction<? super T> mapper) {
+        return average(nonEmptyIterator(), mapper);
+    }
+
+    public final double average(ToLongFunction<? super T> mapper) {
+        return average(nonEmptyIterator(), mapper);
+    }
+
+    public final double average(ToDoubleFunction<? super T> mapper) {
+        return average(nonEmptyIterator(), mapper);
+    }
+
+    public final OptionalDouble averageOptional(ToIntFunction<? super T> mapper) {
+        return optionalIterator()
+            .map(it -> OptionalDouble.of(average(it, mapper)))
+            .orElse(OptionalDouble.empty());
+    }
+
+    public final OptionalDouble averageOptional(ToLongFunction<? super T> mapper) {
+        return optionalIterator()
+            .map(it -> OptionalDouble.of(average(it, mapper)))
+            .orElse(OptionalDouble.empty());
+    }
+
+    public final OptionalDouble averageOptional(ToDoubleFunction<? super T> mapper) {
+        return optionalIterator()
+            .map(it -> OptionalDouble.of(average(it, mapper)))
+            .orElse(OptionalDouble.empty());
+    }
+
+    private static <T> double average(Iterator<T> iterator, ToIntFunction<? super T> mapper) {
+        double sum = 0;
+        int count = 0;
+        while (iterator.hasNext()) {
+            sum += mapper.applyAsInt(iterator.next());
+            count++;
+        }
+        return sum / count;
+    }
+
+    private static <T> double average(Iterator<T> iterator, ToLongFunction<? super T> mapper) {
+        double sum = 0;
+        int count = 0;
+        while (iterator.hasNext()) {
+            sum += mapper.applyAsLong(iterator.next());
+            count++;
+        }
+        return sum / count;
+    }
+
+    private static <T> double average(Iterator<T> iterator, ToDoubleFunction<? super T> mapper) {
+        double sum = 0;
+        int count = 0;
+        while (iterator.hasNext()) {
+            sum += mapper.applyAsDouble(iterator.next());
+            count++;
+        }
+        return sum / count;
+    }
+
+
     // count
 
     /**
