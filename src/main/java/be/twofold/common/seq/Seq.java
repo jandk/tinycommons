@@ -68,11 +68,23 @@ public abstract class Seq<T> implements Iterable<T> {
 
     // Intermediate Operations
 
+    /**
+     * Returns a sequence containing only distinct elements from this sequence.
+     * The elements are compared using {@link Object#equals(Object)}.
+     *
+     * @return The new sequence.
+     */
     public final Seq<T> distinct() {
         Set<T> seen = new HashSet<>();
         return filter(seen::add);
     }
 
+    /**
+     * Drops the first {@code count} elements of this sequence.
+     *
+     * @param count The number of elements to drop.
+     * @return The new sequence.
+     */
     public final Seq<T> drop(int count) {
         Check.argument(count >= 0, "Negative count");
         if (count == 0) {
@@ -81,12 +93,24 @@ public abstract class Seq<T> implements Iterable<T> {
         return seq(() -> new DropIterator<>(iterator(), count));
     }
 
+    /**
+     * Returns a sequence containing only the elements matching the given predicate.
+     *
+     * @param predicate The predicate to match.
+     * @return The new sequence.
+     */
     public final Seq<T> filter(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
 
         return seq(() -> new FilterIterator<>(iterator(), predicate));
     }
 
+    /**
+     * Returns a sequence containing only the elements matching the given predicate.
+     *
+     * @param predicate The predicate to match.
+     * @return The new sequence.
+     */
     public final Seq<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
         Check.notNull(predicate, "predicate");
 
@@ -94,12 +118,28 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(t -> predicate.test(index.getAndIncrement(), t));
     }
 
+    /**
+     * Returns a single sequence of all elements from results of applying
+     * the given function to each element of this sequence.
+     *
+     * @param mapper The function to apply to each element.
+     * @param <R>    The type of the elements of the new sequence.
+     * @return The new sequence.
+     */
     public final <R> Seq<R> flatMap(Function<? super T, ? extends Iterable<? extends R>> mapper) {
         Check.notNull(mapper, "mapper");
 
         return seq(() -> new FlatMapIterator<>(iterator(), mapper));
     }
 
+    /**
+     * Returns a single sequence of all elements from results of applying
+     * the given function to each element of this sequence.
+     *
+     * @param mapper The function to apply to each element.
+     * @param <R>    The type of the elements of the new sequence.
+     * @return The new sequence.
+     */
     public final <R> Seq<R> flatMapIndexed(BiFunction<Integer, ? super T, ? extends Iterable<? extends R>> mapper) {
         Check.notNull(mapper, "mapper");
 
@@ -107,17 +147,36 @@ public abstract class Seq<T> implements Iterable<T> {
         return flatMap(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
+    /**
+     * Returns a sequence of pairs of indexes and elements of this sequence.
+     *
+     * @return The new sequence.
+     */
     public final Seq<Pair<Integer, T>> indexed() {
         AtomicInteger index = new AtomicInteger();
         return map(t -> Pair.of(index.getAndIncrement(), t));
     }
 
+    /**
+     * Returns a sequence containing the results of applying the given function to each element of this sequence.
+     *
+     * @param mapper The function to apply to each element.
+     * @param <R>    The type of the elements of the new sequence.
+     * @return The new sequence.
+     */
     public final <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
 
         return seq(() -> new MapIterator<>(iterator(), mapper));
     }
 
+    /**
+     * Returns a sequence containing the results of applying the given function to each element of this sequence.
+     *
+     * @param mapper The function to apply to each element.
+     * @param <R>    The type of the elements of the new sequence.
+     * @return The new sequence.
+     */
     public final <R> Seq<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
 
@@ -125,10 +184,20 @@ public abstract class Seq<T> implements Iterable<T> {
         return map(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
+    /**
+     * Returns a sequence that can be iterated over only once.
+     *
+     * @return The new sequence.
+     */
     public final Seq<T> once() {
         return this instanceof OnceSeq ? this : new OnceSeq<>(this);
     }
 
+    /**
+     * Perform the given action for each element in the sequence, returning the sequence itself.
+     *
+     * @param action The action to be performed for each element.
+     */
     public final Seq<T> onEach(Consumer<? super T> action) {
         Check.notNull(action, "action");
 
@@ -138,6 +207,12 @@ public abstract class Seq<T> implements Iterable<T> {
         });
     }
 
+    /**
+     * Perform the given action for each element in the sequence, returning the sequence itself.
+     *
+     * @param action The action to be performed for each element.
+     * @return The sequence itself.
+     */
     public final Seq<T> onEachIndexed(BiConsumer<Integer, ? super T> action) {
         Check.notNull(action, "action");
 
@@ -148,11 +223,22 @@ public abstract class Seq<T> implements Iterable<T> {
         });
     }
 
+    /**
+     * Returns a sorted sequence containing the elements of this sequence, using the natural ordering.
+     *
+     * @return The new sequence.
+     */
     @SuppressWarnings("unchecked")
     public final Seq<T> sorted() {
         return sorted((Comparator<? super T>) Comparator.naturalOrder());
     }
 
+    /**
+     * Returns a sorted sequence containing the elements of this sequence, using the given comparator.
+     *
+     * @param comparator The comparator to use to compare elements.
+     * @return The new sequence.
+     */
     public final Seq<T> sorted(Comparator<? super T> comparator) {
         Check.notNull(comparator, "comparator");
 
@@ -163,6 +249,12 @@ public abstract class Seq<T> implements Iterable<T> {
         });
     }
 
+    /**
+     * Returns a sequence containing the first {@code count} elements.
+     *
+     * @param count The number of elements to take.
+     * @return The new sequence.
+     */
     public final Seq<T> take(int count) {
         Check.argument(count >= 0, "Negative count");
         if (count == 0) {
@@ -171,7 +263,11 @@ public abstract class Seq<T> implements Iterable<T> {
         return seq(() -> new TakeIterator<>(iterator(), count));
     }
 
+    //
     // Terminal Operations
+    //
+
+    // all
 
     public final boolean all(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
@@ -184,14 +280,31 @@ public abstract class Seq<T> implements Iterable<T> {
         return true;
     }
 
+
+    // any
+
+    /**
+     * Returns true if the sequence has at least one element.
+     */
     public final boolean any() {
         return iterator().hasNext();
     }
 
+    /**
+     * Returns true if the sequence has at least one element that matches the given predicate.
+     *
+     * @param predicate The predicate to match.
+     */
     public final boolean any(Predicate<? super T> predicate) {
         return filter(predicate).any();
     }
 
+
+    // count
+
+    /**
+     * Returns the number of elements in the sequence.
+     */
     public final int count() {
         int count = 0;
         for (T ignored : this) {
@@ -200,6 +313,11 @@ public abstract class Seq<T> implements Iterable<T> {
         return count;
     }
 
+    /**
+     * Returns the number of elements in the sequence that match the given predicate.
+     *
+     * @param predicate The predicate to match.
+     */
     public final int count(Predicate<? super T> predicate) {
         return filter(predicate).count();
     }
@@ -207,23 +325,48 @@ public abstract class Seq<T> implements Iterable<T> {
 
     // first
 
+    /**
+     * Returns the first element in the sequence.
+     */
     public final T first() {
         return nonEmpty(iterator()).next();
     }
 
+    /**
+     * Returns the first element in the sequence that matches the given predicate.
+     *
+     * @param predicate The predicate to match.
+     */
     public final T first(Predicate<? super T> predicate) {
         return filter(predicate).first();
     }
 
+    /**
+     * Returns the first element in the sequence,
+     * or an empty {@link Optional} if the sequence is empty.
+     */
     public final Optional<T> firstOptional() {
         return optional(iterator()).map(Iterator::next);
     }
 
+    /**
+     * Returns the first element in the sequence that matches the given predicate,
+     * or an empty {@link Optional} if the sequence is empty.
+     *
+     * @param predicate The predicate to match.
+     */
     public final Optional<T> firstOptional(Predicate<? super T> predicate) {
         return filter(predicate).firstOptional();
     }
 
 
+    // forEach
+
+    /**
+     * Perform the given action for each element in the sequence.
+     *
+     * @param consumer The action to be performed for each element
+     */
     public final void forEach(Consumer<? super T> consumer) {
         Check.notNull(consumer, "consumer");
 
@@ -232,6 +375,11 @@ public abstract class Seq<T> implements Iterable<T> {
         }
     }
 
+    /**
+     * Performs the given action for each element in the sequence, providing a sequential index.
+     *
+     * @param consumer The action to be performed for each element
+     */
     public final void forEachIndexed(BiConsumer<Integer, ? super T> consumer) {
         Check.notNull(consumer, "consumer");
 
@@ -239,6 +387,17 @@ public abstract class Seq<T> implements Iterable<T> {
         forEach(t -> consumer.accept(index.getAndIncrement(), t));
     }
 
+
+    // fold
+
+    /**
+     * Accumulates the elements of the sequence into a single value.
+     *
+     * @param initial   The initial value.
+     * @param operation The operation to perform on each element.
+     * @param <R>       The type of the accumulated value.
+     * @return The accumulated value.
+     */
     public final <R> R fold(R initial, BiFunction<R, ? super T, ? extends R> operation) {
         return fold(iterator(), initial, operation);
     }
@@ -246,19 +405,37 @@ public abstract class Seq<T> implements Iterable<T> {
 
     // last
 
+    /**
+     * Returns the last element in the sequence.
+     */
     public final T last() {
         Iterator<T> iterator = nonEmpty(iterator());
         return last(iterator);
     }
 
+    /**
+     * Returns the last element in the sequence that matches the given predicate.
+     *
+     * @param predicate The predicate to match.
+     */
     public final T last(Predicate<? super T> predicate) {
         return filter(predicate).last();
     }
 
+    /**
+     * Returns the last element in the sequence,
+     * or an empty {@link Optional} if the sequence is empty.
+     */
     public final Optional<T> lastOptional() {
         return optional(iterator()).map(this::last);
     }
 
+    /**
+     * Returns the last element in the sequence that matches the given predicate,
+     * or an empty {@link Optional} if the sequence is empty.
+     *
+     * @param predicate The predicate to match.
+     */
     public final Optional<T> lastOptional(Predicate<? super T> predicate) {
         return filter(predicate).lastOptional();
     }
@@ -272,10 +449,20 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
 
+    // none
+
+    /**
+     * Returns {@code true} if the sequence contains no elements.
+     */
     public final boolean none() {
         return !iterator().hasNext();
     }
 
+    /**
+     * Returns {@code true} if the sequence contains no elements that match the given predicate.
+     *
+     * @param predicate The predicate to match.
+     */
     public final boolean none(Predicate<? super T> predicate) {
         return filter(predicate).none();
     }
@@ -284,20 +471,47 @@ public abstract class Seq<T> implements Iterable<T> {
         return reduce(iterator(), operation);
     }
 
+
     // single
 
+    /**
+     * Returns the single element in the sequence,
+     * or throws an exception if there is not exactly one element.
+     *
+     * @return The single element.
+     */
     public final T single() {
         return single(nonEmpty(iterator()), true);
     }
 
+    /**
+     * Returns the single element in the sequence that matches the given predicate,
+     * or throws an exception if there is not exactly one element.
+     *
+     * @param predicate The predicate to match.
+     * @return The single element.
+     */
     public final T single(Predicate<? super T> predicate) {
         return filter(predicate).single();
     }
 
+    /**
+     * Returns the single element in the sequence,
+     * or an empty {@link Optional} if the sequence does not contain exactly one element.
+     *
+     * @return The single element.
+     */
     public final Optional<T> singleOptional() {
         return optional(iterator()).map(it -> single(it, false));
     }
 
+    /**
+     * Returns the single element in the sequence that matches the given predicate,
+     * or an empty {@link Optional} if the sequence does not contain exactly one element.
+     *
+     * @param predicate The predicate to match.
+     * @return The single element.
+     */
     public final Optional<T> singleOptional(Predicate<? super T> predicate) {
         return filter(predicate).singleOptional();
     }
