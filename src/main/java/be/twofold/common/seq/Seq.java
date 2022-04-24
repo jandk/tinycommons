@@ -204,6 +204,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(predicate).count();
     }
 
+
+    // first
+
     public final T first() {
         return nonEmpty(iterator()).next();
     }
@@ -211,6 +214,15 @@ public abstract class Seq<T> implements Iterable<T> {
     public final T first(Predicate<? super T> predicate) {
         return filter(predicate).first();
     }
+
+    public final Optional<T> firstOptional() {
+        return optional(iterator()).map(Iterator::next);
+    }
+
+    public final Optional<T> firstOptional(Predicate<? super T> predicate) {
+        return filter(predicate).firstOptional();
+    }
+
 
     public final void forEach(Consumer<? super T> consumer) {
         Check.notNull(consumer, "consumer");
