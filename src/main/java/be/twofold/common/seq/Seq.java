@@ -329,7 +329,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * Returns the first element in the sequence.
      */
     public final T first() {
-        return nonEmpty(iterator()).next();
+        return nonEmptyIterator().next();
     }
 
     /**
@@ -346,7 +346,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * or an empty {@link Optional} if the sequence is empty.
      */
     public final Optional<T> firstOptional() {
-        return optional(iterator()).map(Iterator::next);
+        return optionalIterator().map(Iterator::next);
     }
 
     /**
@@ -402,6 +402,16 @@ public abstract class Seq<T> implements Iterable<T> {
         return fold(iterator(), initial, operation);
     }
 
+    private static <E, R> R fold(Iterator<E> iterator, R initial, BiFunction<R, ? super E, ? extends R> operation) {
+        Check.notNull(operation, "operation");
+
+        R accumulator = initial;
+        while (iterator.hasNext()) {
+            accumulator = operation.apply(accumulator, iterator.next());
+        }
+        return accumulator;
+    }
+
 
     // last
 
@@ -409,8 +419,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * Returns the last element in the sequence.
      */
     public final T last() {
-        Iterator<T> iterator = nonEmpty(iterator());
-        return last(iterator);
+        return last(nonEmptyIterator());
     }
 
     /**
@@ -427,7 +436,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * or an empty {@link Optional} if the sequence is empty.
      */
     public final Optional<T> lastOptional() {
-        return optional(iterator()).map(Seq::last);
+        return optionalIterator().map(Seq::last);
     }
 
     /**
@@ -465,7 +474,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param comparator The comparator to use.
      */
     public final T max(Comparator<? super T> comparator) {
-        return max(iterator(), comparator);
+        return max(nonEmptyIterator(), comparator);
     }
 
     /**
@@ -484,7 +493,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param comparator The comparator to use.
      */
     public final Optional<T> maxOptional(Comparator<? super T> comparator) {
-        return optional(iterator()).map(it -> max(it, comparator));
+        return optionalIterator().map(it -> max(it, comparator));
     }
 
     private static <T> T max(Iterator<T> iterator, Comparator<? super T> comparator) {
@@ -508,7 +517,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param comparator The comparator to use.
      */
     public final T min(Comparator<? super T> comparator) {
-        return min(iterator(), comparator);
+        return min(nonEmptyIterator(), comparator);
     }
 
     /**
@@ -527,7 +536,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param comparator The comparator to use.
      */
     public final Optional<T> minOptional(Comparator<? super T> comparator) {
-        return optional(iterator()).map(it -> min(it, comparator));
+        return optionalIterator().map(it -> min(it, comparator));
     }
 
     private static <T> T min(Iterator<T> iterator, Comparator<? super T> comparator) {
@@ -557,7 +566,11 @@ public abstract class Seq<T> implements Iterable<T> {
     // reduce
 
     public final T reduce(BinaryOperator<T> operation) {
-        return reduce(iterator(), operation);
+        return reduce(nonEmptyIterator(), operation);
+    }
+
+    private static <E> E reduce(Iterator<E> iterator, BinaryOperator<E> operator) {
+        return fold(iterator, iterator.next(), operator);
     }
 
 
@@ -570,7 +583,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @return The single element.
      */
     public final T single() {
-        return single(nonEmpty(iterator()), true);
+        return single(nonEmptyIterator(), true);
     }
 
     /**
@@ -591,7 +604,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @return The single element.
      */
     public final Optional<T> singleOptional() {
-        return optional(iterator()).map(it -> single(it, false));
+        return optionalIterator().map(it -> single(it, false));
     }
 
     /**
@@ -668,33 +681,22 @@ public abstract class Seq<T> implements Iterable<T> {
 
     // Helpers
 
-    private static <E, R> R fold(Iterator<E> iterator, R initial, BiFunction<R, ? super E, ? extends R> operation) {
-        Check.notNull(operation, "operation");
-
-        R accumulator = initial;
-        while (iterator.hasNext()) {
-            accumulator = operation.apply(accumulator, iterator.next());
+    private Iterator<T> nonEmptyIterator() {
+        Iterator<T> iterator = iterator();
+        if (iterator.hasNext()) {
+            return iterator;
         }
-        return accumulator;
+        throw new IllegalArgumentException("Sequence contains no elements");
     }
 
-    private static <E> E reduce(Iterator<E> iterator, BinaryOperator<E> operator) {
-        return fold(nonEmpty(iterator), iterator.next(), operator);
-    }
-
-    private static <E> Iterator<E> nonEmpty(Iterator<E> iterator) {
-        if (!iterator.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        return iterator;
-    }
-
-    private static <E> Optional<Iterator<E>> optional(Iterator<E> iterator) {
+    private Optional<Iterator<T>> optionalIterator() {
+        Iterator<T> iterator = iterator();
         if (iterator.hasNext()) {
             return Optional.of(iterator);
         }
         return Optional.empty();
     }
+
 
     // Implementations
 
