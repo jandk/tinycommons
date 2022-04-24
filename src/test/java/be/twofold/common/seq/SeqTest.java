@@ -16,6 +16,13 @@ class SeqTest {
     }
 
     @Test
+    void testSeqIteratorCanOnlyIterateOnce() {
+        Seq<?> seq = Seq.seq(Collections.emptyIterator());
+        assertThat(seq.iterator()).isNotNull();
+        assertThatIllegalStateException().isThrownBy(seq::iterator);
+    }
+
+    @Test
     void testFilter() {
         assertThatNullPointerException()
             .isThrownBy(() -> Seq.empty().filter(null));

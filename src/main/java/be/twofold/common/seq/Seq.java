@@ -467,6 +467,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(predicate).none();
     }
 
+
+    // reduce
+
     public final T reduce(BinaryOperator<T> operation) {
         return reduce(iterator(), operation);
     }
