@@ -463,9 +463,8 @@ public abstract class Seq<T> implements Iterable<T> {
     /**
      * Returns the maximum element in the sequence.
      */
-    @SuppressWarnings("unchecked")
     public final T max() {
-        return max((Comparator<? super T>) Comparator.naturalOrder());
+        return max(nonEmptyIterator());
     }
 
     /**
@@ -481,9 +480,8 @@ public abstract class Seq<T> implements Iterable<T> {
      * Returns the maximum element in the sequence,
      * or an empty {@link Optional} if the sequence is empty.
      */
-    @SuppressWarnings("unchecked")
     public final Optional<T> maxOptional() {
-        return maxOptional((Comparator<? super T>) Comparator.naturalOrder());
+        return optionalIterator().map(Seq::max);
     }
 
     /**
@@ -496,6 +494,11 @@ public abstract class Seq<T> implements Iterable<T> {
         return optionalIterator().map(it -> max(it, comparator));
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> T max(Iterator<T> iterator) {
+        return max(iterator, (Comparator<? super T>) Comparator.naturalOrder());
+    }
+
     private static <T> T max(Iterator<T> iterator, Comparator<? super T> comparator) {
         return reduce(iterator, (a, b) -> comparator.compare(a, b) > 0 ? a : b);
     }
@@ -506,9 +509,8 @@ public abstract class Seq<T> implements Iterable<T> {
     /**
      * Returns the minimum element in the sequence.
      */
-    @SuppressWarnings("unchecked")
     public final T min() {
-        return min((Comparator<? super T>) Comparator.naturalOrder());
+        return min(nonEmptyIterator());
     }
 
     /**
@@ -524,9 +526,8 @@ public abstract class Seq<T> implements Iterable<T> {
      * Returns the minimum element in the sequence,
      * or an empty {@link Optional} if the sequence is empty.
      */
-    @SuppressWarnings("unchecked")
     public final Optional<T> minOptional() {
-        return minOptional((Comparator<? super T>) Comparator.naturalOrder());
+        return optionalIterator().map(Seq::min);
     }
 
     /**
@@ -537,6 +538,11 @@ public abstract class Seq<T> implements Iterable<T> {
      */
     public final Optional<T> minOptional(Comparator<? super T> comparator) {
         return optionalIterator().map(it -> min(it, comparator));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T min(Iterator<T> iterator) {
+        return min(iterator, (Comparator<? super T>) Comparator.naturalOrder());
     }
 
     private static <T> T min(Iterator<T> iterator, Comparator<? super T> comparator) {
@@ -567,6 +573,10 @@ public abstract class Seq<T> implements Iterable<T> {
 
     public final T reduce(BinaryOperator<T> operation) {
         return reduce(nonEmptyIterator(), operation);
+    }
+
+    public final Optional<T> reduceOptional(BinaryOperator<T> operation) {
+        return optionalIterator().map(it -> reduce(it, operation));
     }
 
     private static <E> E reduce(Iterator<E> iterator, BinaryOperator<E> operator) {
@@ -686,7 +696,7 @@ public abstract class Seq<T> implements Iterable<T> {
         if (iterator.hasNext()) {
             return iterator;
         }
-        throw new IllegalArgumentException("Sequence contains no elements");
+        throw new NoSuchElementException("Sequence contains no elements");
     }
 
     private Optional<Iterator<T>> optionalIterator() {
