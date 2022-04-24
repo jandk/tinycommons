@@ -23,6 +23,12 @@ class SeqTest {
     }
 
     @Test
+    void testDistinct() {
+        assertThat(Seq.empty().distinct().count()).isEqualTo(0);
+        assertThat(Seq.of(1, 2, 1, 3, 4, 3, 5, 5, 5).distinct().count()).isEqualTo(5);
+    }
+
+    @Test
     void testFilter() {
         assertThatNullPointerException()
             .isThrownBy(() -> Seq.empty().filter(null));
@@ -42,6 +48,22 @@ class SeqTest {
             .take(5).toList();
 
         assertThat(list).containsExactly(0, 4, 8, 12, 16);
+    }
+
+    @Test
+    void testFlatMap() {
+        Seq<Integer> seq = Seq.of(1, 2, 3);
+        assertThat(seq.flatMap(i -> Seq.of(i, i + 1)).toList())
+            .containsExactly(1, 2, 2, 3, 3, 4);
+    }
+
+    @Test
+    void testFlatMapIndexed() {
+        List<Integer> list = aSequence()
+            .flatMapIndexed((index, i) -> Seq.of(index, i + 1))
+            .take(8).toList();
+
+        assertThat(list).containsExactly(0, 1, 1, 3, 2, 5, 3, 7);
     }
 
     @Test
