@@ -251,7 +251,38 @@ public abstract class Seq<T> implements Iterable<T> {
         return reduce(iterator(), operation);
     }
 
+    // single
+
+    public final T single() {
+        return single(nonEmpty(iterator()), true);
+    }
+
+    public final T single(Predicate<? super T> predicate) {
+        return filter(predicate).single();
+    }
+
+    public final Optional<T> singleOptional() {
+        return optional(iterator()).map(it -> single(it, false));
+    }
+
+    public final Optional<T> singleOptional(Predicate<? super T> predicate) {
+        return filter(predicate).singleOptional();
+    }
+
+    private T single(Iterator<T> it, boolean throwException) {
+        T result = it.next();
+        if (it.hasNext()) {
+            if (throwException) {
+                throw new IllegalArgumentException("Sequence contains more than one element");
+            }
+            return null;
+        }
+        return result;
+    }
+
+    //
     // Collectors
+    //
 
     public final <C extends Collection<? super T>> C toCollection(C destination) {
         Check.notNull(destination, "destination");
@@ -320,6 +351,13 @@ public abstract class Seq<T> implements Iterable<T> {
             throw new NoSuchElementException();
         }
         return iterator;
+    }
+
+    private static <E> Optional<Iterator<E>> optional(Iterator<E> iterator) {
+        if (iterator.hasNext()) {
+            return Optional.of(iterator);
+        }
+        return Optional.empty();
     }
 
     // Implementations
