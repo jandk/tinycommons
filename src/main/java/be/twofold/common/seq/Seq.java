@@ -412,6 +412,39 @@ public abstract class Seq<T> implements Iterable<T> {
         return accumulator;
     }
 
+    private static <E> int fold(Iterator<E> iterator, ToIntFunction<? super E> mapper, int initial, IntBinaryOperator operator) {
+        Check.notNull(operator, "operator");
+        Check.notNull(mapper, "mapper");
+
+        int accumulator = initial;
+        while (iterator.hasNext()) {
+            accumulator = operator.applyAsInt(accumulator, mapper.applyAsInt(iterator.next()));
+        }
+        return accumulator;
+    }
+
+    private static <E> long fold(Iterator<E> iterator, ToLongFunction<? super E> mapper, long initial, LongBinaryOperator operator) {
+        Check.notNull(operator, "operator");
+        Check.notNull(mapper, "mapper");
+
+        long accumulator = initial;
+        while (iterator.hasNext()) {
+            accumulator = operator.applyAsLong(accumulator, mapper.applyAsLong(iterator.next()));
+        }
+        return accumulator;
+    }
+
+    private static <E> double fold(Iterator<E> iterator, ToDoubleFunction<? super E> mapper, double initial, DoubleBinaryOperator operator) {
+        Check.notNull(operator, "operator");
+        Check.notNull(mapper, "mapper");
+
+        double accumulator = initial;
+        while (iterator.hasNext()) {
+            accumulator = operator.applyAsDouble(accumulator, mapper.applyAsDouble(iterator.next()));
+        }
+        return accumulator;
+    }
+
 
     // last
 
@@ -638,6 +671,40 @@ public abstract class Seq<T> implements Iterable<T> {
         }
         return null;
     }
+
+
+    // sum
+
+    /**
+     * Returns the sum of the elements in the sequence, applying the given function to each element.
+     *
+     * @param mapper The function to apply to each element.
+     * @return The sum.
+     */
+    public final int sum(ToIntFunction<? super T> mapper) {
+        return fold(iterator(), mapper, 0, Integer::sum);
+    }
+
+    /**
+     * Returns the sum of the elements in the sequence, applying the given function to each element.
+     *
+     * @param mapper The function to apply to each element.
+     * @return The sum.
+     */
+    public final long sum(ToLongFunction<? super T> mapper) {
+        return fold(iterator(), mapper, 0, Long::sum);
+    }
+
+    /**
+     * Returns the sum of the elements in the sequence, applying the given function to each element.
+     *
+     * @param mapper The function to apply to each element.
+     * @return The sum.
+     */
+    public final double sum(ToDoubleFunction<? super T> mapper) {
+        return fold(iterator(), mapper, 0, Double::sum);
+    }
+
 
     //
     // Collectors
