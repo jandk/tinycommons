@@ -231,13 +231,34 @@ public abstract class Seq<T> implements Iterable<T> {
         return fold(iterator(), initial, operation);
     }
 
+
+    // last
+
     public final T last() {
-        return reduce((first, second) -> second);
+        Iterator<T> iterator = nonEmpty(iterator());
+        return last(iterator);
     }
 
     public final T last(Predicate<? super T> predicate) {
         return filter(predicate).last();
     }
+
+    public final Optional<T> lastOptional() {
+        return optional(iterator()).map(this::last);
+    }
+
+    public final Optional<T> lastOptional(Predicate<? super T> predicate) {
+        return filter(predicate).lastOptional();
+    }
+
+    private T last(Iterator<T> iterator) {
+        T last = iterator.next();
+        while (iterator.hasNext()) {
+            last = iterator.next();
+        }
+        return last;
+    }
+
 
     public final boolean none() {
         return !iterator().hasNext();
