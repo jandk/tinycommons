@@ -769,6 +769,45 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
 
+    // summary
+
+    /**
+     * Returns the summary of the elements in the sequence, applying the given function to each element.
+     *
+     * @param mapper The function to apply to each element.
+     */
+    public final IntSummaryStatistics summary(ToIntFunction<? super T> mapper) {
+        return fold(iterator(), new IntSummaryStatistics(), (statistics, element) -> {
+            statistics.accept(mapper.applyAsInt(element));
+            return statistics;
+        });
+    }
+
+    /**
+     * Returns the summary of the elements in the sequence, applying the given function to each element.
+     *
+     * @param mapper The function to apply to each element.
+     */
+    public final LongSummaryStatistics summary(ToLongFunction<? super T> mapper) {
+        return fold(iterator(), new LongSummaryStatistics(), (statistics, element) -> {
+            statistics.accept(mapper.applyAsLong(element));
+            return statistics;
+        });
+    }
+
+    /**
+     * Returns the summary of the elements in the sequence, applying the given function to each element.
+     *
+     * @param mapper The function to apply to each element.
+     */
+    public final DoubleSummaryStatistics summary(ToDoubleFunction<? super T> mapper) {
+        return fold(iterator(), new DoubleSummaryStatistics(), (statistics, element) -> {
+            statistics.accept(mapper.applyAsDouble(element));
+            return statistics;
+        });
+    }
+
+
     //
     // Collectors
     //
