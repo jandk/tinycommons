@@ -518,13 +518,13 @@ public abstract class Seq<T> implements Iterable<T> {
 
     private T single(Iterator<T> it, boolean throwException) {
         T result = it.next();
-        if (it.hasNext()) {
-            if (throwException) {
-                throw new IllegalArgumentException("Sequence contains more than one element");
-            }
-            return null;
+        if (!it.hasNext()) {
+            return result;
         }
-        return result;
+        if (throwException) {
+            throw new IllegalArgumentException("Sequence contains more than one element");
+        }
+        return null;
     }
 
     //
