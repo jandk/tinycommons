@@ -87,11 +87,15 @@ public abstract class Seq<T> implements Iterable<T> {
      */
     public final Seq<T> drop(int count) {
         Check.argument(count >= 0, "Negative count");
+
         if (count == 0) {
             return this;
         }
         return seq(() -> new DropIterator<>(iterator(), count));
     }
+
+
+    // filter
 
     /**
      * Returns a sequence containing only the elements matching the given predicate.
@@ -125,10 +129,33 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <R>   The type of the elements.
      * @return The new sequence.
      */
-    public final <R> Seq<R> filterInstancesOf(Class<R> clazz) {
+    public final <R> Seq<R> filterInstanceOf(Class<R> clazz) {
         Check.notNull(clazz, "clazz");
+
         return filter(clazz::isInstance).map(clazz::cast);
     }
+
+    /**
+     * Returns a sequence containing only the elements not matching the given predicate.
+     *
+     * @param predicate The predicate to not match.
+     * @return The new sequence.
+     */
+    public final Seq<T> filterNot(Predicate<? super T> predicate) {
+        Check.notNull(predicate, "predicate");
+
+        return filter(predicate.negate());
+    }
+
+    /**
+     * Returns a sequence containing only non-null elements.
+     */
+    public final Seq<T> filterNotNull() {
+        return filter(Objects::nonNull);
+    }
+
+
+    // flatMap
 
     /**
      * Returns a single sequence of all elements from results of applying
@@ -327,21 +354,15 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
     public final OptionalDouble averageOptional(ToIntFunction<? super T> mapper) {
-        return optionalIterator()
-            .map(it -> OptionalDouble.of(average(it, mapper)))
-            .orElse(OptionalDouble.empty());
+        return optionalIterator().map(it -> OptionalDouble.of(average(it, mapper))).orElse(OptionalDouble.empty());
     }
 
     public final OptionalDouble averageOptional(ToLongFunction<? super T> mapper) {
-        return optionalIterator()
-            .map(it -> OptionalDouble.of(average(it, mapper)))
-            .orElse(OptionalDouble.empty());
+        return optionalIterator().map(it -> OptionalDouble.of(average(it, mapper))).orElse(OptionalDouble.empty());
     }
 
     public final OptionalDouble averageOptional(ToDoubleFunction<? super T> mapper) {
-        return optionalIterator()
-            .map(it -> OptionalDouble.of(average(it, mapper)))
-            .orElse(OptionalDouble.empty());
+        return optionalIterator().map(it -> OptionalDouble.of(average(it, mapper))).orElse(OptionalDouble.empty());
     }
 
     private static <T> double average(Iterator<T> iterator, ToIntFunction<? super T> mapper) {
@@ -922,11 +943,7 @@ public abstract class Seq<T> implements Iterable<T> {
         return Set.copyOf(toList());
     }
 
-    public final <K, V, M extends Map<K, V>> M toMap(
-        Function<? super T, ? extends K> keyMapper,
-        Function<? super T, ? extends V> valueMapper,
-        M destination
-    ) {
+    public final <K, V, M extends Map<K, V>> M toMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper, M destination) {
         Check.notNull(keyMapper, "keyMapper");
         Check.notNull(valueMapper, "valueMapper");
         Check.notNull(destination, "destination");

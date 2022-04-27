@@ -43,12 +43,8 @@ class SeqTest {
         assertThatNullPointerException()
             .isThrownBy(() -> Seq.empty().filter(null));
 
-        assertThat(Seq.empty().filter(o -> true).count()).isEqualTo(0);
-        assertThat(Seq.empty().filter(o -> false).count()).isEqualTo(0);
-
-        Seq<String> seq = Seq.of("aaa", null, "bbb", null, "ccc");
-        List<String> filtered = seq.filter(s -> s == null || s.startsWith("b")).toList();
-        assertThat(filtered).containsExactly(null, "bbb", null);
+        assertThat(IntegerSeq.filter(i -> i % 2 == 0))
+            .containsExactly(2, 4);
     }
 
     @Test
@@ -61,13 +57,29 @@ class SeqTest {
     }
 
     @Test
-    void testFilterInstancesOf() {
+    void testFilterInstanceOf() {
         Seq<Number> seq = Seq.of(1, 2.0, 3L, 4, 5.0, 6L);
-        assertThat(seq.filterInstancesOf(Double.class)).containsExactly(2.0, 5.0);
-        assertThat(seq.filterInstancesOf(String.class)).isEmpty();
+        assertThat(seq.filterInstanceOf(Double.class)).containsExactly(2.0, 5.0);
+        assertThat(seq.filterInstanceOf(String.class)).isEmpty();
         assertThatNullPointerException()
-            .isThrownBy(() -> seq.filterInstancesOf(null));
+            .isThrownBy(() -> seq.filterInstanceOf(null));
     }
+
+    @Test
+    void testFilterNot() {
+        assertThatNullPointerException()
+            .isThrownBy(() -> Seq.empty().filterNot(null));
+
+        assertThat(IntegerSeq.filterNot(i -> i % 2 == 0))
+            .containsExactly(1, 3, 5);
+    }
+
+    @Test
+    void testFilterNotNull() {
+        assertThat(Seq.of(null, 1, 2, 3, null, 4, 5).filterNotNull())
+            .containsExactly(1, 2, 3, 4, 5);
+    }
+
 
     @Test
     void testFlatMap() {
