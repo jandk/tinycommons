@@ -31,7 +31,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @return The new Seq
      */
     @SuppressWarnings("unchecked")
-    public static <T> Seq<T> empty() {
+    public static <T> Seq<T> of() {
         return (Seq<T>) Empty;
     }
 
@@ -45,7 +45,7 @@ public abstract class Seq<T> implements Iterable<T> {
     public static <T> Seq<T> of(T... elements) {
         Check.notNull(elements, "elements is null");
         if (elements.length == 0) {
-            return empty();
+            return of();
         }
         return seq(() -> Arrays.asList(elements).iterator());
     }
@@ -331,7 +331,7 @@ public abstract class Seq<T> implements Iterable<T> {
     public final Seq<T> take(int count) {
         Check.argument(count >= 0, "Negative count");
         if (count == 0) {
-            return empty();
+            return of();
         }
         return seq(() -> new TakeIterator<>(iterator(), count));
     }

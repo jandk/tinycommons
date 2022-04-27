@@ -10,12 +10,12 @@ import static org.assertj.core.api.Assertions.*;
 class SeqTest {
 
     private static final Seq<String> Sequence = Seq.of("one", "two", "three", "four", "five");
-    private static final Seq<String> Empty = Seq.empty();
-    private static final Seq<Integer> EmptyInteger = Seq.empty();
+    private static final Seq<String> Empty = Seq.of();
+    private static final Seq<Integer> EmptyInteger = Seq.of();
     private static final Seq<Integer> SequenceInteger = Seq.of(1, 2, 3, 4);
-    private static final Seq<Long> EmptyLong = Seq.empty();
+    private static final Seq<Long> EmptyLong = Seq.of();
     private static final Seq<Long> SequenceLong = Seq.of(1L, 2L, 3L, 4L);
-    private static final Seq<Double> EmptyDouble = Seq.empty();
+    private static final Seq<Double> EmptyDouble = Seq.of();
     private static final Seq<Double> SequenceDouble = Seq.of(1.0, 2.0, 3.0, 4.0);
 
     // region Construction
@@ -41,7 +41,7 @@ class SeqTest {
 
     @Test
     void testDistinct() {
-        assertThat(Seq.empty().distinct()).isEmpty();
+        assertThat(Seq.of().distinct()).isEmpty();
         assertThat(Seq.of(1, 1, 1, 3, 2, 1, 3, 2, 1, 1).distinct())
             .containsExactlyInAnyOrder(1, 2, 3);
     }
@@ -76,7 +76,7 @@ class SeqTest {
     @Test
     void testFilterThrows() {
         assertThatNullPointerException()
-            .isThrownBy(() -> Seq.empty().filter(null));
+            .isThrownBy(() -> Seq.of().filter(null));
     }
 
     @Test
