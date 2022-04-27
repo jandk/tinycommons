@@ -598,6 +598,50 @@ public abstract class Seq<T> implements Iterable<T> {
 
     // endregion
 
+    // region groupBy
+
+    /**
+     * Groups the elements of the sequence by the key given by the key selector function,
+     * into a map with each key mapping to a list of values.
+     *
+     * @param keyMapper The function to transform the elements into keys.
+     * @param <K>       The type of the keys.
+     * @return The map with each key mapping to a list of values.
+     */
+    public final <K> Map<K, List<T>> groupBy(Function<? super T, ? extends K> keyMapper) {
+        return groupBy(keyMapper, Function.identity());
+    }
+
+    /**
+     * Groups the elements of the sequence transformed by the value selector function,
+     * by the key given by the key selector function, into a map with each key mapping to a list of values.
+     *
+     * @param keyMapper   The function to transform the elements into keys.
+     * @param valueMapper The function to transform the elements into values.
+     * @param <K>         The type of the keys.
+     * @param <V>         The type of the values.
+     * @return The map with each key mapping to a list of values.
+     */
+    public final <K, V> Map<K, List<V>> groupBy(
+        Function<? super T, ? extends K> keyMapper,
+        Function<? super T, ? extends V> valueMapper
+    ) {
+        Check.notNull(keyMapper, "keyMapper");
+        Check.notNull(valueMapper, "valueMapper");
+
+        Map<K, List<V>> result = new HashMap<>();
+        for (T element : this) {
+            K key = keyMapper.apply(element);
+            V value = valueMapper.apply(element);
+            result
+                .computeIfAbsent(key, __ -> new ArrayList<>())
+                .add(value);
+        }
+        return result;
+    }
+
+    // endregion
+
     // region indexOf
 
     /**

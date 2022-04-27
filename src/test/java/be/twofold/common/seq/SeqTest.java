@@ -332,6 +332,35 @@ class SeqTest {
 
     // endregion
 
+    // region groupBy
+
+    @Test
+    void testGroupByWithKeyMapper() {
+        assertThatNullPointerException().isThrownBy(() -> Sequence.groupBy(null));
+
+        assertThat(Empty.groupBy(String::length)).isEmpty();
+        assertThat(Sequence.groupBy(String::length)).containsOnly(
+            Map.entry(3, List.of("one", "two")),
+            Map.entry(4, List.of("four", "five")),
+            Map.entry(5, List.of("three"))
+        );
+    }
+
+    @Test
+    void testGroupByWithKeyMapperAndValueMapper() {
+        assertThatNullPointerException().isThrownBy(() -> Sequence.groupBy(null, Function.identity()));
+        assertThatNullPointerException().isThrownBy(() -> Sequence.groupBy(Function.identity(), null));
+
+        assertThat(Empty.groupBy(String::length, s -> s.charAt(0))).isEmpty();
+        assertThat(Sequence.groupBy(String::length, s -> s.charAt(0))).containsOnly(
+            Map.entry(3, List.of('o', 't')),
+            Map.entry(4, List.of('f', 'f')),
+            Map.entry(5, List.of('t'))
+        );
+    }
+
+    // endregion
+
     // region indexOf
 
     @Test
