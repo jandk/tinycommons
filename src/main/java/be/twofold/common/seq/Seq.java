@@ -19,7 +19,7 @@ public abstract class Seq<T> implements Iterable<T> {
 
     private static final Seq<?> Empty = seq(Collections::emptyIterator);
 
-    // Construction
+    // region Factories
 
     private Seq() {
     }
@@ -66,7 +66,11 @@ public abstract class Seq<T> implements Iterable<T> {
         return seq(stream::iterator).once();
     }
 
-    // Intermediate Operations
+    // endregion
+
+    // region Intermediate Operations
+
+    // region distinct
 
     /**
      * Returns a sequence containing only distinct elements from this sequence.
@@ -78,6 +82,10 @@ public abstract class Seq<T> implements Iterable<T> {
         Set<T> seen = new HashSet<>();
         return filter(seen::add);
     }
+
+    // endregion
+
+    // region drop
 
     /**
      * Drops the first {@code count} elements of this sequence.
@@ -94,8 +102,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return seq(() -> new DropIterator<>(iterator(), count));
     }
 
+    // endregion
 
-    // filter
+    // region filter
 
     /**
      * Returns a sequence containing only the elements matching the given predicate.
@@ -129,7 +138,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <R>   The type of the elements.
      * @return The new sequence.
      */
-    public final <R> Seq<R> filterInstanceOf(Class<R> clazz) {
+    public final <R> Seq<R> filterIsInstance(Class<R> clazz) {
         Check.notNull(clazz, "clazz");
 
         return filter(clazz::isInstance).map(clazz::cast);
@@ -154,8 +163,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(Objects::nonNull);
     }
 
+    // endregion
 
-    // flatMap
+    // region flatMap
 
     /**
      * Returns a single sequence of all elements from results of applying
@@ -186,6 +196,10 @@ public abstract class Seq<T> implements Iterable<T> {
         return flatMap(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
+    // endregion
+
+    // region indexed
+
     /**
      * Returns a sequence of pairs of indexes and elements of this sequence.
      *
@@ -195,6 +209,10 @@ public abstract class Seq<T> implements Iterable<T> {
         AtomicInteger index = new AtomicInteger();
         return map(t -> Pair.of(index.getAndIncrement(), t));
     }
+
+    // endregion
+
+    // region map
 
     /**
      * Returns a sequence containing the results of applying the given function to each element of this sequence.
@@ -223,6 +241,10 @@ public abstract class Seq<T> implements Iterable<T> {
         return map(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
+    // endregion
+
+    // region once
+
     /**
      * Returns a sequence that can be iterated over only once.
      *
@@ -231,6 +253,10 @@ public abstract class Seq<T> implements Iterable<T> {
     public final Seq<T> once() {
         return this instanceof OnceSeq ? this : new OnceSeq<>(this);
     }
+
+    // endregion
+
+    // region onEach
 
     /**
      * Perform the given action for each element in the sequence, returning the sequence itself.
@@ -262,6 +288,10 @@ public abstract class Seq<T> implements Iterable<T> {
         });
     }
 
+    // endregion
+
+    // region sorted
+
     /**
      * Returns a sorted sequence containing the elements of this sequence, using the natural ordering.
      *
@@ -288,6 +318,10 @@ public abstract class Seq<T> implements Iterable<T> {
         });
     }
 
+    // endregion
+
+    // region take
+
     /**
      * Returns a sequence containing the first {@code count} elements.
      *
@@ -302,11 +336,13 @@ public abstract class Seq<T> implements Iterable<T> {
         return seq(() -> new TakeIterator<>(iterator(), count));
     }
 
-    //
-    // Terminal Operations
-    //
+    // endregion
 
-    // all
+    // endregion
+
+    // region Terminal Operations
+
+    // region all
 
     public final boolean all(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
@@ -319,8 +355,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return true;
     }
 
+    // endregion
 
-    // any
+    // region any
 
     /**
      * Returns true if the sequence has at least one element.
@@ -338,8 +375,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(predicate).any();
     }
 
+    // endregion
 
-    // average
+    // region average
 
     public final double average(ToIntFunction<? super T> mapper) {
         return average(nonEmptyIterator(), mapper);
@@ -395,8 +433,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return sum / count;
     }
 
+    // endregion
 
-    // contains
+    // region contains
 
     /**
      * Returns true if the sequence contains the given element.
@@ -407,8 +446,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return indexOf(element) >= 0;
     }
 
+    // endregion
 
-    // count
+    // region count
 
     /**
      * Returns the number of elements in the sequence.
@@ -430,8 +470,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(predicate).count();
     }
 
+    // endregion
 
-    // first
+    // region first
 
     /**
      * Returns the first element in the sequence.
@@ -467,8 +508,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(predicate).firstOptional();
     }
 
+    // endregion
 
-    // forEach
+    // region forEach
 
     /**
      * Perform the given action for each element in the sequence.
@@ -495,8 +537,9 @@ public abstract class Seq<T> implements Iterable<T> {
         forEach(t -> consumer.accept(index.getAndIncrement(), t));
     }
 
+    // endregion
 
-    // fold
+    // region fold
 
     /**
      * Accumulates the elements of the sequence into a single value.
@@ -553,8 +596,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return accumulator;
     }
 
+    // endregion
 
-    // indexOf
+    // region indexOf
 
     /**
      * Returns the index of the first occurrence of the specified element in the sequence,
@@ -583,8 +627,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return -1;
     }
 
+    // endregion
 
-    // last
+    // region last
 
     /**
      * Returns the last element in the sequence.
@@ -628,8 +673,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return last;
     }
 
+    // endregion
 
-    // lastIndexOf
+    // region lastIndexOf
 
     /**
      * Returns the index of the first occurrence of the specified element in the sequence,
@@ -659,8 +705,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return lastIndex;
     }
 
+    // endregion
 
-    // max
+    // region max
 
     /**
      * Returns the maximum element in the sequence.
@@ -705,8 +752,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return reduce(iterator, (a, b) -> comparator.compare(a, b) > 0 ? a : b);
     }
 
+    // endregion
 
-    // min
+    // region min
 
     /**
      * Returns the minimum element in the sequence.
@@ -751,8 +799,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return reduce(iterator, (a, b) -> comparator.compare(a, b) < 0 ? a : b);
     }
 
+    // endregion
 
-    // none
+    // region none
 
     /**
      * Returns {@code true} if the sequence contains no elements.
@@ -770,8 +819,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(predicate).none();
     }
 
+    // endregion
 
-    // reduce
+    // region reduce
 
     public final T reduce(BinaryOperator<T> operation) {
         return reduce(nonEmptyIterator(), operation);
@@ -785,8 +835,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return fold(iterator, iterator.next(), operator);
     }
 
+    // endregion
 
-    // single
+    // region single
 
     /**
      * Returns the single element in the sequence,
@@ -841,8 +892,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return null;
     }
 
+    // endregion
 
-    // sum
+    // region sum
 
     /**
      * Returns the sum of the elements in the sequence, applying the given function to each element.
@@ -874,8 +926,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return fold(iterator(), mapper, 0, Double::sum);
     }
 
+    // endregion
 
-    // summary
+    // region summary
 
     /**
      * Returns the summary of the elements in the sequence, applying the given function to each element.
@@ -913,10 +966,9 @@ public abstract class Seq<T> implements Iterable<T> {
         });
     }
 
+    // endregion
 
-    //
-    // Collectors
-    //
+    // region toCollection
 
     public final <C extends Collection<? super T>> C toCollection(C destination) {
         Check.notNull(destination, "destination");
@@ -943,6 +995,10 @@ public abstract class Seq<T> implements Iterable<T> {
         return Set.copyOf(toList());
     }
 
+    // endregion
+
+    // region toMap
+
     public final <K, V, M extends Map<K, V>> M toMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper, M destination) {
         Check.notNull(keyMapper, "keyMapper");
         Check.notNull(valueMapper, "valueMapper");
@@ -960,7 +1016,11 @@ public abstract class Seq<T> implements Iterable<T> {
         return destination;
     }
 
-    // Helpers
+    // endregion
+
+    // endregion
+
+    // region Helpers
 
     private Iterator<T> nonEmptyIterator() {
         Iterator<T> iterator = iterator();
@@ -978,8 +1038,9 @@ public abstract class Seq<T> implements Iterable<T> {
         return Optional.empty();
     }
 
+    // endregion
 
-    // Implementations
+    // region Implementation Classes
 
     private static final class IterableSeq<T> extends Seq<T> {
         private final Iterable<T> iterable;
@@ -1148,5 +1209,7 @@ public abstract class Seq<T> implements Iterable<T> {
             return iterator.next();
         }
     }
+
+    // endregion
 
 }

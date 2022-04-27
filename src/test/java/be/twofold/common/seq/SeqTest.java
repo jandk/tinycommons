@@ -57,12 +57,12 @@ class SeqTest {
     }
 
     @Test
-    void testFilterInstanceOf() {
+    void testFilterIsInstance() {
         Seq<Number> seq = Seq.of(1, 2.0, 3L, 4, 5.0, 6L);
-        assertThat(seq.filterInstanceOf(Double.class)).containsExactly(2.0, 5.0);
-        assertThat(seq.filterInstanceOf(String.class)).isEmpty();
+        assertThat(seq.filterIsInstance(Double.class)).containsExactly(2.0, 5.0);
+        assertThat(seq.filterIsInstance(String.class)).isEmpty();
         assertThatNullPointerException()
-            .isThrownBy(() -> seq.filterInstanceOf(null));
+            .isThrownBy(() -> seq.filterIsInstance(null));
     }
 
     @Test
