@@ -64,6 +64,7 @@ class SeqTest {
     void testFilterInstancesOf() {
         Seq<Number> seq = Seq.of(1, 2.0, 3L, 4, 5.0, 6L);
         assertThat(seq.filterInstancesOf(Double.class)).containsExactly(2.0, 5.0);
+        assertThat(seq.filterInstancesOf(String.class)).isEmpty();
         assertThatNullPointerException()
             .isThrownBy(() -> seq.filterInstancesOf(null));
     }
