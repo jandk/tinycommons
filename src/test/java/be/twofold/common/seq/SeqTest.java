@@ -62,15 +62,14 @@ class SeqTest {
 
     @Test
     void testFlatMap() {
-        Seq<Integer> seq = IntegerSeq;
-        assertThat(seq.flatMap(i -> Seq.of(i, i + 1)).toList())
-            .containsExactly(1, 2, 2, 3, 3, 4);
+        assertThat(IntegerSeq.flatMap(i -> Seq.of(i, i * 2)).toList())
+            .containsExactly(1, 2, 2, 4, 3, 6, 4, 8, 5, 10);
     }
 
     @Test
     void testFlatMapIndexed() {
         List<Integer> list = aSequence()
-            .flatMapIndexed((index, i) -> Seq.of(index, i + 1))
+            .flatMapIndexed((index, i) -> Seq.of(index, i * 2))
             .take(8).toList();
 
         assertThat(list).containsExactly(0, 1, 1, 3, 2, 5, 3, 7);
@@ -122,8 +121,8 @@ class SeqTest {
 
     @Test
     void testAnyWithPredicate() {
-        assertThat(IntegerSeq.any(i -> i == 2)).isTrue();
-        assertThat(IntegerSeq.any(i -> i == 4)).isFalse();
+        assertThat(IntegerSeq.any(i -> i == 3)).isTrue();
+        assertThat(IntegerSeq.any(i -> i == 6)).isFalse();
         assertThat(Seq.<Integer>of().any(i -> i == 2)).isFalse();
     }
 
@@ -331,8 +330,8 @@ class SeqTest {
 
     @Test
     void testNoneWithPredicate() {
-        assertThat(IntegerSeq.none(i -> i == 2)).isFalse();
-        assertThat(IntegerSeq.none(i -> i == 4)).isTrue();
+        assertThat(IntegerSeq.none(i -> i == 3)).isFalse();
+        assertThat(IntegerSeq.none(i -> i == 6)).isTrue();
         assertThat(Seq.<Integer>of().none(i -> i == 2)).isTrue();
     }
 
@@ -437,17 +436,17 @@ class SeqTest {
 
     @Test
     public void testSumOfInt() {
-        assertThat(IntegerSeq.sum(Integer::intValue)).isEqualTo(6);
+        assertThat(IntegerSeq.sum(Integer::intValue)).isEqualTo(15);
     }
 
     @Test
     public void testSumOfLong() {
-        assertThat(LongSeq.sum(Long::longValue)).isEqualTo(6L);
+        assertThat(LongSeq.sum(Long::longValue)).isEqualTo(15L);
     }
 
     @Test
     public void testSumOfDouble() {
-        assertThat(DoubleSeq.sum(Double::doubleValue)).isEqualTo(6.0);
+        assertThat(DoubleSeq.sum(Double::doubleValue)).isEqualTo(15.0);
     }
 
 }
