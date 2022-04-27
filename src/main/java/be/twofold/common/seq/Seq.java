@@ -118,6 +118,11 @@ public abstract class Seq<T> implements Iterable<T> {
         return filter(t -> predicate.test(index.getAndIncrement(), t));
     }
 
+    public final <R extends T> Seq<R> filterInstancesOf(Class<R> clazz) {
+        Check.notNull(clazz, "clazz");
+        return filter(clazz::isInstance).map(clazz::cast);
+    }
+
     /**
      * Returns a single sequence of all elements from results of applying
      * the given function to each element of this sequence.

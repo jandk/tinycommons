@@ -61,6 +61,14 @@ class SeqTest {
     }
 
     @Test
+    void testFilterInstancesOf() {
+        Seq<Number> seq = Seq.of(1, 2.0, 3L, 4, 5.0, 6L);
+        assertThat(seq.filterInstancesOf(Double.class)).containsExactly(2.0, 5.0);
+        assertThatNullPointerException()
+            .isThrownBy(() -> seq.filterInstancesOf(null));
+    }
+
+    @Test
     void testFlatMap() {
         assertThat(IntegerSeq.flatMap(i -> Seq.of(i, i * 2)).toList())
             .containsExactly(1, 2, 2, 4, 3, 6, 4, 8, 5, 10);
