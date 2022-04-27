@@ -72,7 +72,7 @@ class SeqTest {
             .flatMapIndexed((index, i) -> Seq.of(index, i * 2))
             .take(8).toList();
 
-        assertThat(list).containsExactly(0, 1, 1, 3, 2, 5, 3, 7);
+        assertThat(list).containsExactly(0, 0, 1, 4, 2, 8, 3, 12);
     }
 
     @Test
@@ -187,6 +187,16 @@ class SeqTest {
     }
 
 
+    // contains
+
+    @Test
+    void testContains() {
+        assertThat(IntegerSeq.contains(3)).isTrue();
+        assertThat(IntegerSeq.contains(6)).isFalse();
+        assertThat(Seq.of("a", "b", "c").contains(null)).isFalse();
+    }
+
+
     // first
 
     @Test
@@ -229,6 +239,23 @@ class SeqTest {
     }
 
 
+    // indexOf
+
+    @Test
+    void testIndexOf() {
+        assertThat(Seq.of(1, 2, 1, 2).indexOf(2)).isEqualTo(1);
+        assertThat(Seq.of(1, 2, 1, 2).indexOf(3)).isEqualTo(-1);
+    }
+
+    @Test
+    void testIndexOfWithPredicate() {
+        assertThat(Seq.of(1, 2, 1, 2).indexOf(x -> x == 2)).isEqualTo(1);
+        assertThat(Seq.of(1, 2, 1, 2).indexOf(x -> x == 3)).isEqualTo(-1);
+        assertThatNullPointerException()
+            .isThrownBy(() -> Seq.of(1, 2, 1, 2).indexOf((Predicate<? super Integer>) null));
+    }
+
+
     // last
 
     @Test
@@ -259,6 +286,23 @@ class SeqTest {
         assertThat(Seq.empty().lastOptional(x -> true)).isEmpty();
         assertThat(Seq.of("one", "two").lastOptional(x -> x.equals("one"))).hasValue("one");
         assertThat(Seq.of("one", "two", "three").lastOptional(x -> x.length() == 3)).hasValue("two");
+    }
+
+
+    // lastIndexOf
+
+    @Test
+    void testLastIndexOf() {
+        assertThat(Seq.of(1, 2, 1, 2).lastIndexOf(1)).isEqualTo(2);
+        assertThat(Seq.of(1, 2, 1, 2).lastIndexOf(3)).isEqualTo(-1);
+    }
+
+    @Test
+    void testLastIndexOfWithPredicate() {
+        assertThat(Seq.of(1, 2, 1, 2).lastIndexOf(x -> x == 1)).isEqualTo(2);
+        assertThat(Seq.of(1, 2, 1, 2).lastIndexOf(x -> x == 3)).isEqualTo(-1);
+        assertThatNullPointerException()
+            .isThrownBy(() -> Seq.of(1, 2, 1, 2).lastIndexOf((Predicate<? super Integer>) null));
     }
 
 

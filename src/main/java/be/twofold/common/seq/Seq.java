@@ -363,6 +363,18 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
 
+    // contains
+
+    /**
+     * Returns true if the sequence contains the given element.
+     *
+     * @param element The element to search for.
+     */
+    public final boolean contains(T element) {
+        return indexOf(element) >= 0;
+    }
+
+
     // count
 
     /**
@@ -509,6 +521,36 @@ public abstract class Seq<T> implements Iterable<T> {
     }
 
 
+    // indexOf
+
+    /**
+     * Returns the index of the first occurrence of the specified element in the sequence,
+     * or -1 if the sequence does not contain the element.
+     *
+     * @param element The element to search for.
+     */
+    public final int indexOf(T element) {
+        return indexOf(t -> Objects.equals(t, element));
+    }
+
+    /**
+     * Returns the index of the first element matching the given predicate,
+     * or -1 if the sequence does not contain any element matching the predicate.
+     *
+     * @param predicate The predicate to match.
+     */
+    public final int indexOf(Predicate<? super T> predicate) {
+        int index = 0;
+        for (T element : this) {
+            if (predicate.test(element)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+
     // last
 
     /**
@@ -551,6 +593,37 @@ public abstract class Seq<T> implements Iterable<T> {
             last = iterator.next();
         }
         return last;
+    }
+
+
+    // lastIndexOf
+
+    /**
+     * Returns the index of the first occurrence of the specified element in the sequence,
+     * or -1 if the sequence does not contain the element.
+     *
+     * @param element The element to search for.
+     */
+    public final int lastIndexOf(T element) {
+        return lastIndexOf(t -> Objects.equals(t, element));
+    }
+
+    /**
+     * Returns the index of the first element matching the given predicate,
+     * or -1 if the sequence does not contain any element matching the predicate.
+     *
+     * @param predicate The predicate to match.
+     */
+    public final int lastIndexOf(Predicate<? super T> predicate) {
+        int index = 0;
+        int lastIndex = -1;
+        for (T element : this) {
+            if (predicate.test(element)) {
+                lastIndex = index;
+            }
+            index++;
+        }
+        return lastIndex;
     }
 
 
