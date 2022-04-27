@@ -4,20 +4,21 @@ import org.junit.jupiter.api.*;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.*;
 
 import static org.assertj.core.api.Assertions.*;
 
 class SeqTest {
 
-    private static final Seq<Integer> IntegerSeqEmpty = Seq.empty();
-    private static final Seq<Double> DoubleSeqEmpty = Seq.empty();
-    private static final Seq<Long> LongSeqEmpty = Seq.empty();
-    private static final Seq<Integer> IntegerSeq = Seq.of(1, 2, 3, 4, 5);
-    private static final Seq<Double> DoubleSeq = Seq.of(1.0, 2.0, 3.0, 4.0, 5.0);
-    private static final Seq<Long> LongSeq = Seq.of(1L, 2L, 3L, 4L, 5L);
+    private static final Seq<String> Sequence = Seq.of("one", "two", "three", "four", "five");
+    private static final Seq<String> Empty = Seq.empty();
+    private static final Seq<Integer> EmptyInteger = Seq.empty();
+    private static final Seq<Integer> SequenceInteger = Seq.of(1, 2, 3, 4);
+    private static final Seq<Long> EmptyLong = Seq.empty();
+    private static final Seq<Long> SequenceLong = Seq.of(1L, 2L, 3L, 4L);
+    private static final Seq<Double> EmptyDouble = Seq.empty();
+    private static final Seq<Double> SequenceDouble = Seq.of(1.0, 2.0, 3.0, 4.0);
 
-    // region Seq
+    // region Construction
 
     @Test
     void testOf() {
@@ -32,28 +33,62 @@ class SeqTest {
         assertThatIllegalStateException().isThrownBy(seq::iterator);
     }
 
+    // endregion
+
+    // region Intermediate Operations
+
+    // region distinct
+
     @Test
     void testDistinct() {
-        assertThat(Seq.empty().distinct().count()).isEqualTo(0);
-        assertThat(Seq.of(1, 2, 1, 3, 4, 3, 5, 5, 5).distinct().count()).isEqualTo(5);
+        assertThat(Seq.empty().distinct()).isEmpty();
+        assertThat(Seq.of(1, 1, 1, 3, 2, 1, 3, 2, 1, 1).distinct())
+            .containsExactlyInAnyOrder(1, 2, 3);
+    }
+
+    // endregion
+
+    // region drop
+
+    @Test
+    void testDrop() {
+        assertThat(Sequence.drop(0)).containsExactlyElementsOf(Sequence);
+        assertThat(Sequence.drop(3)).containsExactly("four", "five");
+        assertThat(Sequence.drop(5)).isEmpty();
     }
 
     @Test
+    void testDropThrows() {
+        assertThatIllegalArgumentException()
+            .isThrownBy(() -> Sequence.drop(-1));
+    }
+
+    // endregion
+
+    // region filter
+
+    @Test
     void testFilter() {
+        assertThat(Sequence.filter(s -> s.startsWith("t")))
+            .containsExactly("two", "three");
+    }
+
+    @Test
+    void testFilterThrows() {
         assertThatNullPointerException()
             .isThrownBy(() -> Seq.empty().filter(null));
-
-        assertThat(IntegerSeq.filter(i -> i % 2 == 0))
-            .containsExactly(2, 4);
     }
 
     @Test
     void testFilterIndexed() {
-        List<Integer> list = aSequence()
-            .filterIndexed((index, __) -> index % 2 == 0)
-            .take(5).toList();
+        assertThat(Sequence.filterIndexed((i, s) -> i % 2 == 0))
+            .containsExactly("one", "three", "five");
+    }
 
-        assertThat(list).containsExactly(0, 4, 8, 12, 16);
+    @Test
+    void testFilterIndexedThrows() {
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.filterIndexed(null));
     }
 
     @Test
@@ -61,457 +96,529 @@ class SeqTest {
         Seq<Number> seq = Seq.of(1, 2.0, 3L, 4, 5.0, 6L);
         assertThat(seq.filterIsInstance(Double.class)).containsExactly(2.0, 5.0);
         assertThat(seq.filterIsInstance(String.class)).isEmpty();
+    }
+
+    @Test
+    void testFilterIsInstanceThrows() {
         assertThatNullPointerException()
-            .isThrownBy(() -> seq.filterIsInstance(null));
+            .isThrownBy(() -> Sequence.filterIsInstance(null));
     }
 
     @Test
     void testFilterNot() {
-        assertThatNullPointerException()
-            .isThrownBy(() -> Seq.empty().filterNot(null));
+        assertThat(Sequence.filterNot(s -> s.startsWith("t")))
+            .containsExactly("one", "four", "five");
+    }
 
-        assertThat(IntegerSeq.filterNot(i -> i % 2 == 0))
-            .containsExactly(1, 3, 5);
+    @Test
+    void testFilterNotThrows() {
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.filterNot(null));
     }
 
     @Test
     void testFilterNotNull() {
-        assertThat(Seq.of(null, 1, 2, 3, null, 4, 5).filterNotNull())
-            .containsExactly(1, 2, 3, 4, 5);
-    }
-
-
-    @Test
-    void testFlatMap() {
-        assertThat(IntegerSeq.flatMap(i -> Seq.of(i, i * 2)).toList())
-            .containsExactly(1, 2, 2, 4, 3, 6, 4, 8, 5, 10);
-    }
-
-    @Test
-    void testFlatMapIndexed() {
-        List<Integer> list = aSequence()
-            .flatMapIndexed((index, i) -> Seq.of(index, i * 2))
-            .take(8).toList();
-
-        assertThat(list).containsExactly(0, 0, 1, 4, 2, 8, 3, 12);
-    }
-
-    @Test
-    void testOnce() {
-        Seq<Integer> seq = IntegerSeq;
-        seq.toList();
-        seq.toList();
-
-        Seq<Integer> seqOnce = seq.once();
-        seqOnce.toList();
-
-        assertThatIllegalStateException()
-            .isThrownBy(seqOnce::toList);
-
-        Seq<Object> once = Seq.empty().once();
-        assertThat(once.once())
-            .isSameAs(once);
-    }
-
-    @Test
-    void testTake() {
-        assertThatIllegalArgumentException()
-            .isThrownBy(() -> Seq.empty().take(-1));
-
-        assertThat(Seq.empty().take(0))
-            .isEqualTo(Seq.empty());
-
-        assertThat(aSequence().take(5).toList())
-            .containsExactly(0, 2, 4, 6, 8);
-    }
-
-    private Seq<Integer> aSequence() {
-        // For now generate via stream as we don't have our own generate methods yet
-        return Seq.seq(Stream.iterate(0, i -> i + 2));
+        assertThat(Seq.of(null, "one", null, "two", null, "three", null).filterNotNull())
+            .containsExactly("one", "two", "three");
     }
 
     // endregion
 
-    // any
+    // region flatMap
+
+    @Test
+    void testFlatMap() {
+        assertThat(Sequence.flatMap(s -> Seq.of(s, s.toUpperCase())))
+            .containsExactly("one", "ONE", "two", "TWO", "three", "THREE", "four", "FOUR", "five", "FIVE");
+    }
+
+    @Test
+    void testFlatMapThrows() {
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.flatMap(null));
+    }
+
+    @Test
+    void testFlatMapIndexed() {
+        assertThat(Sequence.flatMapIndexed((i, s) -> Seq.of(String.valueOf(i + 1), s)))
+            .containsExactly("1", "one", "2", "two", "3", "three", "4", "four", "5", "five");
+    }
+
+    @Test
+    void testFlatMapIndexedThrows() {
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.flatMapIndexed(null));
+    }
+
+    // endregion
+
+    // region once
+
+    @Test
+    void testOnce() {
+        Seq<String> seq = Sequence;
+        seq.toList();
+        seq.toList();
+
+        Seq<String> once = seq.once();
+        once.toList();
+
+        assertThatIllegalStateException()
+            .isThrownBy(once::toList);
+    }
+
+    // endregion
+
+    // region take
+
+    @Test
+    void testTake() {
+        assertThat(Sequence.take(0)).isEmpty();
+        assertThat(Sequence.take(3)).containsExactly("one", "two", "three");
+        assertThat(Sequence.take(5)).containsExactlyElementsOf(Sequence);
+    }
+
+    @Test
+    void testTakeThrows() {
+        assertThatIllegalArgumentException()
+            .isThrownBy(() -> Sequence.take(-1));
+    }
+
+    // endregion
+
+    // endregion
+
+    // region Terminal Operations
+
+    // region any
 
     @Test
     void testAny() {
-        assertThat(Seq.empty().any()).isFalse();
-        assertThat(IntegerSeq.any()).isTrue();
+        assertThat(Empty.any()).isFalse();
+        assertThat(Sequence.any()).isTrue();
     }
 
     @Test
     void testAnyWithPredicate() {
-        assertThat(IntegerSeq.any(i -> i == 3)).isTrue();
-        assertThat(IntegerSeq.any(i -> i == 6)).isFalse();
-        assertThat(Seq.<Integer>of().any(i -> i == 2)).isFalse();
+        assertThat(Empty.any(s -> s.startsWith("t"))).isFalse();
+        assertThat(Sequence.any(s -> s.startsWith("t"))).isTrue();
+        assertThat(Sequence.any(s -> s.startsWith("u"))).isFalse();
     }
-
-
-    // average
 
     @Test
-    void testAnyWithPredicateThrowsOnNull() {
+    void testAnyWithPredicateThrows() {
         assertThatNullPointerException()
-            .isThrownBy(() -> IntegerSeq.any(null));
+            .isThrownBy(() -> Sequence.any(null));
     }
+
+    // endregion
+
+    // region average
 
     @Test
     void testAverageInt() {
-        assertThat(IntegerSeq.average(Integer::intValue)).isEqualTo(3.0);
+        assertThat(SequenceInteger.average(Integer::intValue)).isEqualTo(2.5);
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> IntegerSeqEmpty.average(Integer::intValue));
-        assertThatNullPointerException()
-            .isThrownBy(() -> IntegerSeq.average((ToIntFunction<? super Integer>) null));
+            .isThrownBy(() -> EmptyInteger.average(Integer::intValue));
     }
 
     @Test
     void testAverageIntOptional() {
-        assertThat(IntegerSeq.averageOptional(Integer::intValue)).hasValue(3.0);
-        assertThat(IntegerSeqEmpty.averageOptional(Integer::intValue)).isEmpty();
-        assertThatNullPointerException()
-            .isThrownBy(() -> IntegerSeq.averageOptional((ToIntFunction<? super Integer>) null));
+        assertThat(SequenceInteger.averageOptional(Integer::intValue)).hasValue(2.5);
+        assertThat(EmptyInteger.averageOptional(Integer::intValue)).isEmpty();
     }
 
     @Test
-    void testAverageLong() {
-        assertThat(LongSeq.average(Long::longValue)).isEqualTo(3.0);
-        assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> LongSeqEmpty.average(Long::longValue));
+    void testAverageIntThrows() {
         assertThatNullPointerException()
-            .isThrownBy(() -> LongSeq.average((ToLongFunction<? super Long>) null));
+            .isThrownBy(() -> SequenceInteger.average((ToIntFunction<Integer>) null));
+        assertThatNullPointerException()
+            .isThrownBy(() -> SequenceInteger.averageOptional((ToIntFunction<Integer>) null));
+    }
+
+
+    @Test
+    void testAverageLong() {
+        assertThat(SequenceLong.average(Long::longValue)).isEqualTo(2.5);
+        assertThatExceptionOfType(NoSuchElementException.class)
+            .isThrownBy(() -> EmptyLong.average(Long::longValue));
     }
 
     @Test
     void testAverageLongOptional() {
-        assertThat(LongSeq.averageOptional(Long::longValue)).hasValue(3.0);
-        assertThat(LongSeqEmpty.averageOptional(Long::longValue)).isEmpty();
+        assertThat(SequenceLong.averageOptional(Long::longValue)).hasValue(2.5);
+        assertThat(EmptyLong.averageOptional(Long::longValue)).isEmpty();
+    }
+
+    @Test
+    void testAverageLongThrows() {
         assertThatNullPointerException()
-            .isThrownBy(() -> LongSeq.averageOptional((ToLongFunction<? super Long>) null));
+            .isThrownBy(() -> SequenceLong.average((ToLongFunction<Long>) null));
+        assertThatNullPointerException()
+            .isThrownBy(() -> SequenceLong.averageOptional((ToLongFunction<Long>) null));
     }
 
     @Test
     void testAverageDouble() {
-        assertThat(DoubleSeq.average(Double::doubleValue)).isEqualTo(3.0);
+        assertThat(SequenceDouble.average(Double::doubleValue)).isEqualTo(2.5);
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> DoubleSeqEmpty.average(Double::doubleValue));
-        assertThatNullPointerException()
-            .isThrownBy(() -> DoubleSeq.average((ToDoubleFunction<? super Double>) null));
+            .isThrownBy(() -> EmptyDouble.average(Double::doubleValue));
     }
 
     @Test
     void testAverageDoubleOptional() {
-        assertThat(DoubleSeq.averageOptional(Double::doubleValue)).hasValue(3.0);
-        assertThat(DoubleSeqEmpty.averageOptional(Double::doubleValue)).isEmpty();
-        assertThatNullPointerException()
-            .isThrownBy(() -> DoubleSeq.averageOptional((ToDoubleFunction<? super Double>) null));
+        assertThat(SequenceDouble.averageOptional(Double::doubleValue)).hasValue(2.5);
+        assertThat(EmptyDouble.averageOptional(Double::doubleValue)).isEmpty();
     }
 
+    @Test
+    void testAverageDoubleThrows() {
+        assertThatNullPointerException()
+            .isThrownBy(() -> SequenceDouble.average((ToDoubleFunction<Double>) null));
+        assertThatNullPointerException()
+            .isThrownBy(() -> SequenceDouble.averageOptional((ToDoubleFunction<Double>) null));
+    }
 
-    // contains
+    // endregion
+
+    // region contains
 
     @Test
     void testContains() {
-        assertThat(IntegerSeq.contains(3)).isTrue();
-        assertThat(IntegerSeq.contains(6)).isFalse();
-        assertThat(Seq.of("a", "b", "c").contains(null)).isFalse();
+        assertThat(Sequence.contains("three")).isTrue();
+        assertThat(Sequence.contains("six")).isFalse();
+        assertThat(Sequence.contains(null)).isFalse();
     }
 
+    // endregion
 
-    // first
+    // region first
 
     @Test
     void testFirst() {
+        assertThat(Sequence.first()).isEqualTo("one");
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> Seq.empty().first());
-        assertThat(Seq.of("one").first()).isEqualTo("one");
-        assertThat(Seq.of("one", "two").first()).isEqualTo("one");
+            .isThrownBy(Empty::first);
     }
 
     @Test
     void testFirstWithPredicate() {
+        assertThat(Sequence.first(s -> s.startsWith("t"))).isEqualTo("two");
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> Seq.empty().first(x -> true));
-        assertThat(Seq.of("one", "two").first(x -> x.equals("two"))).isEqualTo("two");
-        assertThat(Seq.of("one", "two", "three").first(x -> x.length() == 5)).isEqualTo("three");
+            .isThrownBy(() -> Empty.first(s -> s.startsWith("t")));
     }
 
     @Test
     void testFirstOptional() {
-        assertThat(Seq.empty().firstOptional()).isEmpty();
-        assertThat(Seq.of("one").firstOptional()).hasValue("one");
-        assertThat(Seq.of("one", "two").firstOptional()).hasValue("one");
+        assertThat(Sequence.firstOptional()).hasValue("one");
+        assertThat(Empty.firstOptional()).isEmpty();
     }
 
     @Test
     void testFirstOptionalWithPredicate() {
-        assertThat(Seq.empty().firstOptional(x -> true)).isEmpty();
-        assertThat(Seq.of("one", "two").firstOptional(x -> x.equals("two"))).hasValue("two");
-        assertThat(Seq.of("one", "two", "three").firstOptional(x -> x.length() == 5)).hasValue("three");
+        assertThat(Sequence.firstOptional(s -> s.startsWith("t"))).hasValue("two");
+        assertThat(Empty.firstOptional(s -> s.startsWith("t"))).isEmpty();
     }
 
+    // endregion
 
-    // fold
+    // region fold
 
     @Test
     void testFold() {
-        assertThat(IntegerSeq.fold(0, Integer::sum)).isEqualTo(15);
-        assertThat(IntegerSeqEmpty.fold(0, Integer::sum)).isEqualTo(0);
+        assertThat(Sequence.fold("---", String::concat)).isEqualTo("---onetwothreefourfive");
+        assertThat(Empty.fold("---", String::concat)).isEqualTo("---");
     }
 
+    // endregion
 
-    // indexOf
+    // region indexOf
 
     @Test
     void testIndexOf() {
-        assertThat(Seq.of(1, 2, 1, 2).indexOf(2)).isEqualTo(1);
-        assertThat(Seq.of(1, 2, 1, 2).indexOf(3)).isEqualTo(-1);
+        Seq<String> seq = Seq.of("one", "two", "one", "two");
+        assertThat(seq.indexOf("two")).isEqualTo(1);
+        assertThat(seq.indexOf("three")).isEqualTo(-1);
     }
 
     @Test
     void testIndexOfWithPredicate() {
-        assertThat(Seq.of(1, 2, 1, 2).indexOf(x -> x == 2)).isEqualTo(1);
-        assertThat(Seq.of(1, 2, 1, 2).indexOf(x -> x == 3)).isEqualTo(-1);
+        assertThat(Sequence.indexOf(s -> s.startsWith("t"))).isEqualTo(1);
+        assertThat(Sequence.indexOf(s -> s.startsWith("u"))).isEqualTo(-1);
         assertThatNullPointerException()
-            .isThrownBy(() -> Seq.of(1, 2, 1, 2).indexOf((Predicate<? super Integer>) null));
+            .isThrownBy(() -> Sequence.indexOf((Predicate<String>) null));
     }
 
+    // endregion
 
-    // last
+    // region last
 
     @Test
     void testLast() {
+        assertThat(Sequence.last()).isEqualTo("five");
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> Seq.empty().last());
-        assertThat(Seq.of("one").last()).isEqualTo("one");
-        assertThat(Seq.of("one", "two").last()).isEqualTo("two");
+            .isThrownBy(Empty::last);
     }
 
     @Test
     void testLastWithPredicate() {
+        assertThat(Sequence.last(s -> s.startsWith("t"))).isEqualTo("three");
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> Seq.empty().last(x -> true));
-        assertThat(Seq.of("one", "two").last(x -> x.equals("one"))).isEqualTo("one");
-        assertThat(Seq.of("one", "two", "three").last(x -> x.length() == 3)).isEqualTo("two");
+            .isThrownBy(() -> Empty.last(s -> s.startsWith("t")));
     }
 
     @Test
     void testLastOptional() {
-        assertThat(Seq.empty().lastOptional()).isEmpty();
-        assertThat(Seq.of("one").lastOptional()).hasValue("one");
-        assertThat(Seq.of("one", "two").lastOptional()).hasValue("two");
+        assertThat(Sequence.lastOptional()).hasValue("five");
+        assertThat(Empty.lastOptional()).isEmpty();
     }
 
     @Test
     void testLastOptionalWithPredicate() {
-        assertThat(Seq.empty().lastOptional(x -> true)).isEmpty();
-        assertThat(Seq.of("one", "two").lastOptional(x -> x.equals("one"))).hasValue("one");
-        assertThat(Seq.of("one", "two", "three").lastOptional(x -> x.length() == 3)).hasValue("two");
+        assertThat(Sequence.lastOptional(s -> s.startsWith("t"))).hasValue("three");
+        assertThat(Empty.lastOptional(s -> s.startsWith("t"))).isEmpty();
     }
 
+    // endregion
 
-    // lastIndexOf
+    // region lastIndexOf
 
     @Test
     void testLastIndexOf() {
-        assertThat(Seq.of(1, 2, 1, 2).lastIndexOf(1)).isEqualTo(2);
-        assertThat(Seq.of(1, 2, 1, 2).lastIndexOf(3)).isEqualTo(-1);
+        Seq<String> seq = Seq.of("one", "two", "one", "two");
+        assertThat(seq.lastIndexOf("one")).isEqualTo(2);
+        assertThat(seq.lastIndexOf("three")).isEqualTo(-1);
     }
 
     @Test
     void testLastIndexOfWithPredicate() {
-        assertThat(Seq.of(1, 2, 1, 2).lastIndexOf(x -> x == 1)).isEqualTo(2);
-        assertThat(Seq.of(1, 2, 1, 2).lastIndexOf(x -> x == 3)).isEqualTo(-1);
+        assertThat(Sequence.lastIndexOf(s -> s.startsWith("t"))).isEqualTo(2);
+        assertThat(Sequence.lastIndexOf(s -> s.startsWith("u"))).isEqualTo(-1);
         assertThatNullPointerException()
-            .isThrownBy(() -> Seq.of(1, 2, 1, 2).lastIndexOf((Predicate<? super Integer>) null));
+            .isThrownBy(() -> Sequence.lastIndexOf((Predicate<String>) null));
     }
 
+    // endregion
 
-    // max
+    // region max
 
     @Test
     void testMax() {
-        assertThat(Seq.of(2, 1, 4, 3).max()).isEqualTo(4);
+        assertThat(Sequence.max()).isEqualTo("two");
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> Seq.empty().max());
+            .isThrownBy(Empty::max);
     }
 
     @Test
-    void testMaxWithPredicate() {
-        assertThat(Seq.of(2, 1, 4, 3).max(Comparator.reverseOrder())).isEqualTo(1);
+    void testMaxWithComparator() {
+        assertThat(Sequence.max(Comparator.reverseOrder())).isEqualTo("five");
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> IntegerSeqEmpty.max(Comparator.reverseOrder()));
+            .isThrownBy(() -> EmptyInteger.max(Comparator.reverseOrder()));
     }
 
     @Test
     void testMaxOptional() {
-        assertThat(Seq.of(2, 1, 4, 3).maxOptional()).isEqualTo(Optional.of(4));
-        assertThat(Seq.empty().maxOptional()).isEqualTo(Optional.empty());
+        assertThat(Sequence.maxOptional()).hasValue("two");
+        assertThat(Empty.maxOptional()).isEmpty();
     }
 
     @Test
-    void testMaxOptionalWithPredicate() {
-        assertThat(Seq.of(2, 1, 4, 3).maxOptional(Comparator.reverseOrder())).isEqualTo(Optional.of(1));
-        assertThat(IntegerSeqEmpty.maxOptional(Comparator.reverseOrder())).isEqualTo(Optional.empty());
+    void testMaxOptionalWithComparator() {
+        assertThat(Sequence.maxOptional(Comparator.reverseOrder())).hasValue("five");
+        assertThat(EmptyInteger.maxOptional(Comparator.reverseOrder())).isEmpty();
     }
 
+    // endregion
 
-    // min
+    // region min
 
     @Test
     void testMin() {
-        assertThat(Seq.of(2, 1, 4, 3).min()).isEqualTo(1);
+        assertThat(Sequence.min()).isEqualTo("five");
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> Seq.empty().min());
+            .isThrownBy(Empty::min);
     }
 
     @Test
-    void testMinWithPredicate() {
-        assertThat(Seq.of(2, 1, 4, 3).min(Comparator.reverseOrder())).isEqualTo(4);
+    void testMinWithComparator() {
+        assertThat(Sequence.min(Comparator.reverseOrder())).isEqualTo("two");
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> IntegerSeqEmpty.min(Comparator.reverseOrder()));
+            .isThrownBy(() -> EmptyInteger.min(Comparator.reverseOrder()));
     }
 
     @Test
     void testMinOptional() {
-        assertThat(Seq.of(2, 1, 4, 3).minOptional()).isEqualTo(Optional.of(1));
-        assertThat(Seq.empty().minOptional()).isEqualTo(Optional.empty());
+        assertThat(Sequence.minOptional()).hasValue("five");
+        assertThat(Empty.minOptional()).isEmpty();
     }
 
     @Test
-    void testMinOptionalWithPredicate() {
-        assertThat(Seq.of(2, 1, 4, 3).minOptional(Comparator.reverseOrder())).isEqualTo(Optional.of(4));
-        assertThat(IntegerSeqEmpty.minOptional(Comparator.reverseOrder())).isEqualTo(Optional.empty());
+    void testMinOptionalWithComparator() {
+        assertThat(Sequence.minOptional(Comparator.reverseOrder())).hasValue("two");
+        assertThat(EmptyInteger.minOptional(Comparator.reverseOrder())).isEmpty();
     }
 
+    // endregion
 
-    // none
+    // region none
 
     @Test
     void testNone() {
-        assertThat(Seq.empty().none()).isTrue();
-        assertThat(IntegerSeq.none()).isFalse();
+        assertThat(Sequence.none()).isFalse();
+        assertThat(Empty.none()).isTrue();
     }
 
     @Test
     void testNoneWithPredicate() {
-        assertThat(IntegerSeq.none(i -> i == 3)).isFalse();
-        assertThat(IntegerSeq.none(i -> i == 6)).isTrue();
-        assertThat(Seq.<Integer>of().none(i -> i == 2)).isTrue();
+        assertThat(Sequence.none(t -> t.startsWith("t"))).isFalse();
+        assertThat(Sequence.none(t -> t.startsWith("u"))).isTrue();
+        assertThat(Empty.none(t -> t.startsWith("t"))).isTrue();
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.none(null));
     }
 
+    // endregion
 
-    // reduce
+    // region reduce
 
     @Test
     void testReduce() {
-        assertThat(IntegerSeq.reduce(Integer::sum)).isEqualTo(15);
+        assertThat(Sequence.reduce(String::concat)).isEqualTo("onetwothreefourfive");
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> IntegerSeqEmpty.reduce(Integer::sum));
+            .isThrownBy(() -> Empty.reduce(String::concat));
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.reduce(null));
     }
 
     @Test
     void testReduceOptional() {
-        assertThat(IntegerSeq.reduceOptional(Integer::sum)).hasValue(15);
-        assertThat(IntegerSeqEmpty.reduceOptional(Integer::sum)).isEqualTo(Optional.empty());
+        assertThat(Sequence.reduceOptional(String::concat)).hasValue("onetwothreefourfive");
+        assertThat(Empty.reduceOptional(String::concat)).isEmpty();
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.reduceOptional(null));
     }
 
+    // endregion
 
-    // single
+    // region single
 
     @Test
     void testSingle() {
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> Seq.empty().single());
-        assertThat(Seq.of("one").single()).isEqualTo("one");
+            .isThrownBy(() -> Sequence.take(0).single());
+        assertThat(Sequence.take(1).single()).isEqualTo("one");
         assertThatIllegalArgumentException()
-            .isThrownBy(() -> Seq.of("one", "two").single());
+            .isThrownBy(() -> Sequence.take(2).single());
     }
 
     @Test
     void testSingleWithPredicate() {
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(() -> Seq.empty().single(x -> true));
-        assertThat(Seq.of("one", "two").single(x -> x.equals("two"))).isEqualTo("two");
+            .isThrownBy(() -> Sequence.single(t -> t.startsWith("u")));
+        assertThat(Sequence.single(t -> t.startsWith("o"))).isEqualTo("one");
         assertThatIllegalArgumentException()
-            .isThrownBy(() -> Seq.of("one", "two", "three").single(x -> x.length() == 3));
+            .isThrownBy(() -> Sequence.single(t -> t.startsWith("t")));
     }
 
     @Test
     void testSingleOptional() {
-        assertThat(Seq.empty().singleOptional()).isEmpty();
-        assertThat(Seq.of("one").singleOptional()).hasValue("one");
-        assertThat(Seq.of("one", "two").singleOptional()).isEmpty();
+        assertThat(Sequence.take(0).singleOptional()).isEmpty();
+        assertThat(Sequence.take(1).singleOptional()).hasValue("one");
+        assertThat(Sequence.take(2).singleOptional()).isEmpty();
     }
 
     @Test
     void testSingleOptionalWithPredicate() {
-        assertThat(Seq.empty().singleOptional(x -> true)).isEmpty();
-        assertThat(Seq.of("one", "two").singleOptional(x -> x.equals("two"))).hasValue("two");
-        assertThat(Seq.of("one", "two", "three").singleOptional(x -> x.length() == 3)).isEmpty();
+        assertThat(Sequence.singleOptional(t -> t.startsWith("u"))).isEmpty();
+        assertThat(Sequence.singleOptional(t -> t.startsWith("o"))).hasValue("one");
+        assertThat(Sequence.singleOptional(t -> t.startsWith("t"))).isEmpty();
     }
 
+    // endregion
 
-    // summary
+    // region summary
 
     @Test
     void testSummaryInt() {
         // These do not have equals, so compare using toString
-        assertThat(IntegerSeqEmpty.summary(Integer::intValue))
+        assertThat(EmptyInteger.summary(Integer::intValue))
             .hasToString(new IntSummaryStatistics().toString());
 
-        IntSummaryStatistics summary = IntegerSeq.summary(Integer::intValue);
-        assertThat(summary.getCount()).isEqualTo(5);
-        assertThat(summary.getSum()).isEqualTo(15);
+        IntSummaryStatistics summary = SequenceInteger.summary(Integer::intValue);
+        assertThat(summary.getCount()).isEqualTo(4);
+        assertThat(summary.getSum()).isEqualTo(10);
         assertThat(summary.getMin()).isEqualTo(1);
-        assertThat(summary.getMax()).isEqualTo(5);
-        assertThat(summary.getAverage()).isEqualTo(3.0);
+        assertThat(summary.getMax()).isEqualTo(4);
+        assertThat(summary.getAverage()).isEqualTo(2.5);
+
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.summary((ToIntFunction<String>) null));
     }
 
     @Test
     void testSummaryLong() {
         // These do not have equals, so compare using toString
-        assertThat(LongSeqEmpty.summary(Long::longValue))
+        assertThat(EmptyLong.summary(Long::longValue))
             .hasToString(new LongSummaryStatistics().toString());
 
-        LongSummaryStatistics summary = LongSeq.summary(Long::longValue);
-        assertThat(summary.getCount()).isEqualTo(5);
-        assertThat(summary.getSum()).isEqualTo(15L);
+        LongSummaryStatistics summary = SequenceLong.summary(Long::longValue);
+        assertThat(summary.getCount()).isEqualTo(4);
+        assertThat(summary.getSum()).isEqualTo(10L);
         assertThat(summary.getMin()).isEqualTo(1L);
-        assertThat(summary.getMax()).isEqualTo(5L);
-        assertThat(summary.getAverage()).isEqualTo(3.0);
+        assertThat(summary.getMax()).isEqualTo(4L);
+        assertThat(summary.getAverage()).isEqualTo(2.5);
+
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.summary((ToLongFunction<String>) null));
     }
 
     @Test
     void testSummaryDouble() {
         // These do not have equals, so compare using toString
-        assertThat(DoubleSeqEmpty.summary(Double::doubleValue))
+        assertThat(EmptyDouble.summary(Double::doubleValue))
             .hasToString(new DoubleSummaryStatistics().toString());
 
-        DoubleSummaryStatistics summary = DoubleSeq.summary(Double::doubleValue);
-        assertThat(summary.getCount()).isEqualTo(5);
-        assertThat(summary.getSum()).isEqualTo(15.0);
+        DoubleSummaryStatistics summary = SequenceDouble.summary(Double::doubleValue);
+        assertThat(summary.getCount()).isEqualTo(4);
+        assertThat(summary.getSum()).isEqualTo(10.0);
         assertThat(summary.getMin()).isEqualTo(1.0);
-        assertThat(summary.getMax()).isEqualTo(5.0);
-        assertThat(summary.getAverage()).isEqualTo(3.0);
+        assertThat(summary.getMax()).isEqualTo(4.0);
+        assertThat(summary.getAverage()).isEqualTo(2.5);
+
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.summary((ToDoubleFunction<String>) null));
     }
 
+    // endregion
 
-    // sum
+    // region sum
 
     @Test
     public void testSumOfInt() {
-        assertThat(IntegerSeq.sum(Integer::intValue)).isEqualTo(15);
+        assertThat(SequenceInteger.sum(Integer::intValue)).isEqualTo(10);
+
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.sum((ToIntFunction<String>) null));
     }
 
     @Test
     public void testSumOfLong() {
-        assertThat(LongSeq.sum(Long::longValue)).isEqualTo(15L);
+        assertThat(SequenceLong.sum(Long::longValue)).isEqualTo(10L);
+
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.sum((ToLongFunction<String>) null));
     }
 
     @Test
     public void testSumOfDouble() {
-        assertThat(DoubleSeq.sum(Double::doubleValue)).isEqualTo(15.0);
+        assertThat(SequenceDouble.sum(Double::doubleValue)).isEqualTo(10.0);
+
+        assertThatNullPointerException()
+            .isThrownBy(() -> Sequence.sum((ToDoubleFunction<String>) null));
     }
+
+    // endregion
+
+    // endregion
 
 }
