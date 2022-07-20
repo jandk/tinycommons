@@ -65,6 +65,16 @@ class SeqTest {
 
     // endregion
 
+    // region dropWhile
+
+    @Test
+    void testDropWhile() {
+        assertThat(Sequence.dropWhile(s -> s.length() == 3))
+            .containsExactly("three", "four", "five");
+    }
+
+    // endregion
+
     // region filter
 
     @Test

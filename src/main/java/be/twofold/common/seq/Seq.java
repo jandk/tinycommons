@@ -104,6 +104,22 @@ public abstract class Seq<T> implements Iterable<T> {
 
     // endregion
 
+    // region dropWhile
+
+    /**
+     * Drop elements while the predicate is true.
+     *
+     * @param predicate The predicate to match.
+     * @return The new sequence.
+     */
+    public final Seq<T> dropWhile(Predicate<? super T> predicate) {
+        Check.notNull(predicate, "predicate");
+
+        return seq(() -> new DropWhileIterator<>(iterator(), predicate));
+    }
+
+    // endregion
+
     // region filter
 
     /**
@@ -1140,6 +1156,51 @@ public abstract class Seq<T> implements Iterable<T> {
                 throw new NoSuchElementException();
             }
             return iterator.next();
+        }
+    }
+
+    private static final class DropWhileIterator<E> implements Iterator<E> {
+        private final Iterator<E> iterator;
+        private final Predicate<? super E> predicate;
+        private E next = null;
+        private int state = -1;
+
+        private DropWhileIterator(Iterator<E> iterator, Predicate<? super E> predicate) {
+            this.iterator = Check.notNull(iterator, "iterator is null");
+            this.predicate = Check.notNull(predicate, "predicate is null");
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (state == -1) {
+                drop();
+            }
+            return state == 1 || iterator.hasNext();
+        }
+
+        @Override
+        public E next() {
+            if (state == -1) {
+                drop();
+            }
+            if (state == 1) {
+                E result = this.next;
+                this.next = null;
+                state = 0;
+                return result;
+            }
+            return iterator.next();
+        }
+
+        private void drop() {
+            while (iterator.hasNext()) {
+                E next = iterator.next();
+                if (!predicate.test(next)) {
+                    this.next = next;
+                    state = 1;
+                    break;
+                }
+            }
         }
     }
 
