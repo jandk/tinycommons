@@ -164,7 +164,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof List)) return false;
 
@@ -178,7 +178,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         int hashCode = 1;
         for (E element : this) {
             hashCode = 31 * hashCode + element.hashCode();
@@ -212,7 +212,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
         }
     }
 
-    static class ListItr<E> extends Itr<E> implements ListIterator<E> {
+    static final class ListItr<E> extends Itr<E> implements ListIterator<E> {
         ListItr(List<E> list, int size, int index) {
             super(list, size, index);
         }
@@ -256,7 +256,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
         }
     }
 
-    static class SubList<E> extends ImmutableList<E> {
+    static final class SubList<E> extends ImmutableList<E> {
         private final List<E> list;
         private final int offset;
         private final int size;

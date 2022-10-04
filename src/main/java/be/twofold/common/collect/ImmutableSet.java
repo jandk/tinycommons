@@ -8,8 +8,9 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     }
 
 
+    @SuppressWarnings("unchecked")
     public static <E> ImmutableSet<E> of() {
-        throw new UnsupportedOperationException();
+        return (ImmutableSet<E>) MultiImmutableSet.Empty;
     }
 
     public static <E> ImmutableSet<E> of(E e) {
@@ -17,39 +18,39 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableSet<>(e1, e2);
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2, E e3) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableSet<>(e1, e2, e3);
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableSet<>(e1, e2, e3, e4);
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableSet<>(e1, e2, e3, e4, e5);
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5, E e6) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableSet<>(e1, e2, e3, e4, e5, e6);
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableSet<>(e1, e2, e3, e4, e5, e6, e7);
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableSet<>(e1, e2, e3, e4, e5, e6, e7, e8);
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableSet<>(e1, e2, e3, e4, e5, e6, e7, e8, e9);
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableSet<>(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
     }
 
     @SafeVarargs
@@ -60,7 +61,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
             case 1:
                 return of(elements[0]);
             default:
-                throw new UnsupportedOperationException();
+                return new MultiImmutableSet<>(elements);
         }
     }
 
@@ -70,6 +71,34 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
             return (ImmutableSet<E>) collection;
         }
         return (ImmutableSet<E>) of(collection.toArray());
+    }
+
+
+    @Override
+    public final boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Set)) return false;
+
+        Collection<?> collection = (Collection<?>) obj;
+        if (collection.size() != size()) {
+            return false;
+        }
+
+        for (Object element : collection) {
+            if (element == null || !contains(element)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public final int hashCode() {
+        int hashCode = 0;
+        for (E obj : this) {
+            hashCode += obj.hashCode();
+        }
+        return hashCode;
     }
 
 }
