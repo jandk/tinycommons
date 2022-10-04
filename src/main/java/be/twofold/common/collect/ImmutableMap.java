@@ -9,8 +9,9 @@ public abstract class ImmutableMap<K, V> extends AbstractMap<K, V> {
     }
 
 
+    @SuppressWarnings("unchecked")
     public static <K, V> ImmutableMap<K, V> of() {
-        throw new UnsupportedOperationException();
+        return (ImmutableMap<K, V>) MultiImmutableMap.Empty;
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k, V v) {
@@ -18,39 +19,39 @@ public abstract class ImmutableMap<K, V> extends AbstractMap<K, V> {
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableMap<>(k1, v1, k2, v2);
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableMap<>(k1, v1, k2, v2, k3, v3);
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableMap<>(k1, v1, k2, v2, k3, v3, k4, v4);
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableMap<>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableMap<>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableMap<>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableMap<>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableMap<>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableMap<>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
     }
 
     @SafeVarargs
@@ -61,7 +62,13 @@ public abstract class ImmutableMap<K, V> extends AbstractMap<K, V> {
             case 1:
                 return of(entries[0].getKey(), entries[0].getValue());
             default:
-                throw new UnsupportedOperationException();
+                Object[] array = new Object[2 * entries.length];
+                for (int i = 0, o = 0; i < entries.length; i++) {
+                    Entry<? extends K, ? extends V> entry = entries[i];
+                    array[o++] = entry.getKey();
+                    array[o++] = entry.getValue();
+                }
+                return new MultiImmutableMap<>(array);
         }
     }
 

@@ -24,7 +24,8 @@ public class ImmutableMapTest {
             })
             .named("ImmutableMap.ofEntries")
             .withFeatures(
-                CollectionSize.ANY
+                CollectionSize.ANY,
+                MapFeature.REJECTS_DUPLICATES_AT_CREATION
             )
             .createTestSuite();
     }

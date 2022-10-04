@@ -11,7 +11,7 @@ final class MultiImmutableSet<E> extends ImmutableSet<E> {
     @SafeVarargs
     @SuppressWarnings("unchecked")
     MultiImmutableSet(E... elements) {
-        E[] table = (E[]) new Object[2 * Math.max(elements.length, 1)];
+        E[] table = (E[]) new Object[Math.max(2 * elements.length, 1)];
         for (E element : elements) {
             int index = Math.floorMod(element.hashCode(), table.length);
             while (true) {
@@ -21,7 +21,7 @@ final class MultiImmutableSet<E> extends ImmutableSet<E> {
                     break;
                 }
                 if (existing.equals(element)) {
-                    throw new IllegalArgumentException("duplicate element: " + element);
+                    throw new IllegalArgumentException("Duplicate element: " + element);
                 }
                 if (++index == table.length) {
                     index = 0;

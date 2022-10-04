@@ -33,9 +33,9 @@ final class ImmutableEntry<K, V> implements Map.Entry<K, V> {
         if (this == obj) return true;
         if (!(obj instanceof Map.Entry)) return false;
 
-        ImmutableEntry<?, ?> other = (ImmutableEntry<?, ?>) obj;
-        return key.equals(other.key)
-            && value.equals(other.value);
+        Map.Entry<?, ?> other = (Map.Entry<?, ?>) obj;
+        return key.equals(other.getKey())
+            && value.equals(other.getValue());
     }
 
     @Override
