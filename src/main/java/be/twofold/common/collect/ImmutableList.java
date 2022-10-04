@@ -1,5 +1,7 @@
 package be.twofold.common.collect;
 
+import be.twofold.common.*;
+
 import java.util.*;
 import java.util.function.*;
 
@@ -9,8 +11,9 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
     }
 
 
+    @SuppressWarnings("unchecked")
     public static <E> ImmutableList<E> of() {
-        throw new UnsupportedOperationException();
+        return (ImmutableList<E>) MultiImmutableList.Empty;
     }
 
     public static <E> ImmutableList<E> of(E e) {
@@ -18,39 +21,39 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableList<>(e1, e2);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2, E e3) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableList<>(e1, e2, e3);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2, E e3, E e4) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableList<>(e1, e2, e3, e4);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableList<>(e1, e2, e3, e4, e5);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableList<>(e1, e2, e3, e4, e5, e6);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableList<>(e1, e2, e3, e4, e5, e6, e7);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableList<>(e1, e2, e3, e4, e5, e6, e7, e8);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableList<>(e1, e2, e3, e4, e5, e6, e7, e8, e9);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
-        throw new UnsupportedOperationException();
+        return new MultiImmutableList<>(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
     }
 
     @SafeVarargs
@@ -61,7 +64,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
             case 1:
                 return of(elements[0]);
             default:
-                throw new UnsupportedOperationException();
+                return new MultiImmutableList<>(elements.clone());
         }
     }
 
@@ -108,6 +111,172 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
     @Deprecated
     public final void sort(Comparator<? super E> c) {
         throw new UnsupportedOperationException();
+    }
+
+
+    @Override
+    public final boolean contains(Object o) {
+        return indexOf(o) >= 0;
+    }
+
+    @Override
+    public final int indexOf(Object o) {
+        Check.notNull(o);
+        for (int i = 0, s = size(); i < s; i++) {
+            if (o.equals(get(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public final int lastIndexOf(Object o) {
+        Check.notNull(o);
+        for (int i = size() - 1; i >= 0; i--) {
+            if (o.equals(get(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public final Iterator<E> iterator() {
+        return new Itr<>(this, size(), 0);
+    }
+
+    @Override
+    public final ListIterator<E> listIterator() {
+        return listIterator(0);
+    }
+
+    @Override
+    public final ListIterator<E> listIterator(int index) {
+        Check.index(index, size() + 1);
+        return new ListItr<>(this, size(), index);
+    }
+
+    @Override
+    public final List<E> subList(int fromIndex, int toIndex) {
+        Check.fromToIndex(fromIndex, toIndex, size());
+        return new SubList<>(this, fromIndex, toIndex - fromIndex);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof List)) return false;
+
+        Iterator<?> it = ((List<?>) obj).iterator();
+        for (E element : this) {
+            if (!it.hasNext() || !element.equals(it.next())) {
+                return false;
+            }
+        }
+        return !it.hasNext();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        for (E element : this) {
+            hashCode = 31 * hashCode + element.hashCode();
+        }
+        return hashCode;
+    }
+
+
+    static class Itr<E> implements Iterator<E> {
+        protected final List<E> list;
+        protected final int size;
+        protected int index;
+
+        Itr(List<E> list, int size, int index) {
+            this.list = list;
+            this.size = size;
+            this.index = index;
+        }
+
+        @Override
+        public final boolean hasNext() {
+            return index < size;
+        }
+
+        @Override
+        public final E next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return list.get(index++);
+        }
+    }
+
+    static class ListItr<E> extends Itr<E> implements ListIterator<E> {
+        ListItr(List<E> list, int size, int index) {
+            super(list, size, index);
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return index > 0;
+        }
+
+        @Override
+        public E previous() {
+            if (!hasPrevious()) {
+                throw new NoSuchElementException();
+            }
+            return list.get(--index);
+        }
+
+        @Override
+        public int nextIndex() {
+            return index;
+        }
+
+        @Override
+        public int previousIndex() {
+            return index - 1;
+        }
+
+        @Override
+        public void add(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void set(E e) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    static class SubList<E> extends ImmutableList<E> {
+        private final List<E> list;
+        private final int offset;
+        private final int size;
+
+        SubList(List<E> list, int offset, int size) {
+            this.list = list;
+            this.offset = offset;
+            this.size = size;
+        }
+
+        @Override
+        public E get(int index) {
+            Check.index(index, size);
+            return list.get(offset + index);
+        }
+
+        @Override
+        public int size() {
+            return size;
+        }
     }
 
 }
