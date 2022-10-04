@@ -1,6 +1,5 @@
 package be.twofold.common;
 
-import java.util.*;
 import java.util.function.*;
 
 /**
@@ -17,15 +16,24 @@ public final class Check {
     }
 
     public static <T> T notNull(T obj) {
-        return Objects.requireNonNull(obj);
+        if (obj == null) {
+            throw new NullPointerException();
+        }
+        return obj;
     }
 
     public static <T> T notNull(T obj, String message) {
-        return Objects.requireNonNull(obj, message);
+        if (obj == null) {
+            throw new NullPointerException(message);
+        }
+        return obj;
     }
 
     public static <T> T notNull(T obj, Supplier<String> messageSupplier) {
-        return Objects.requireNonNull(obj, messageSupplier);
+        if (obj == null) {
+            throw new NullPointerException(messageSupplier == null ? null : messageSupplier.get());
+        }
+        return obj;
     }
 
     public static void argument(boolean expression) {
@@ -64,12 +72,18 @@ public final class Check {
         }
     }
 
-    public static int index(int index, int size) {
-        return Objects.checkIndex(index, size);
+    public static int index(int index, int length) {
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException(String.format("Index %s out of bounds for length %s", index, length));
+        }
+        return index;
     }
 
-    public static int fromToIndex(int from, int to, int size) {
-        return Objects.checkFromToIndex(from, to, size);
+    public static int fromToIndex(int fromIndex, int toIndex, int length) {
+        if (fromIndex < 0 || fromIndex > toIndex || toIndex > length) {
+            throw new IndexOutOfBoundsException(String.format("Range [%s, %s) out of bounds for length %s", fromIndex, toIndex, length));
+        }
+        return fromIndex;
     }
 
 }

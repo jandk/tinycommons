@@ -23,7 +23,17 @@ public final class StringUtils {
      * @return {@code true} if the string is null or blank
      */
     public static boolean isBlank(String string) {
-        return string == null || string.isBlank();
+        if (string == null) {
+            return true;
+        }
+        for (int i = 0; i < string.length(); ) {
+            int codePoint = string.codePointAt(i);
+            if (!Character.isWhitespace(codePoint)) {
+                return false;
+            }
+            i += Character.charCount(codePoint);
+        }
+        return true;
     }
 
     public static String nullToEmpty(String string) {

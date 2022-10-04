@@ -1,6 +1,7 @@
 package be.twofold.common.seq;
 
 import be.twofold.common.*;
+import be.twofold.common.collect.*;
 import be.twofold.common.tuple.*;
 
 import java.util.*;
@@ -1047,12 +1048,12 @@ public abstract class Seq<T> implements Iterable<T> {
         return toCollection(new HashSet<>());
     }
 
-    public final List<T> toUnmodifiableList() {
-        return List.copyOf(toList());
+    public final List<T> toImmutableList() {
+        return ImmutableList.copyOf(toList());
     }
 
-    public final Set<T> toUnmodifiableSet() {
-        return Set.copyOf(toList());
+    public final Set<T> toImmutableSet() {
+        return ImmutableSet.copyOf(toList());
     }
 
     // endregion

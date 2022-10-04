@@ -40,12 +40,4 @@ public final class IOUtils {
             : new BufferedWriter(writer);
     }
 
-    public static String readAllText(Reader reader) throws IOException {
-        Check.notNull(reader, "reader");
-
-        StringWriter writer = new StringWriter();
-        reader.transferTo(writer);
-        return writer.toString();
-    }
-
 }

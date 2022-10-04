@@ -1,5 +1,6 @@
 package be.twofold.common.seq;
 
+import be.twofold.common.collect.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -350,9 +351,9 @@ class SeqTest {
 
         assertThat(Empty.groupBy(String::length)).isEmpty();
         assertThat(Sequence.groupBy(String::length)).containsOnly(
-            Map.entry(3, List.of("one", "two")),
-            Map.entry(4, List.of("four", "five")),
-            Map.entry(5, List.of("three"))
+            ImmutableMap.entry(3, ImmutableList.of("one", "two")),
+            ImmutableMap.entry(4, ImmutableList.of("four", "five")),
+            ImmutableMap.entry(5, ImmutableList.of("three"))
         );
     }
 
@@ -363,9 +364,9 @@ class SeqTest {
 
         assertThat(Empty.groupBy(String::length, s -> s.charAt(0))).isEmpty();
         assertThat(Sequence.groupBy(String::length, s -> s.charAt(0))).containsOnly(
-            Map.entry(3, List.of('o', 't')),
-            Map.entry(4, List.of('f', 'f')),
-            Map.entry(5, List.of('t'))
+            ImmutableMap.entry(3, ImmutableList.of('o', 't')),
+            ImmutableMap.entry(4, ImmutableList.of('f', 'f')),
+            ImmutableMap.entry(5, ImmutableList.of('t'))
         );
     }
 
