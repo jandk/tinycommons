@@ -14,7 +14,7 @@ public abstract class ImmutableMap<K, V> extends AbstractMap<K, V> {
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k, V v) {
-        throw new UnsupportedOperationException();
+        return new SingletonMap<>(k, v);
     }
 
     public static <K, V> ImmutableMap<K, V> of(K k1, V v1, K k2, V v2) {

@@ -14,7 +14,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
     }
 
     public static <E> ImmutableList<E> of(E e) {
-        throw new UnsupportedOperationException();
+        return new SingletonList<>(e);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2) {

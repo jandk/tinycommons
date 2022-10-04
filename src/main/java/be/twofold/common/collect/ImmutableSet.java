@@ -13,7 +13,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     }
 
     public static <E> ImmutableSet<E> of(E e) {
-        throw new UnsupportedOperationException();
+        return new SingletonSet<>(e);
     }
 
     public static <E> ImmutableSet<E> of(E e1, E e2) {
