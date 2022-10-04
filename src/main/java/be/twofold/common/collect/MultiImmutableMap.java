@@ -69,7 +69,7 @@ final class MultiImmutableMap<K, V> extends ImmutableMap<K, V> {
 
         @Override
         public Iterator<Entry<K, V>> iterator() {
-            return new EntrySetItr<>(elements, size);
+            return new Itr<>(elements, size);
         }
 
         @Override
@@ -77,13 +77,13 @@ final class MultiImmutableMap<K, V> extends ImmutableMap<K, V> {
             return size;
         }
 
-        static final class EntrySetItr<K, V> implements Iterator<Entry<K, V>> {
+        static final class Itr<K, V> implements Iterator<Entry<K, V>> {
             private final Object[] elements;
             private final int size;
             private int count;
             private int index;
 
-            EntrySetItr(Object[] elements, int size) {
+            Itr(Object[] elements, int size) {
                 this.elements = Check.notNull(elements);
                 this.size = size;
             }
