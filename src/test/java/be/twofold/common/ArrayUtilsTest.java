@@ -247,58 +247,58 @@ class ArrayUtilsTest {
     @Test
     void testIndexOfByteWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((byte[]) null, (byte) 0, 0, 0));
+            .isThrownBy(() -> ArrayUtils.indexOf((byte[]) null, 0, 0, (byte) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new byte[2], (byte) 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.indexOf(new byte[2], -1, 2, (byte) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new byte[2], (byte) 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.indexOf(new byte[2], 0, 3, (byte) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new byte[2], (byte) 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.indexOf(new byte[2], 2, 1, (byte) 0));
 
         byte[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.indexOf(array, (byte) 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.indexOf(array, (byte) 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(array, (byte) 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(array, (byte) 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.indexOf(array, (byte) 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, (byte) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, (byte) 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, (byte) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, (byte) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, 0, 4, (byte) 9)).isEqualTo(-1);
     }
 
     @Test
     void testIndexOfShortWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((short[]) null, (short) 0, 0, 0));
+            .isThrownBy(() -> ArrayUtils.indexOf((short[]) null, 0, 0, (short) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new short[2], (short) 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.indexOf(new short[2], -1, 2, (short) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new short[2], (short) 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.indexOf(new short[2], 0, 3, (short) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new short[2], (short) 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.indexOf(new short[2], 2, 1, (short) 0));
 
         short[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.indexOf(array, (short) 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.indexOf(array, (short) 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(array, (short) 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(array, (short) 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.indexOf(array, (short) 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, (short) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, (short) 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, (short) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, (short) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, 0, 4, (short) 9)).isEqualTo(-1);
     }
 
     @Test
     void testIndexOfIntWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((int[]) null, (int) 0, 0, 0));
+            .isThrownBy(() -> ArrayUtils.indexOf((int[]) null, 0, 0, (int) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new int[2], (int) 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.indexOf(new int[2], -1, 2, (int) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new int[2], (int) 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.indexOf(new int[2], 0, 3, (int) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new int[2], (int) 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.indexOf(new int[2], 2, 1, (int) 0));
 
         int[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.indexOf(array, (int) 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.indexOf(array, (int) 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(array, (int) 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(array, (int) 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.indexOf(array, (int) 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, (int) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, (int) 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, (int) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, (int) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, 0, 4, (int) 9)).isEqualTo(-1);
     }
 
     @Test
@@ -306,18 +306,18 @@ class ArrayUtilsTest {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.indexOf((long[]) null, 0, 0, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new long[2], 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.indexOf(new long[2], -1, 2, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new long[2], 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.indexOf(new long[2], 0, 3, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new long[2], 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.indexOf(new long[2], 2, 1, 0));
 
         long[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.indexOf(array, 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.indexOf(array, 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(array, 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(array, 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.indexOf(array, 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, 1)).isEqualTo(4);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, 0, 4, 9)).isEqualTo(-1);
     }
 
     @Test
@@ -325,18 +325,18 @@ class ArrayUtilsTest {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.indexOf((float[]) null, 0, 0, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new float[2], 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.indexOf(new float[2], -1, 2, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new float[2], 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.indexOf(new float[2], 0, 3, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new float[2], 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.indexOf(new float[2], 2, 1, 0));
 
         float[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.indexOf(array, 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.indexOf(array, 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(array, 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(array, 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.indexOf(array, 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, 1)).isEqualTo(4);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, 0, 4, 9)).isEqualTo(-1);
     }
 
     @Test
@@ -344,53 +344,53 @@ class ArrayUtilsTest {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.indexOf((double[]) null, 0, 0, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new double[2], 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.indexOf(new double[2], -1, 2, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new double[2], 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.indexOf(new double[2], 0, 3, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new double[2], 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.indexOf(new double[2], 2, 1, 0));
 
         double[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.indexOf(array, 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.indexOf(array, 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(array, 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(array, 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.indexOf(array, 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, 1)).isEqualTo(4);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, 3)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, 2, 4, 4)).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, 0, 4, 9)).isEqualTo(-1);
     }
 
     @Test
     void testIndexOfCharWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((char[]) null, 'a', 0, 0));
+            .isThrownBy(() -> ArrayUtils.indexOf((char[]) null, 0, 0, 'a'));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new char[2], 'a', -1, 2));
+            .isThrownBy(() -> ArrayUtils.indexOf(new char[2], -1, 2, 'a'));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new char[2], 'a', 0, 3));
+            .isThrownBy(() -> ArrayUtils.indexOf(new char[2], 0, 3, 'a'));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new char[2], 'a', 2, 1));
+            .isThrownBy(() -> ArrayUtils.indexOf(new char[2], 2, 1, 'a'));
 
         char[] array = {'a', 'b', 'c', 'd', 'a'};
-        assertThat(ArrayUtils.indexOf(array, (char) 'a', 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.indexOf(array, (char) 'b', 2, 5)).isEqualTo(-1);
-        assertThat(ArrayUtils.indexOf(array, (char) 'c', 2, 5)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(array, (char) 'd', 2, 5)).isEqualTo(3);
-        assertThat(ArrayUtils.indexOf(array, (char) 'z', 0, 5)).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, (char) 'a')).isEqualTo(4);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, (char) 'b')).isEqualTo(-1);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, (char) 'c')).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, 2, 5, (char) 'd')).isEqualTo(3);
+        assertThat(ArrayUtils.indexOf(array, 0, 5, (char) 'z')).isEqualTo(-1);
     }
 
     @Test
     void testIndexOfBooleanWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.indexOf((boolean[]) null, true, 0, 0));
+            .isThrownBy(() -> ArrayUtils.indexOf((boolean[]) null, 0, 0, true));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new boolean[2], true, -1, 2));
+            .isThrownBy(() -> ArrayUtils.indexOf(new boolean[2], -1, 2, true));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new boolean[2], true, 0, 3));
+            .isThrownBy(() -> ArrayUtils.indexOf(new boolean[2], 0, 3, true));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.indexOf(new boolean[2], true, 2, 1));
+            .isThrownBy(() -> ArrayUtils.indexOf(new boolean[2], 2, 1, true));
 
         boolean[] array = new boolean[]{false, true, false};
-        assertThat(ArrayUtils.indexOf(array, false, 1, 3)).isEqualTo(2);
-        assertThat(ArrayUtils.indexOf(array, true, 0, 2)).isEqualTo(1);
+        assertThat(ArrayUtils.indexOf(array, 1, 3, false)).isEqualTo(2);
+        assertThat(ArrayUtils.indexOf(array, 0, 2, true)).isEqualTo(1);
     }
 
     // endregion
@@ -513,58 +513,58 @@ class ArrayUtilsTest {
     @Test
     void testLastIndexOfByteWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((byte[]) null, (byte) 0, 0, 0));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((byte[]) null, 0, 0, (byte) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new byte[2], (byte) 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new byte[2], -1, 2, (byte) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new byte[2], (byte) 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new byte[2], 0, 3, (byte) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new byte[2], (byte) 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new byte[2], 2, 1, (byte) 0));
 
         byte[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.lastIndexOf(array, (byte) 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.lastIndexOf(array, (byte) 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(array, (byte) 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(array, (byte) 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.lastIndexOf(array, (byte) 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 5, (byte) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (byte) 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (byte) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (byte) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, 0, 4, (byte) 9)).isEqualTo(-1);
     }
 
     @Test
     void testLastIndexOfShortWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((short[]) null, (short) 0, 0, 0));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((short[]) null, 0, 0, (short) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new short[2], (short) 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new short[2], -1, 2, (short) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new short[2], (short) 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new short[2], 0, 3, (short) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new short[2], (short) 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new short[2], 2, 1, (short) 0));
 
         short[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.lastIndexOf(array, (short) 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.lastIndexOf(array, (short) 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(array, (short) 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(array, (short) 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.lastIndexOf(array, (short) 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 5, (short) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (short) 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (short) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (short) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, 0, 4, (short) 9)).isEqualTo(-1);
     }
 
     @Test
     void testLastIndexOfIntWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((int[]) null, (int) 0, 0, 0));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((int[]) null, 0, 0, (int) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new int[2], (int) 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new int[2], -1, 2, (int) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new int[2], (int) 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new int[2], 0, 3, (int) 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new int[2], (int) 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new int[2], 2, 1, (int) 0));
 
         int[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.lastIndexOf(array, (int) 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.lastIndexOf(array, (int) 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(array, (int) 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(array, (int) 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.lastIndexOf(array, (int) 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 5, (int) 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (int) 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (int) 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (int) 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, 0, 4, (int) 9)).isEqualTo(-1);
     }
 
     @Test
@@ -572,18 +572,18 @@ class ArrayUtilsTest {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.lastIndexOf((long[]) null, 0, 0, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new long[2], 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new long[2], -1, 2, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new long[2], 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new long[2], 0, 3, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new long[2], 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new long[2], 2, 1, 0));
 
         long[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.lastIndexOf(array, 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.lastIndexOf(array, 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(array, 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(array, 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.lastIndexOf(array, 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 5, 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, 0, 4, 9)).isEqualTo(-1);
     }
 
     @Test
@@ -591,18 +591,18 @@ class ArrayUtilsTest {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.lastIndexOf((float[]) null, 0, 0, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new float[2], 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new float[2], -1, 2, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new float[2], 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new float[2], 0, 3, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new float[2], 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new float[2], 2, 1, 0));
 
         float[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.lastIndexOf(array, 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.lastIndexOf(array, 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(array, 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(array, 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.lastIndexOf(array, 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 5, 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, 0, 4, 9)).isEqualTo(-1);
     }
 
     @Test
@@ -610,53 +610,53 @@ class ArrayUtilsTest {
         assertThatNullPointerException()
             .isThrownBy(() -> ArrayUtils.lastIndexOf((double[]) null, 0, 0, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new double[2], 0, -1, 2));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new double[2], -1, 2, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new double[2], 0, 0, 3));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new double[2], 0, 3, 0));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new double[2], 0, 2, 1));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new double[2], 2, 1, 0));
 
         double[] array = {1, 2, 3, 4, 1};
-        assertThat(ArrayUtils.lastIndexOf(array, 1, 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.lastIndexOf(array, 2, 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(array, 3, 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(array, 4, 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.lastIndexOf(array, 9, 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 5, 1)).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, 2)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, 3)).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, 4)).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, 0, 4, 9)).isEqualTo(-1);
     }
 
     @Test
     void testLastIndexOfCharWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((char[]) null, 'a', 0, 0));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((char[]) null, 0, 0, 'a'));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new char[2], 'a', -1, 2));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new char[2], -1, 2, 'a'));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new char[2], 'a', 0, 3));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new char[2], 0, 3, 'a'));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new char[2], 'a', 2, 1));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new char[2], 2, 1, 'a'));
 
         char[] array = {'a', 'b', 'c', 'd', 'a'};
-        assertThat(ArrayUtils.lastIndexOf(array, (char) 'a', 2, 5)).isEqualTo(4);
-        assertThat(ArrayUtils.lastIndexOf(array, (char) 'b', 2, 4)).isEqualTo(-1);
-        assertThat(ArrayUtils.lastIndexOf(array, (char) 'c', 2, 4)).isEqualTo(2);
-        assertThat(ArrayUtils.lastIndexOf(array, (char) 'd', 2, 4)).isEqualTo(3);
-        assertThat(ArrayUtils.lastIndexOf(array, (char) 'z', 0, 4)).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 5, (char) 'a')).isEqualTo(4);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (char) 'b')).isEqualTo(-1);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (char) 'c')).isEqualTo(2);
+        assertThat(ArrayUtils.lastIndexOf(array, 2, 4, (char) 'd')).isEqualTo(3);
+        assertThat(ArrayUtils.lastIndexOf(array, 0, 4, (char) 'z')).isEqualTo(-1);
     }
 
     @Test
     void testLastIndexOfBooleanWithFromToIndex() {
         assertThatNullPointerException()
-            .isThrownBy(() -> ArrayUtils.lastIndexOf((boolean[]) null, true, 0, 0));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf((boolean[]) null, 0, 0, true));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new boolean[2], true, -1, 2));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new boolean[2], -1, 2, true));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new boolean[2], true, 0, 3));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new boolean[2], 0, 3, true));
         assertThatExceptionOfType(IndexOutOfBoundsException.class)
-            .isThrownBy(() -> ArrayUtils.lastIndexOf(new boolean[2], true, 2, 1));
+            .isThrownBy(() -> ArrayUtils.lastIndexOf(new boolean[2], 2, 1, true));
 
         boolean[] array = new boolean[]{false, true, false};
-        assertThat(ArrayUtils.lastIndexOf(array, false, 0, 2)).isEqualTo(0);
-        assertThat(ArrayUtils.lastIndexOf(array, true, 0, 2)).isEqualTo(1);
+        assertThat(ArrayUtils.lastIndexOf(array, 0, 2, false)).isEqualTo(0);
+        assertThat(ArrayUtils.lastIndexOf(array, 0, 2, true)).isEqualTo(1);
     }
 
     // endregion
