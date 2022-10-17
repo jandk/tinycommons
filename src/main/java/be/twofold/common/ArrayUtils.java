@@ -906,61 +906,6 @@ public final class ArrayUtils {
     }
 
 
-    private static void swap(byte[] array, int i, int j) {
-        byte tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-    }
-
-    private static void swap(short[] array, int i, int j) {
-        short tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-    }
-
-    private static void swap(int[] array, int i, int j) {
-        int tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-    }
-
-    private static void swap(long[] array, int i, int j) {
-        long tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-    }
-
-    private static void swap(float[] array, int i, int j) {
-        float tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-    }
-
-    private static void swap(double[] array, int i, int j) {
-        double tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-    }
-
-    private static void swap(char[] array, int i, int j) {
-        char tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-    }
-
-    private static void swap(boolean[] array, int i, int j) {
-        boolean tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-    }
-
-    private static void swap(Object[] array, int i, int j) {
-        Object tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-    }
-
-
     public static int hashCode(byte[] array) {
         if (array == null) {
             return 0;
@@ -1320,5 +1265,129 @@ public final class ArrayUtils {
         return builder.append(']').toString();
     }
 
+
+    private static int compare(byte a, byte b) {
+        return Byte.compare(a, b);
+    }
+
+    private static int compare(short a, short b) {
+        return Short.compare(a, b);
+    }
+
+    private static int compare(int a, int b) {
+        return Integer.compare(a, b);
+    }
+
+    private static int compare(long a, long b) {
+        return Long.compare(a, b);
+    }
+
+    private static int compare(float a, float b) {
+        return Float.compare(a, b);
+    }
+
+    private static int compare(double a, double b) {
+        return Double.compare(a, b);
+    }
+
+    private static int compare(char a, char b) {
+        return Character.compare(a, b);
+    }
+
+    private static int compare(boolean a, boolean b) {
+        return Boolean.compare(a, b);
+    }
+
+
+    private static boolean equal(byte a, byte b) {
+        return a == b;
+    }
+
+    private static boolean equal(short a, short b) {
+        return a == b;
+    }
+
+    private static boolean equal(int a, int b) {
+        return a == b;
+    }
+
+    private static boolean equal(long a, long b) {
+        return a == b;
+    }
+
+    private static boolean equal(float a, float b) {
+        return Float.floatToIntBits(a) == Float.floatToIntBits(b);
+    }
+
+    private static boolean equal(double a, double b) {
+        return Double.doubleToLongBits(a) == Double.doubleToLongBits(b);
+    }
+
+    private static boolean equal(char a, char b) {
+        return a == b;
+    }
+
+    private static boolean equal(boolean a, boolean b) {
+        return a == b;
+    }
+
+    private static boolean equal(Object a, Object b) {
+        return Objects.equals(a, b);
+    }
+
+
+    private static void swap(byte[] array, int i, int j) {
+        byte tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+
+    private static void swap(short[] array, int i, int j) {
+        short tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+
+    private static void swap(int[] array, int i, int j) {
+        int tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+
+    private static void swap(long[] array, int i, int j) {
+        long tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+
+    private static void swap(float[] array, int i, int j) {
+        float tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+
+    private static void swap(double[] array, int i, int j) {
+        double tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+
+    private static void swap(char[] array, int i, int j) {
+        char tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+
+    private static void swap(boolean[] array, int i, int j) {
+        boolean tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+
+    private static void swap(Object[] array, int i, int j) {
+        Object tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
 
 }
