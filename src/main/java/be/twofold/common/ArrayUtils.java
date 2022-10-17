@@ -13,7 +13,6 @@ public final class ArrayUtils {
         throw new UnsupportedOperationException();
     }
 
-    // region contains
 
     /**
      * Check if the value is present in the array.
@@ -107,9 +106,6 @@ public final class ArrayUtils {
         return indexOf(array, value) >= 0;
     }
 
-    // endregion
-
-    // region indexOf
 
     /**
      * Finds the index of the value in the array.
@@ -406,9 +402,6 @@ public final class ArrayUtils {
         return -1;
     }
 
-    // endregion
-
-    // region lastIndexOf
 
     /**
      * Finds the last index of the value in the array.
@@ -705,9 +698,6 @@ public final class ArrayUtils {
         return -1;
     }
 
-    // endregion
-
-    // region reverse
 
     public static void reverse(byte[] array) {
         reverse(array, 0, array.length);
@@ -825,9 +815,6 @@ public final class ArrayUtils {
         }
     }
 
-    // endregion
-
-    // region sortDescending
 
     public static void sortDescending(byte[] array) {
         sortDescending(array, 0, array.length);
@@ -918,9 +905,6 @@ public final class ArrayUtils {
         reverse(array, fromIndex, toIndex);
     }
 
-    // endregion
-
-    // region swap
 
     private static void swap(byte[] array, int i, int j) {
         byte tmp = array[i];
@@ -976,9 +960,6 @@ public final class ArrayUtils {
         array[j] = tmp;
     }
 
-    // endregion
-
-    // region hashCode
 
     public static int hashCode(byte[] array) {
         if (array == null) {
@@ -1141,9 +1122,6 @@ public final class ArrayUtils {
         return result;
     }
 
-    // endregion
-
-    // region toString
 
     public static String toString(byte[] array) {
         if (array == null) {
@@ -1342,6 +1320,5 @@ public final class ArrayUtils {
         return builder.append(']').toString();
     }
 
-    // endregion
 
 }
