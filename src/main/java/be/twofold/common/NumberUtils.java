@@ -1,6 +1,6 @@
 package be.twofold.common;
 
-import java.lang.reflect.*;
+import java.util.*;
 
 public final class NumberUtils {
 
@@ -11,7 +11,7 @@ public final class NumberUtils {
     // region max
 
     public static byte max(byte... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         byte max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -24,7 +24,7 @@ public final class NumberUtils {
     }
 
     public static short max(short... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         short max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -37,7 +37,7 @@ public final class NumberUtils {
     }
 
     public static int max(int... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         int max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -50,7 +50,7 @@ public final class NumberUtils {
     }
 
     public static long max(long... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         long max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -63,7 +63,7 @@ public final class NumberUtils {
     }
 
     public static float max(float... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         float max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -76,7 +76,7 @@ public final class NumberUtils {
     }
 
     public static double max(double... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         double max = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -93,7 +93,7 @@ public final class NumberUtils {
     // region min
 
     public static byte min(byte... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         byte min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -106,7 +106,7 @@ public final class NumberUtils {
     }
 
     public static short min(short... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         short min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -119,7 +119,7 @@ public final class NumberUtils {
     }
 
     public static int min(int... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         int min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -132,7 +132,7 @@ public final class NumberUtils {
     }
 
     public static long min(long... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         long min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -145,7 +145,7 @@ public final class NumberUtils {
     }
 
     public static float min(float... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         float min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -158,7 +158,7 @@ public final class NumberUtils {
     }
 
     public static double min(double... array) {
-        check(array);
+        Check.argument(array.length > 0, "array is empty");
 
         double min = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -174,84 +174,43 @@ public final class NumberUtils {
 
     // region tryParse
 
-    public static Byte tryParseByte(String s) {
+    public static OptionalInt tryParseInt(String s) {
         if (s == null) {
-            return null;
+            return OptionalInt.empty();
         }
 
         try {
-            return Byte.parseByte(s);
+            return OptionalInt.of(Integer.parseInt(s));
         } catch (NumberFormatException e) {
-            return null;
+            return OptionalInt.empty();
         }
     }
 
-    public static Short tryParseShort(String s) {
+    public static OptionalLong tryParseLong(String s) {
         if (s == null) {
-            return null;
+            return OptionalLong.empty();
         }
 
         try {
-            return Short.parseShort(s);
+            return OptionalLong.of(Long.parseLong(s));
         } catch (NumberFormatException e) {
-            return null;
+            return OptionalLong.empty();
         }
     }
 
-    public static Integer tryParseInt(String s) {
+    public static OptionalDouble tryParseDouble(String s) {
         if (s == null) {
-            return null;
+            return OptionalDouble.empty();
         }
 
         try {
-            return Integer.parseInt(s);
+            return OptionalDouble.of(Double.parseDouble(s));
         } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    public static Long tryParseLong(String s) {
-        if (s == null) {
-            return null;
-        }
-
-        try {
-            return Long.parseLong(s);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    public static Float tryParseFloat(String s) {
-        if (s == null) {
-            return null;
-        }
-
-        try {
-            return Float.parseFloat(s);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    public static Double tryParseDouble(String s) {
-        if (s == null) {
-            return null;
-        }
-
-        try {
-            return Double.parseDouble(s);
-        } catch (NumberFormatException e) {
-            return null;
+            return OptionalDouble.empty();
 
         }
     }
 
     // endregion
-
-    private static void check(Object array) {
-        Check.notNull(array, "array");
-        Check.argument(Array.getLength(array) > 0, "array is empty");
-    }
 
 }

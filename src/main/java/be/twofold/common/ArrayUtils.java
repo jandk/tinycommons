@@ -1,6 +1,5 @@
 package be.twofold.common;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -9,8 +8,6 @@ import java.util.*;
  * {@code null} is not allowed as a parameter, and will throw {@link NullPointerException}
  */
 public final class ArrayUtils {
-
-    private static final int NOT_FOUND = -1;
 
     private ArrayUtils() {
         throw new UnsupportedOperationException();
@@ -26,7 +23,6 @@ public final class ArrayUtils {
      * @return {@code true} if the value is present
      */
     public static boolean contains(byte[] array, byte value) {
-        check(array);
         return indexOf(array, value) >= 0;
     }
 
@@ -38,7 +34,6 @@ public final class ArrayUtils {
      * @return {@code true} if the value is present
      */
     public static boolean contains(short[] array, short value) {
-        check(array);
         return indexOf(array, value) >= 0;
     }
 
@@ -50,7 +45,6 @@ public final class ArrayUtils {
      * @return {@code true} if the value is present
      */
     public static boolean contains(int[] array, int value) {
-        check(array);
         return indexOf(array, value) >= 0;
     }
 
@@ -62,7 +56,6 @@ public final class ArrayUtils {
      * @return {@code true} if the value is present
      */
     public static boolean contains(long[] array, long value) {
-        check(array);
         return indexOf(array, value) >= 0;
     }
 
@@ -76,7 +69,6 @@ public final class ArrayUtils {
      * @return {@code true} if the value is present
      */
     public static boolean contains(float[] array, float value) {
-        check(array);
         return indexOf(array, value) >= 0;
     }
 
@@ -90,7 +82,6 @@ public final class ArrayUtils {
      * @return {@code true} if the value is present
      */
     public static boolean contains(double[] array, double value) {
-        check(array);
         return indexOf(array, value) >= 0;
     }
 
@@ -102,7 +93,6 @@ public final class ArrayUtils {
      * @return {@code true} if the value is present
      */
     public static boolean contains(char[] array, char value) {
-        check(array);
         return indexOf(array, value) >= 0;
     }
 
@@ -114,7 +104,6 @@ public final class ArrayUtils {
      * @return {@code true} if the value is present
      */
     public static boolean contains(boolean[] array, boolean value) {
-        check(array);
         return indexOf(array, value) >= 0;
     }
 
@@ -132,7 +121,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(byte[] array, byte value) {
-        check(array);
         return indexOf(array, value, 0, array.length);
     }
 
@@ -148,7 +136,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(byte[] array, byte value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex; i < toIndex; i++) {
             if (array[i] == value) {
@@ -156,7 +144,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -170,7 +158,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(short[] array, short value) {
-        check(array);
         return indexOf(array, value, 0, array.length);
     }
 
@@ -186,7 +173,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(short[] array, short value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex; i < toIndex; i++) {
             if (array[i] == value) {
@@ -194,7 +181,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -208,7 +195,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(int[] array, int value) {
-        check(array);
         return indexOf(array, value, 0, array.length);
     }
 
@@ -224,7 +210,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(int[] array, int value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex; i < toIndex; i++) {
             if (array[i] == value) {
@@ -232,7 +218,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -246,7 +232,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(long[] array, long value) {
-        check(array);
         return indexOf(array, value, 0, array.length);
     }
 
@@ -262,7 +247,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(long[] array, long value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex; i < toIndex; i++) {
             if (array[i] == value) {
@@ -270,7 +255,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -284,7 +269,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(float[] array, float value) {
-        check(array);
         return indexOf(array, value, 0, array.length);
     }
 
@@ -300,7 +284,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(float[] array, float value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex; i < toIndex; i++) {
             if (Float.compare(array[i], value) == 0) {
@@ -308,7 +292,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -322,7 +306,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(double[] array, double value) {
-        check(array);
         return indexOf(array, value, 0, array.length);
     }
 
@@ -338,7 +321,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(double[] array, double value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex; i < toIndex; i++) {
             if (Double.compare(array[i], value) == 0) {
@@ -346,7 +329,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -360,7 +343,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(char[] array, char value) {
-        check(array);
         return indexOf(array, value, 0, array.length);
     }
 
@@ -376,7 +358,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(char[] array, char value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex; i < toIndex; i++) {
             if (array[i] == value) {
@@ -384,7 +366,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -398,7 +380,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(boolean[] array, boolean value) {
-        check(array);
         return indexOf(array, value, 0, array.length);
     }
 
@@ -414,7 +395,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int indexOf(boolean[] array, boolean value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex; i < toIndex; i++) {
             if (array[i] == value) {
@@ -422,7 +403,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
     // endregion
@@ -439,7 +420,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(byte[] array, byte value) {
-        check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
@@ -455,7 +435,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(byte[] array, byte value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = toIndex - 1; i >= fromIndex; i--) {
             if (array[i] == value) {
@@ -463,7 +443,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -477,7 +457,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(short[] array, short value) {
-        check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
@@ -493,7 +472,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(short[] array, short value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = toIndex - 1; i >= fromIndex; i--) {
             if (array[i] == value) {
@@ -501,7 +480,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -515,7 +494,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(int[] array, int value) {
-        check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
@@ -531,7 +509,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(int[] array, int value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = toIndex - 1; i >= fromIndex; i--) {
             if (array[i] == value) {
@@ -539,7 +517,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -553,7 +531,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(long[] array, long value) {
-        check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
@@ -569,7 +546,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(long[] array, long value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = toIndex - 1; i >= fromIndex; i--) {
             if (array[i] == value) {
@@ -577,7 +554,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -591,7 +568,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(float[] array, float value) {
-        check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
@@ -607,7 +583,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(float[] array, float value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = toIndex - 1; i >= fromIndex; i--) {
             if (Float.compare(array[i], value) == 0) {
@@ -615,7 +591,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -629,7 +605,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(double[] array, double value) {
-        check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
@@ -645,7 +620,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(double[] array, double value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = toIndex - 1; i >= fromIndex; i--) {
             if (Double.compare(array[i], value) == 0) {
@@ -653,7 +628,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -667,7 +642,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(char[] array, char value) {
-        check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
@@ -683,7 +657,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(char[] array, char value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = toIndex - 1; i >= fromIndex; i--) {
             if (array[i] == value) {
@@ -691,7 +665,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
 
@@ -705,7 +679,6 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(boolean[] array, boolean value) {
-        check(array);
         return lastIndexOf(array, value, 0, array.length);
     }
 
@@ -721,7 +694,7 @@ public final class ArrayUtils {
      * @return The index, or {@code -1} if not found
      */
     public static int lastIndexOf(boolean[] array, boolean value, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = toIndex - 1; i >= fromIndex; i--) {
             if (array[i] == value) {
@@ -729,7 +702,7 @@ public final class ArrayUtils {
             }
         }
 
-        return NOT_FOUND;
+        return -1;
     }
 
     // endregion
@@ -737,12 +710,11 @@ public final class ArrayUtils {
     // region reverse
 
     public static void reverse(byte[] array) {
-        check(array);
         reverse(array, 0, array.length);
     }
 
     public static void reverse(byte[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
@@ -751,12 +723,11 @@ public final class ArrayUtils {
 
 
     public static void reverse(short[] array) {
-        check(array);
         reverse(array, 0, array.length);
     }
 
     public static void reverse(short[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
@@ -765,12 +736,11 @@ public final class ArrayUtils {
 
 
     public static void reverse(int[] array) {
-        check(array);
         reverse(array, 0, array.length);
     }
 
     public static void reverse(int[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
@@ -779,12 +749,11 @@ public final class ArrayUtils {
 
 
     public static void reverse(long[] array) {
-        check(array);
         reverse(array, 0, array.length);
     }
 
     public static void reverse(long[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
@@ -793,12 +762,11 @@ public final class ArrayUtils {
 
 
     public static void reverse(float[] array) {
-        check(array);
         reverse(array, 0, array.length);
     }
 
     public static void reverse(float[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
@@ -807,12 +775,11 @@ public final class ArrayUtils {
 
 
     public static void reverse(double[] array) {
-        check(array);
         reverse(array, 0, array.length);
     }
 
     public static void reverse(double[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
@@ -821,12 +788,11 @@ public final class ArrayUtils {
 
 
     public static void reverse(char[] array) {
-        check(array);
         reverse(array, 0, array.length);
     }
 
     public static void reverse(char[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
@@ -835,12 +801,11 @@ public final class ArrayUtils {
 
 
     public static void reverse(boolean[] array) {
-        check(array);
         reverse(array, 0, array.length);
     }
 
     public static void reverse(boolean[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
@@ -849,12 +814,11 @@ public final class ArrayUtils {
 
 
     public static void reverse(Object[] array) {
-        check(array);
         reverse(array, 0, array.length);
     }
 
     public static void reverse(Object[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         for (int i = fromIndex, j = toIndex - 1; i < j; i++, j--) {
             swap(array, i, j);
@@ -866,97 +830,89 @@ public final class ArrayUtils {
     // region sortDescending
 
     public static void sortDescending(byte[] array) {
-        check(array);
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(byte[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
         Arrays.sort(array, fromIndex, toIndex);
         reverse(array, fromIndex, toIndex);
     }
 
 
     public static void sortDescending(short[] array) {
-        check(array);
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(short[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
         Arrays.sort(array, fromIndex, toIndex);
         reverse(array, fromIndex, toIndex);
     }
 
 
     public static void sortDescending(int[] array) {
-        check(array);
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(int[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
         Arrays.sort(array, fromIndex, toIndex);
         reverse(array, fromIndex, toIndex);
     }
 
 
     public static void sortDescending(long[] array) {
-        check(array);
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(long[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
         Arrays.sort(array, fromIndex, toIndex);
         reverse(array, fromIndex, toIndex);
     }
 
 
     public static void sortDescending(float[] array) {
-        check(array);
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(float[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
         Arrays.sort(array, fromIndex, toIndex);
         reverse(array, fromIndex, toIndex);
     }
 
 
     public static void sortDescending(double[] array) {
-        check(array);
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(double[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
         Arrays.sort(array, fromIndex, toIndex);
         reverse(array, fromIndex, toIndex);
     }
 
 
     public static void sortDescending(char[] array) {
-        check(array);
         sortDescending(array, 0, array.length);
     }
 
     public static void sortDescending(char[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
         Arrays.sort(array, fromIndex, toIndex);
         reverse(array, fromIndex, toIndex);
     }
 
 
     public static <T> void sortDescending(T[] array, Comparator<? super T> comparator) {
-        check(array);
         Check.notNull(comparator, "comparator");
         sortDescending(array, 0, array.length, comparator);
     }
 
     public static <T> void sortDescending(T[] array, int fromIndex, int toIndex, Comparator<? super T> comparator) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
         Check.notNull(comparator, "comparator");
         Arrays.sort(array, fromIndex, toIndex, comparator);
         reverse(array, fromIndex, toIndex);
@@ -1032,7 +988,7 @@ public final class ArrayUtils {
     }
 
     public static int hashCode(byte[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         int result = 1;
         for (int i = fromIndex; i < toIndex; i++) {
@@ -1050,7 +1006,7 @@ public final class ArrayUtils {
     }
 
     public static int hashCode(short[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         int result = 1;
         for (int i = fromIndex; i < toIndex; i++) {
@@ -1068,7 +1024,7 @@ public final class ArrayUtils {
     }
 
     public static int hashCode(int[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         int result = 1;
         for (int i = fromIndex; i < toIndex; i++) {
@@ -1086,7 +1042,7 @@ public final class ArrayUtils {
     }
 
     public static int hashCode(long[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         int result = 1;
         for (int i = fromIndex; i < toIndex; i++) {
@@ -1104,7 +1060,7 @@ public final class ArrayUtils {
     }
 
     public static int hashCode(float[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         int result = 1;
         for (int i = fromIndex; i < toIndex; i++) {
@@ -1122,7 +1078,7 @@ public final class ArrayUtils {
     }
 
     public static int hashCode(double[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         int result = 1;
         for (int i = fromIndex; i < toIndex; i++) {
@@ -1140,7 +1096,7 @@ public final class ArrayUtils {
     }
 
     public static int hashCode(char[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         int result = 1;
         for (int i = fromIndex; i < toIndex; i++) {
@@ -1158,7 +1114,7 @@ public final class ArrayUtils {
     }
 
     public static int hashCode(boolean[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         int result = 1;
         for (int i = fromIndex; i < toIndex; i++) {
@@ -1176,7 +1132,7 @@ public final class ArrayUtils {
     }
 
     public static int hashCode(Object[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         int result = 1;
         for (int i = fromIndex; i < toIndex; i++) {
@@ -1197,7 +1153,7 @@ public final class ArrayUtils {
     }
 
     public static String toString(byte[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         if (fromIndex == toIndex) {
             return "[]";
@@ -1219,7 +1175,7 @@ public final class ArrayUtils {
     }
 
     public static String toString(short[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         if (fromIndex == toIndex) {
             return "[]";
@@ -1241,7 +1197,7 @@ public final class ArrayUtils {
     }
 
     public static String toString(int[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         if (fromIndex == toIndex) {
             return "[]";
@@ -1263,7 +1219,7 @@ public final class ArrayUtils {
     }
 
     public static String toString(long[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         if (fromIndex == toIndex) {
             return "[]";
@@ -1285,7 +1241,7 @@ public final class ArrayUtils {
     }
 
     public static String toString(float[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         if (fromIndex == toIndex) {
             return "[]";
@@ -1307,7 +1263,7 @@ public final class ArrayUtils {
     }
 
     public static String toString(double[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         if (fromIndex == toIndex) {
             return "[]";
@@ -1329,7 +1285,7 @@ public final class ArrayUtils {
     }
 
     public static String toString(char[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         if (fromIndex == toIndex) {
             return "[]";
@@ -1351,7 +1307,7 @@ public final class ArrayUtils {
     }
 
     public static String toString(boolean[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         if (fromIndex == toIndex) {
             return "[]";
@@ -1373,7 +1329,7 @@ public final class ArrayUtils {
     }
 
     public static String toString(Object[] array, int fromIndex, int toIndex) {
-        check(array, fromIndex, toIndex);
+        Check.fromToIndex(fromIndex, toIndex, array.length);
 
         if (fromIndex == toIndex) {
             return "[]";
@@ -1387,15 +1343,5 @@ public final class ArrayUtils {
     }
 
     // endregion
-
-
-    private static void check(Object array) {
-        Check.notNull(array, "array");
-    }
-
-    private static void check(Object array, int fromIndex, int toIndex) {
-        check(array);
-        Check.fromToIndex(fromIndex, toIndex, Array.getLength(array));
-    }
 
 }

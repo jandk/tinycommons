@@ -40,4 +40,38 @@ public final class IOUtils {
             : new BufferedWriter(writer);
     }
 
+    public static long copy(InputStream input, OutputStream output) throws IOException {
+        Check.notNull(input, "input");
+        Check.notNull(output, "output");
+
+        long count = 0;
+        byte[] buffer = new byte[8192];
+        while (true) {
+            int read = input.read(buffer);
+            if (read == -1) {
+                break;
+            }
+            output.write(buffer, 0, read);
+            count += read;
+        }
+        return count;
+    }
+
+    public static long copy(Reader reader, Writer writer) throws IOException {
+        Check.notNull(reader, "reader");
+        Check.notNull(writer, "writer");
+
+        long count = 0;
+        char[] buffer = new char[8192];
+        while (true) {
+            int read = reader.read(buffer);
+            if (read == -1) {
+                break;
+            }
+            writer.write(buffer, 0, read);
+            count += read;
+        }
+        return count;
+    }
+
 }

@@ -26,7 +26,7 @@ public final class StringUtils {
         if (string == null) {
             return true;
         }
-        for (int i = 0; i < string.length(); ) {
+        for (int i = 0, len = string.length(); i < len; ) {
             int codePoint = string.codePointAt(i);
             if (!Character.isWhitespace(codePoint)) {
                 return false;

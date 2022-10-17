@@ -14,45 +14,24 @@ class NumberUtilsTest {
     // region testTryParse
 
     @Test
-    void testTryParseByte() {
-        assertThat(NumberUtils.tryParseByte(null)).isNull();
-        assertThat(NumberUtils.tryParseByte("foo")).isNull();
-        assertThat(NumberUtils.tryParseByte("123")).isEqualTo((byte) 123);
-    }
-
-    @Test
-    void testTryParseShort() {
-        assertThat(NumberUtils.tryParseShort(null)).isNull();
-        assertThat(NumberUtils.tryParseShort("foo")).isNull();
-        assertThat(NumberUtils.tryParseShort("12345")).isEqualTo((short) 12345);
-    }
-
-    @Test
     void testTryParseInt() {
-        assertThat(NumberUtils.tryParseInt(null)).isNull();
-        assertThat(NumberUtils.tryParseInt("foo")).isNull();
-        assertThat(NumberUtils.tryParseInt("123456789")).isEqualTo(123456789);
+        assertThat(NumberUtils.tryParseInt(null)).isEmpty();
+        assertThat(NumberUtils.tryParseInt("foo")).isEmpty();
+        assertThat(NumberUtils.tryParseInt("123456789")).hasValue(123456789);
     }
 
     @Test
     void testTryParseLong() {
-        assertThat(NumberUtils.tryParseLong(null)).isNull();
-        assertThat(NumberUtils.tryParseLong("foo")).isNull();
-        assertThat(NumberUtils.tryParseLong("123456789012")).isEqualTo(123456789012L);
-    }
-
-    @Test
-    void testTryParseFloat() {
-        assertThat(NumberUtils.tryParseFloat(null)).isNull();
-        assertThat(NumberUtils.tryParseFloat("foo")).isNull();
-        assertThat(NumberUtils.tryParseFloat("123.456")).isEqualTo(123.456f);
+        assertThat(NumberUtils.tryParseLong(null)).isEmpty();
+        assertThat(NumberUtils.tryParseLong("foo")).isEmpty();
+        assertThat(NumberUtils.tryParseLong("123456789012")).hasValue(123456789012L);
     }
 
     @Test
     void testTryParseDouble() {
-        assertThat(NumberUtils.tryParseDouble(null)).isNull();
-        assertThat(NumberUtils.tryParseDouble("foo")).isNull();
-        assertThat(NumberUtils.tryParseDouble("123.456")).isEqualTo(123.456);
+        assertThat(NumberUtils.tryParseDouble(null)).isEmpty();
+        assertThat(NumberUtils.tryParseDouble("foo")).isEmpty();
+        assertThat(NumberUtils.tryParseDouble("123.456")).hasValue(123.456);
     }
 
     // endregion
