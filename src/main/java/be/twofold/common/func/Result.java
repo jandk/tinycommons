@@ -2,16 +2,16 @@ package be.twofold.common.func;
 
 import java.util.*;
 
-public abstract class Try<T> {
+public abstract class Result<T> {
 
-    Try() {
+    Result() {
     }
 
-    public static <T> Try<T> success(T result) {
+    public static <T> Result<T> success(T result) {
         return new Success<>(result);
     }
 
-    public static <T> Try<T> failure(Throwable cause) {
+    public static <T> Result<T> failure(Throwable cause) {
         return new Failure<>(cause);
     }
 
@@ -27,7 +27,7 @@ public abstract class Try<T> {
 
     public abstract Throwable getCause();
 
-    static final class Success<T> extends Try<T> {
+    static final class Success<T> extends Result<T> {
         private final T result;
 
         Success(T result) {
@@ -61,7 +61,7 @@ public abstract class Try<T> {
         }
     }
 
-    static final class Failure<T> extends Try<T> {
+    static final class Failure<T> extends Result<T> {
         private final Throwable cause;
 
         Failure(Throwable cause) {
