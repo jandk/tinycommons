@@ -16,14 +16,7 @@ import java.util.stream.*;
  *
  * @param <T> The type of elements in this Seq
  */
-public abstract class Seq<T> implements Iterable<T> {
-
-    private static final Seq<?> Empty = seq(Collections::emptyIterator);
-
-    // region Factories
-
-    private Seq() {
-    }
+public interface Seq<T> extends Iterable<T> {
 
     /**
      * Creates a new empty Seq
@@ -32,8 +25,8 @@ public abstract class Seq<T> implements Iterable<T> {
      * @return The new Seq
      */
     @SuppressWarnings("unchecked")
-    public static <T> Seq<T> of() {
-        return (Seq<T>) Empty;
+    static <T> Seq<T> of() {
+        return (Seq<T>) SeqHelpers.Empty;
     }
 
     /**
@@ -43,35 +36,31 @@ public abstract class Seq<T> implements Iterable<T> {
      * @return The new Seq
      */
     @SafeVarargs
-    public static <T> Seq<T> of(T... elements) {
+    static <T> Seq<T> of(T... elements) {
         Check.notNull(elements, "elements is null");
         if (elements.length == 0) {
             return of();
         }
-        return seq(() -> Arrays.asList(elements).iterator());
+        return () -> Arrays.asList(elements).iterator();
     }
 
     /**
      * Creates a new Seq from an existing iterable
      */
-    public static <T> Seq<T> seq(Iterable<T> iterable) {
-        return new IterableSeq<>(iterable);
+    static <T> Seq<T> seq(Iterable<T> iterable) {
+        Check.notNull(iterable, "iterable is null");
+        return iterable::iterator;
     }
 
-    public static <T> Seq<T> seq(Iterator<T> iterator) {
+    static <T> Seq<T> seq(Iterator<T> iterator) {
         Check.notNull(iterator, "iterator is null");
-        return seq(() -> iterator).once();
+        return ((Seq<T>) () -> iterator).once();
     }
 
-    public static <T> Seq<T> seq(Stream<T> stream) {
-        return seq(stream::iterator).once();
+    static <T> Seq<T> seq(Stream<T> stream) {
+        Check.notNull(stream, "stream is null");
+        return ((Seq<T>) stream::iterator).once();
     }
-
-    // endregion
-
-    // region Intermediate Operations
-
-    // region distinct
 
     /**
      * Returns a sequence containing only distinct elements from this sequence.
@@ -79,14 +68,10 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @return The new sequence.
      */
-    public final Seq<T> distinct() {
+    default Seq<T> distinct() {
         Set<T> seen = new HashSet<>();
         return filter(seen::add);
     }
-
-    // endregion
-
-    // region drop
 
     /**
      * Drops the first {@code count} elements of this sequence.
@@ -94,18 +79,14 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param count The number of elements to drop.
      * @return The new sequence.
      */
-    public final Seq<T> drop(int count) {
+    default Seq<T> drop(int count) {
         Check.argument(count >= 0, "Negative count");
 
         if (count == 0) {
             return this;
         }
-        return seq(() -> new DropIterator<>(iterator(), count));
+        return () -> new DropItr<>(iterator(), count);
     }
-
-    // endregion
-
-    // region dropWhile
 
     /**
      * Drop elements while the predicate is true.
@@ -113,26 +94,10 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param predicate The predicate to match.
      * @return The new sequence.
      */
-    public final Seq<T> dropWhile(Predicate<? super T> predicate) {
+    default Seq<T> dropWhile(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
 
-        return seq(() -> new DropWhileIterator<>(iterator(), predicate));
-    }
-
-    // endregion
-
-    // region filter
-
-    /**
-     * Returns a sequence containing only the elements matching the given predicate.
-     *
-     * @param predicate The predicate to match.
-     * @return The new sequence.
-     */
-    public final Seq<T> filter(Predicate<? super T> predicate) {
-        Check.notNull(predicate, "predicate");
-
-        return seq(() -> new FilterIterator<>(iterator(), predicate));
+        return () -> new DropWhileItr<>(iterator(), predicate);
     }
 
     /**
@@ -141,7 +106,19 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param predicate The predicate to match.
      * @return The new sequence.
      */
-    public final Seq<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
+    default Seq<T> filter(Predicate<? super T> predicate) {
+        Check.notNull(predicate, "predicate");
+
+        return () -> new FilterItr<>(iterator(), predicate);
+    }
+
+    /**
+     * Returns a sequence containing only the elements matching the given predicate.
+     *
+     * @param predicate The predicate to match.
+     * @return The new sequence.
+     */
+    default Seq<T> filterIndexed(BiPredicate<Integer, ? super T> predicate) {
         Check.notNull(predicate, "predicate");
 
         AtomicInteger index = new AtomicInteger();
@@ -155,7 +132,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <R>   The type of the elements.
      * @return The new sequence.
      */
-    public final <R> Seq<R> filterIsInstance(Class<R> clazz) {
+    default <R> Seq<R> filterIsInstance(Class<R> clazz) {
         Check.notNull(clazz, "clazz");
 
         return filter(clazz::isInstance).map(clazz::cast);
@@ -167,7 +144,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param predicate The predicate to not match.
      * @return The new sequence.
      */
-    public final Seq<T> filterNot(Predicate<? super T> predicate) {
+    default Seq<T> filterNot(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
 
         return filter(predicate.negate());
@@ -176,14 +153,10 @@ public abstract class Seq<T> implements Iterable<T> {
     /**
      * Returns a sequence containing only non-null elements.
      */
-    public final Seq<T> filterNotNull() {
+    default Seq<T> filterNotNull() {
         return filter(Objects::nonNull);
     }
 
-    // endregion
-
-    // region flatMap
-
     /**
      * Returns a single sequence of all elements from results of applying
      * the given function to each element of this sequence.
@@ -192,10 +165,10 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <R>    The type of the elements of the new sequence.
      * @return The new sequence.
      */
-    public final <R> Seq<R> flatMap(Function<? super T, ? extends Iterable<? extends R>> mapper) {
+    default <R> Seq<R> flatMap(Function<? super T, ? extends Iterable<? extends R>> mapper) {
         Check.notNull(mapper, "mapper");
 
-        return seq(() -> new FlatMapIterator<>(iterator(), mapper));
+        return () -> new FlatMapItr<>(iterator(), mapper);
     }
 
     /**
@@ -206,31 +179,23 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <R>    The type of the elements of the new sequence.
      * @return The new sequence.
      */
-    public final <R> Seq<R> flatMapIndexed(BiFunction<Integer, ? super T, ? extends Iterable<? extends R>> mapper) {
+    default <R> Seq<R> flatMapIndexed(BiFunction<Integer, ? super T, ? extends Iterable<? extends R>> mapper) {
         Check.notNull(mapper, "mapper");
 
         AtomicInteger index = new AtomicInteger();
         return flatMap(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
-    // endregion
-
-    // region indexed
-
     /**
      * Returns a sequence of pairs of indexes and elements of this sequence.
      *
      * @return The new sequence.
      */
-    public final Seq<Pair<Integer, T>> indexed() {
+    default Seq<Pair<Integer, T>> indexed() {
         AtomicInteger index = new AtomicInteger();
         return map(t -> Pair.of(index.getAndIncrement(), t));
     }
 
-    // endregion
-
-    // region map
-
     /**
      * Returns a sequence containing the results of applying the given function to each element of this sequence.
      *
@@ -238,10 +203,10 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <R>    The type of the elements of the new sequence.
      * @return The new sequence.
      */
-    public final <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
+    default <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
 
-        return seq(() -> new MapIterator<>(iterator(), mapper));
+        return () -> new MapItr<>(iterator(), mapper);
     }
 
     /**
@@ -251,36 +216,28 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <R>    The type of the elements of the new sequence.
      * @return The new sequence.
      */
-    public final <R> Seq<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
+    default <R> Seq<R> mapIndexed(BiFunction<Integer, ? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
 
         AtomicInteger index = new AtomicInteger();
         return map(t -> mapper.apply(index.getAndIncrement(), t));
     }
 
-    // endregion
-
-    // region once
-
     /**
      * Returns a sequence that can be iterated over only once.
      *
      * @return The new sequence.
      */
-    public final Seq<T> once() {
+    default Seq<T> once() {
         return this instanceof OnceSeq ? this : new OnceSeq<>(this);
     }
-
-    // endregion
-
-    // region onEach
 
     /**
      * Perform the given action for each element in the sequence, returning the sequence itself.
      *
      * @param action The action to be performed for each element.
      */
-    public final Seq<T> onEach(Consumer<? super T> action) {
+    default Seq<T> onEach(Consumer<? super T> action) {
         Check.notNull(action, "action");
 
         return map(element -> {
@@ -295,7 +252,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param action The action to be performed for each element.
      * @return The sequence itself.
      */
-    public final Seq<T> onEachIndexed(BiConsumer<Integer, ? super T> action) {
+    default Seq<T> onEachIndexed(BiConsumer<Integer, ? super T> action) {
         Check.notNull(action, "action");
 
         AtomicInteger index = new AtomicInteger();
@@ -305,17 +262,13 @@ public abstract class Seq<T> implements Iterable<T> {
         });
     }
 
-    // endregion
-
-    // region sorted
-
     /**
      * Returns a sorted sequence containing the elements of this sequence, using the natural ordering.
      *
      * @return The new sequence.
      */
     @SuppressWarnings("unchecked")
-    public final Seq<T> sorted() {
+    default Seq<T> sorted() {
         return sorted((Comparator<? super T>) Comparator.naturalOrder());
     }
 
@@ -325,19 +278,15 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param comparator The comparator to use to compare elements.
      * @return The new sequence.
      */
-    public final Seq<T> sorted(Comparator<? super T> comparator) {
+    default Seq<T> sorted(Comparator<? super T> comparator) {
         Check.notNull(comparator, "comparator");
 
-        return seq(() -> {
+        return () -> {
             List<T> list = toList();
             list.sort(comparator);
             return list.iterator();
-        });
+        };
     }
-
-    // endregion
-
-    // region take
 
     /**
      * Returns a sequence containing the first {@code count} elements.
@@ -345,23 +294,15 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param count The number of elements to take.
      * @return The new sequence.
      */
-    public final Seq<T> take(int count) {
+    default Seq<T> take(int count) {
         Check.argument(count >= 0, "Negative count");
         if (count == 0) {
             return of();
         }
-        return seq(() -> new TakeIterator<>(iterator(), count));
+        return () -> new TakeItr<>(iterator(), count);
     }
 
-    // endregion
-
-    // endregion
-
-    // region Terminal Operations
-
-    // region all
-
-    public final boolean all(Predicate<? super T> predicate) {
+    default boolean all(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
 
         for (T element : this) {
@@ -372,14 +313,10 @@ public abstract class Seq<T> implements Iterable<T> {
         return true;
     }
 
-    // endregion
-
-    // region any
-
     /**
      * Returns true if the sequence has at least one element.
      */
-    public final boolean any() {
+    default boolean any() {
         return iterator().hasNext();
     }
 
@@ -388,89 +325,47 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param predicate The predicate to match.
      */
-    public final boolean any(Predicate<? super T> predicate) {
+    default boolean any(Predicate<? super T> predicate) {
         return filter(predicate).any();
     }
 
-    // endregion
-
-    // region average
-
-    public final double average(ToIntFunction<? super T> mapper) {
-        return average(nonEmptyIterator(), mapper);
+    default double average(ToIntFunction<? super T> mapper) {
+        return SeqHelpers.average(SeqHelpers.nonEmpty(this), mapper);
     }
 
-    public final double average(ToLongFunction<? super T> mapper) {
-        return average(nonEmptyIterator(), mapper);
+    default double average(ToLongFunction<? super T> mapper) {
+        return SeqHelpers.average(SeqHelpers.nonEmpty(this), mapper);
     }
 
-    public final double average(ToDoubleFunction<? super T> mapper) {
-        return average(nonEmptyIterator(), mapper);
+    default double average(ToDoubleFunction<? super T> mapper) {
+        return SeqHelpers.average(SeqHelpers.nonEmpty(this), mapper);
     }
 
-    public final OptionalDouble averageOptional(ToIntFunction<? super T> mapper) {
-        return optionalIterator().map(it -> OptionalDouble.of(average(it, mapper))).orElse(OptionalDouble.empty());
+    default OptionalDouble averageOptional(ToIntFunction<? super T> mapper) {
+        return SeqHelpers.optional(this).map(it -> OptionalDouble.of(SeqHelpers.average(it, mapper))).orElse(OptionalDouble.empty());
     }
 
-    public final OptionalDouble averageOptional(ToLongFunction<? super T> mapper) {
-        return optionalIterator().map(it -> OptionalDouble.of(average(it, mapper))).orElse(OptionalDouble.empty());
+    default OptionalDouble averageOptional(ToLongFunction<? super T> mapper) {
+        return SeqHelpers.optional(this).map(it -> OptionalDouble.of(SeqHelpers.average(it, mapper))).orElse(OptionalDouble.empty());
     }
 
-    public final OptionalDouble averageOptional(ToDoubleFunction<? super T> mapper) {
-        return optionalIterator().map(it -> OptionalDouble.of(average(it, mapper))).orElse(OptionalDouble.empty());
+    default OptionalDouble averageOptional(ToDoubleFunction<? super T> mapper) {
+        return SeqHelpers.optional(this).map(it -> OptionalDouble.of(SeqHelpers.average(it, mapper))).orElse(OptionalDouble.empty());
     }
-
-    private static <T> double average(Iterator<T> iterator, ToIntFunction<? super T> mapper) {
-        double sum = 0;
-        int count = 0;
-        while (iterator.hasNext()) {
-            sum += mapper.applyAsInt(iterator.next());
-            count++;
-        }
-        return sum / count;
-    }
-
-    private static <T> double average(Iterator<T> iterator, ToLongFunction<? super T> mapper) {
-        double sum = 0;
-        int count = 0;
-        while (iterator.hasNext()) {
-            sum += mapper.applyAsLong(iterator.next());
-            count++;
-        }
-        return sum / count;
-    }
-
-    private static <T> double average(Iterator<T> iterator, ToDoubleFunction<? super T> mapper) {
-        double sum = 0;
-        int count = 0;
-        while (iterator.hasNext()) {
-            sum += mapper.applyAsDouble(iterator.next());
-            count++;
-        }
-        return sum / count;
-    }
-
-    // endregion
-
-    // region contains
 
     /**
      * Returns true if the sequence contains the given element.
      *
      * @param element The element to search for.
      */
-    public final boolean contains(T element) {
+    default boolean contains(T element) {
         return indexOf(element) >= 0;
     }
-
-    // endregion
-
-    // region count
 
     /**
      * Returns the number of elements in the sequence.
      */
-    public final int count() {
+    default int count() {
         int count = 0;
         for (T ignored : this) {
             count++;
@@ -483,19 +378,15 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param predicate The predicate to match.
      */
-    public final int count(Predicate<? super T> predicate) {
+    default int count(Predicate<? super T> predicate) {
         return filter(predicate).count();
     }
-
-    // endregion
-
-    // region first
 
     /**
      * Returns the first element in the sequence.
      */
-    public final T first() {
-        return nonEmptyIterator().next();
+    default T first() {
+        return SeqHelpers.nonEmpty(this).next();
     }
 
     /**
@@ -503,7 +394,7 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param predicate The predicate to match.
      */
-    public final T first(Predicate<? super T> predicate) {
+    default T first(Predicate<? super T> predicate) {
         return filter(predicate).first();
     }
 
@@ -511,8 +402,8 @@ public abstract class Seq<T> implements Iterable<T> {
      * Returns the first element in the sequence,
      * or an empty {@link Optional} if the sequence is empty.
      */
-    public final Optional<T> firstOptional() {
-        return optionalIterator().map(Iterator::next);
+    default Optional<T> firstOptional() {
+        return SeqHelpers.optional(this).map(Iterator::next);
     }
 
     /**
@@ -521,20 +412,16 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param predicate The predicate to match.
      */
-    public final Optional<T> firstOptional(Predicate<? super T> predicate) {
+    default Optional<T> firstOptional(Predicate<? super T> predicate) {
         return filter(predicate).firstOptional();
     }
-
-    // endregion
-
-    // region forEach
 
     /**
      * Perform the given action for each element in the sequence.
      *
      * @param consumer The action to be performed for each element
      */
-    public final void forEach(Consumer<? super T> consumer) {
+    default void forEach(Consumer<? super T> consumer) {
         Check.notNull(consumer, "consumer");
 
         for (T element : this) {
@@ -547,16 +434,12 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param consumer The action to be performed for each element
      */
-    public final void forEachIndexed(BiConsumer<Integer, ? super T> consumer) {
+    default void forEachIndexed(BiConsumer<Integer, ? super T> consumer) {
         Check.notNull(consumer, "consumer");
 
         AtomicInteger index = new AtomicInteger();
         forEach(t -> consumer.accept(index.getAndIncrement(), t));
     }
-
-    // endregion
-
-    // region fold
 
     /**
      * Accumulates the elements of the sequence into a single value.
@@ -566,56 +449,9 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <R>       The type of the accumulated value.
      * @return The accumulated value.
      */
-    public final <R> R fold(R initial, BiFunction<R, ? super T, ? extends R> operation) {
-        return fold(iterator(), initial, operation);
+    default <R> R fold(R initial, BiFunction<R, ? super T, ? extends R> operation) {
+        return SeqHelpers.fold(iterator(), initial, operation);
     }
-
-    private static <E, R> R fold(Iterator<E> iterator, R initial, BiFunction<R, ? super E, ? extends R> operation) {
-        Check.notNull(operation, "operation");
-
-        R accumulator = initial;
-        while (iterator.hasNext()) {
-            accumulator = operation.apply(accumulator, iterator.next());
-        }
-        return accumulator;
-    }
-
-    private static <E> int fold(Iterator<E> iterator, ToIntFunction<? super E> mapper, int initial, IntBinaryOperator operator) {
-        Check.notNull(operator, "operator");
-        Check.notNull(mapper, "mapper");
-
-        int accumulator = initial;
-        while (iterator.hasNext()) {
-            accumulator = operator.applyAsInt(accumulator, mapper.applyAsInt(iterator.next()));
-        }
-        return accumulator;
-    }
-
-    private static <E> long fold(Iterator<E> iterator, ToLongFunction<? super E> mapper, long initial, LongBinaryOperator operator) {
-        Check.notNull(operator, "operator");
-        Check.notNull(mapper, "mapper");
-
-        long accumulator = initial;
-        while (iterator.hasNext()) {
-            accumulator = operator.applyAsLong(accumulator, mapper.applyAsLong(iterator.next()));
-        }
-        return accumulator;
-    }
-
-    private static <E> double fold(Iterator<E> iterator, ToDoubleFunction<? super E> mapper, double initial, DoubleBinaryOperator operator) {
-        Check.notNull(operator, "operator");
-        Check.notNull(mapper, "mapper");
-
-        double accumulator = initial;
-        while (iterator.hasNext()) {
-            accumulator = operator.applyAsDouble(accumulator, mapper.applyAsDouble(iterator.next()));
-        }
-        return accumulator;
-    }
-
-    // endregion
-
-    // region groupBy
 
     /**
      * Groups the elements of the sequence by the key given by the key selector function,
@@ -625,7 +461,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <K>       The type of the keys.
      * @return The map with each key mapping to a list of values.
      */
-    public final <K> Map<K, List<T>> groupBy(Function<? super T, ? extends K> keyMapper) {
+    default <K> Map<K, List<T>> groupBy(Function<? super T, ? extends K> keyMapper) {
         return groupBy(keyMapper, Function.identity());
     }
 
@@ -639,7 +475,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param <V>         The type of the values.
      * @return The map with each key mapping to a list of values.
      */
-    public final <K, V> Map<K, List<V>> groupBy(
+    default <K, V> Map<K, List<V>> groupBy(
         Function<? super T, ? extends K> keyMapper,
         Function<? super T, ? extends V> valueMapper
     ) {
@@ -657,17 +493,13 @@ public abstract class Seq<T> implements Iterable<T> {
         return result;
     }
 
-    // endregion
-
-    // region indexOf
-
     /**
      * Returns the index of the first occurrence of the specified element in the sequence,
      * or -1 if the sequence does not contain the element.
      *
      * @param element The element to search for.
      */
-    public final int indexOf(T element) {
+    default int indexOf(T element) {
         return indexOf(t -> Objects.equals(t, element));
     }
 
@@ -677,7 +509,7 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param predicate The predicate to match.
      */
-    public final int indexOf(Predicate<? super T> predicate) {
+    default int indexOf(Predicate<? super T> predicate) {
         int index = 0;
         for (T element : this) {
             if (predicate.test(element)) {
@@ -688,15 +520,11 @@ public abstract class Seq<T> implements Iterable<T> {
         return -1;
     }
 
-    // endregion
-
-    // region last
-
     /**
      * Returns the last element in the sequence.
      */
-    public final T last() {
-        return last(nonEmptyIterator());
+    default T last() {
+        return SeqHelpers.last(SeqHelpers.nonEmpty(this));
     }
 
     /**
@@ -704,7 +532,7 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param predicate The predicate to match.
      */
-    public final T last(Predicate<? super T> predicate) {
+    default T last(Predicate<? super T> predicate) {
         return filter(predicate).last();
     }
 
@@ -712,8 +540,8 @@ public abstract class Seq<T> implements Iterable<T> {
      * Returns the last element in the sequence,
      * or an empty {@link Optional} if the sequence is empty.
      */
-    public final Optional<T> lastOptional() {
-        return optionalIterator().map(Seq::last);
+    default Optional<T> lastOptional() {
+        return SeqHelpers.optional(this).map(SeqHelpers::last);
     }
 
     /**
@@ -722,21 +550,9 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param predicate The predicate to match.
      */
-    public final Optional<T> lastOptional(Predicate<? super T> predicate) {
+    default Optional<T> lastOptional(Predicate<? super T> predicate) {
         return filter(predicate).lastOptional();
     }
-
-    private static <T> T last(Iterator<T> iterator) {
-        T last = iterator.next();
-        while (iterator.hasNext()) {
-            last = iterator.next();
-        }
-        return last;
-    }
-
-    // endregion
-
-    // region lastIndexOf
 
     /**
      * Returns the index of the first occurrence of the specified element in the sequence,
@@ -744,7 +560,7 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param element The element to search for.
      */
-    public final int lastIndexOf(T element) {
+    default int lastIndexOf(T element) {
         return lastIndexOf(t -> Objects.equals(t, element));
     }
 
@@ -754,7 +570,7 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param predicate The predicate to match.
      */
-    public final int lastIndexOf(Predicate<? super T> predicate) {
+    default int lastIndexOf(Predicate<? super T> predicate) {
         int index = 0;
         int lastIndex = -1;
         for (T element : this) {
@@ -766,15 +582,11 @@ public abstract class Seq<T> implements Iterable<T> {
         return lastIndex;
     }
 
-    // endregion
-
-    // region max
-
     /**
      * Returns the maximum element in the sequence.
      */
-    public final T max() {
-        return max(nonEmptyIterator());
+    default T max() {
+        return SeqHelpers.max(SeqHelpers.nonEmpty(this));
     }
 
     /**
@@ -782,16 +594,16 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param comparator The comparator to use.
      */
-    public final T max(Comparator<? super T> comparator) {
-        return max(nonEmptyIterator(), comparator);
+    default T max(Comparator<? super T> comparator) {
+        return SeqHelpers.max(SeqHelpers.nonEmpty(this), comparator);
     }
 
     /**
      * Returns the maximum element in the sequence,
      * or an empty {@link Optional} if the sequence is empty.
      */
-    public final Optional<T> maxOptional() {
-        return optionalIterator().map(Seq::max);
+    default Optional<T> maxOptional() {
+        return SeqHelpers.optional(this).map(SeqHelpers::max);
     }
 
     /**
@@ -800,28 +612,15 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param comparator The comparator to use.
      */
-    public final Optional<T> maxOptional(Comparator<? super T> comparator) {
-        return optionalIterator().map(it -> max(it, comparator));
+    default Optional<T> maxOptional(Comparator<? super T> comparator) {
+        return SeqHelpers.optional(this).map(it -> SeqHelpers.max(it, comparator));
     }
-
-    @SuppressWarnings("unchecked")
-    private static <T> T max(Iterator<T> iterator) {
-        return max(iterator, (Comparator<? super T>) Comparator.naturalOrder());
-    }
-
-    private static <T> T max(Iterator<T> iterator, Comparator<? super T> comparator) {
-        return reduce(iterator, (a, b) -> comparator.compare(a, b) > 0 ? a : b);
-    }
-
-    // endregion
-
-    // region min
 
     /**
      * Returns the minimum element in the sequence.
      */
-    public final T min() {
-        return min(nonEmptyIterator());
+    default T min() {
+        return SeqHelpers.min(SeqHelpers.nonEmpty(this));
     }
 
     /**
@@ -829,16 +628,16 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param comparator The comparator to use.
      */
-    public final T min(Comparator<? super T> comparator) {
-        return min(nonEmptyIterator(), comparator);
+    default T min(Comparator<? super T> comparator) {
+        return SeqHelpers.min(SeqHelpers.nonEmpty(this), comparator);
     }
 
     /**
      * Returns the minimum element in the sequence,
      * or an empty {@link Optional} if the sequence is empty.
      */
-    public final Optional<T> minOptional() {
-        return optionalIterator().map(Seq::min);
+    default Optional<T> minOptional() {
+        return SeqHelpers.optional(this).map(SeqHelpers::min);
     }
 
     /**
@@ -847,27 +646,14 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param comparator The comparator to use.
      */
-    public final Optional<T> minOptional(Comparator<? super T> comparator) {
-        return optionalIterator().map(it -> min(it, comparator));
+    default Optional<T> minOptional(Comparator<? super T> comparator) {
+        return SeqHelpers.optional(this).map(it -> SeqHelpers.min(it, comparator));
     }
-
-    @SuppressWarnings("unchecked")
-    private static <T> T min(Iterator<T> iterator) {
-        return min(iterator, (Comparator<? super T>) Comparator.naturalOrder());
-    }
-
-    private static <T> T min(Iterator<T> iterator, Comparator<? super T> comparator) {
-        return reduce(iterator, (a, b) -> comparator.compare(a, b) < 0 ? a : b);
-    }
-
-    // endregion
-
-    // region none
 
     /**
      * Returns {@code true} if the sequence contains no elements.
      */
-    public final boolean none() {
+    default boolean none() {
         return !iterator().hasNext();
     }
 
@@ -876,29 +662,17 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param predicate The predicate to match.
      */
-    public final boolean none(Predicate<? super T> predicate) {
+    default boolean none(Predicate<? super T> predicate) {
         return filter(predicate).none();
     }
 
-    // endregion
-
-    // region reduce
-
-    public final T reduce(BinaryOperator<T> operation) {
-        return reduce(nonEmptyIterator(), operation);
+    default T reduce(BinaryOperator<T> operation) {
+        return SeqHelpers.reduce(SeqHelpers.nonEmpty(this), operation);
     }
 
-    public final Optional<T> reduceOptional(BinaryOperator<T> operation) {
-        return optionalIterator().map(it -> reduce(it, operation));
+    default Optional<T> reduceOptional(BinaryOperator<T> operation) {
+        return SeqHelpers.optional(this).map(it -> SeqHelpers.reduce(it, operation));
     }
-
-    private static <E> E reduce(Iterator<E> iterator, BinaryOperator<E> operator) {
-        return fold(iterator, iterator.next(), operator);
-    }
-
-    // endregion
-
-    // region single
 
     /**
      * Returns the single element in the sequence,
@@ -906,8 +680,8 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @return The single element.
      */
-    public final T single() {
-        return single(nonEmptyIterator(), true);
+    default T single() {
+        return SeqHelpers.single(SeqHelpers.nonEmpty(this), true);
     }
 
     /**
@@ -917,7 +691,7 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param predicate The predicate to match.
      * @return The single element.
      */
-    public final T single(Predicate<? super T> predicate) {
+    default T single(Predicate<? super T> predicate) {
         return filter(predicate).single();
     }
 
@@ -927,8 +701,8 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @return The single element.
      */
-    public final Optional<T> singleOptional() {
-        return optionalIterator().map(it -> single(it, false));
+    default Optional<T> singleOptional() {
+        return SeqHelpers.optional(this).map(it -> SeqHelpers.single(it, false));
     }
 
     /**
@@ -938,33 +712,18 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param predicate The predicate to match.
      * @return The single element.
      */
-    public final Optional<T> singleOptional(Predicate<? super T> predicate) {
+    default Optional<T> singleOptional(Predicate<? super T> predicate) {
         return filter(predicate).singleOptional();
     }
 
-    private static <T> T single(Iterator<T> it, boolean throwException) {
-        T result = it.next();
-        if (!it.hasNext()) {
-            return result;
-        }
-        if (throwException) {
-            throw new IllegalArgumentException("Sequence contains more than one element");
-        }
-        return null;
-    }
-
-    // endregion
-
-    // region sum
-
     /**
      * Returns the sum of the elements in the sequence, applying the given function to each element.
      *
      * @param mapper The function to apply to each element.
      * @return The sum.
      */
-    public final int sum(ToIntFunction<? super T> mapper) {
-        return fold(iterator(), mapper, 0, Integer::sum);
+    default int sum(ToIntFunction<? super T> mapper) {
+        return SeqHelpers.fold(iterator(), mapper, 0, Integer::sum);
     }
 
     /**
@@ -973,8 +732,8 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param mapper The function to apply to each element.
      * @return The sum.
      */
-    public final long sum(ToLongFunction<? super T> mapper) {
-        return fold(iterator(), mapper, 0, Long::sum);
+    default long sum(ToLongFunction<? super T> mapper) {
+        return SeqHelpers.fold(iterator(), mapper, 0, Long::sum);
     }
 
     /**
@@ -983,21 +742,17 @@ public abstract class Seq<T> implements Iterable<T> {
      * @param mapper The function to apply to each element.
      * @return The sum.
      */
-    public final double sum(ToDoubleFunction<? super T> mapper) {
-        return fold(iterator(), mapper, 0, Double::sum);
+    default double sum(ToDoubleFunction<? super T> mapper) {
+        return SeqHelpers.fold(iterator(), mapper, 0, Double::sum);
     }
-
-    // endregion
-
-    // region summary
 
     /**
      * Returns the summary of the elements in the sequence, applying the given function to each element.
      *
      * @param mapper The function to apply to each element.
      */
-    public final IntSummaryStatistics summary(ToIntFunction<? super T> mapper) {
-        return fold(iterator(), new IntSummaryStatistics(), (statistics, element) -> {
+    default IntSummaryStatistics summary(ToIntFunction<? super T> mapper) {
+        return SeqHelpers.fold(iterator(), new IntSummaryStatistics(), (statistics, element) -> {
             statistics.accept(mapper.applyAsInt(element));
             return statistics;
         });
@@ -1008,8 +763,8 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param mapper The function to apply to each element.
      */
-    public final LongSummaryStatistics summary(ToLongFunction<? super T> mapper) {
-        return fold(iterator(), new LongSummaryStatistics(), (statistics, element) -> {
+    default LongSummaryStatistics summary(ToLongFunction<? super T> mapper) {
+        return SeqHelpers.fold(iterator(), new LongSummaryStatistics(), (statistics, element) -> {
             statistics.accept(mapper.applyAsLong(element));
             return statistics;
         });
@@ -1020,18 +775,14 @@ public abstract class Seq<T> implements Iterable<T> {
      *
      * @param mapper The function to apply to each element.
      */
-    public final DoubleSummaryStatistics summary(ToDoubleFunction<? super T> mapper) {
-        return fold(iterator(), new DoubleSummaryStatistics(), (statistics, element) -> {
+    default DoubleSummaryStatistics summary(ToDoubleFunction<? super T> mapper) {
+        return SeqHelpers.fold(iterator(), new DoubleSummaryStatistics(), (statistics, element) -> {
             statistics.accept(mapper.applyAsDouble(element));
             return statistics;
         });
     }
 
-    // endregion
-
-    // region toCollection
-
-    public final <C extends Collection<? super T>> C toCollection(C destination) {
+    default <C extends Collection<? super T>> C toCollection(C destination) {
         Check.notNull(destination, "destination");
 
         for (T element : this) {
@@ -1040,27 +791,23 @@ public abstract class Seq<T> implements Iterable<T> {
         return destination;
     }
 
-    public final List<T> toList() {
+    default List<T> toList() {
         return toCollection(new ArrayList<>());
     }
 
-    public final Set<T> toSet() {
+    default Set<T> toSet() {
         return toCollection(new HashSet<>());
     }
 
-    public final List<T> toImmutableList() {
+    default List<T> toImmutableList() {
         return ImmutableList.copyOf(toList());
     }
 
-    public final Set<T> toImmutableSet() {
+    default Set<T> toImmutableSet() {
         return ImmutableSet.copyOf(toList());
     }
 
-    // endregion
-
-    // region toMap
-
-    public final <K, V, M extends Map<K, V>> M toMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper, M destination) {
+    default <K, V, M extends Map<K, V>> M toMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper, M destination) {
         Check.notNull(keyMapper, "keyMapper");
         Check.notNull(valueMapper, "valueMapper");
         Check.notNull(destination, "destination");
@@ -1076,246 +823,5 @@ public abstract class Seq<T> implements Iterable<T> {
 
         return destination;
     }
-
-    // endregion
-
-    // endregion
-
-    // region Helpers
-
-    private Iterator<T> nonEmptyIterator() {
-        Iterator<T> iterator = iterator();
-        if (iterator.hasNext()) {
-            return iterator;
-        }
-        throw new NoSuchElementException("Sequence contains no elements");
-    }
-
-    private Optional<Iterator<T>> optionalIterator() {
-        Iterator<T> iterator = iterator();
-        if (iterator.hasNext()) {
-            return Optional.of(iterator);
-        }
-        return Optional.empty();
-    }
-
-    // endregion
-
-    // region Implementation Classes
-
-    private static final class IterableSeq<T> extends Seq<T> {
-        private final Iterable<T> iterable;
-
-        private IterableSeq(Iterable<T> iterable) {
-            this.iterable = Check.notNull(iterable, "iterable is null");
-        }
-
-        @Override
-        public Iterator<T> iterator() {
-            return iterable.iterator();
-        }
-    }
-
-    private static final class OnceSeq<T> extends Seq<T> {
-        private final AtomicReference<Seq<T>> reference;
-
-        private OnceSeq(Seq<T> seq) {
-            reference = new AtomicReference<>(seq);
-        }
-
-        @Override
-        public Iterator<T> iterator() {
-            Seq<T> seq = reference.getAndSet(null);
-            if (seq == null) {
-                throw new IllegalStateException("Sequence can only be iterated once");
-            }
-            return seq.iterator();
-        }
-    }
-
-    private static final class DropIterator<E> implements Iterator<E> {
-        private final Iterator<E> iterator;
-        private int count;
-
-        private DropIterator(Iterator<E> iterator, int count) {
-            this.iterator = Check.notNull(iterator, "iterator is null");
-            this.count = count;
-        }
-
-        @Override
-        public boolean hasNext() {
-            while (count > 0 && iterator.hasNext()) {
-                iterator.next();
-                count--;
-            }
-            return iterator.hasNext();
-        }
-
-        @Override
-        public E next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            return iterator.next();
-        }
-    }
-
-    private static final class DropWhileIterator<E> implements Iterator<E> {
-        private final Iterator<E> iterator;
-        private final Predicate<? super E> predicate;
-        private E next = null;
-        private int state = -1;
-
-        private DropWhileIterator(Iterator<E> iterator, Predicate<? super E> predicate) {
-            this.iterator = Check.notNull(iterator, "iterator is null");
-            this.predicate = Check.notNull(predicate, "predicate is null");
-        }
-
-        @Override
-        public boolean hasNext() {
-            if (state == -1) {
-                drop();
-            }
-            return state == 1 || iterator.hasNext();
-        }
-
-        @Override
-        public E next() {
-            if (state == -1) {
-                drop();
-            }
-            if (state == 1) {
-                E result = this.next;
-                this.next = null;
-                state = 0;
-                return result;
-            }
-            return iterator.next();
-        }
-
-        private void drop() {
-            while (iterator.hasNext()) {
-                E next = iterator.next();
-                if (!predicate.test(next)) {
-                    this.next = next;
-                    state = 1;
-                    break;
-                }
-            }
-        }
-    }
-
-    private static final class FilterIterator<E> implements Iterator<E> {
-        private final Iterator<E> iterator;
-        private final Predicate<? super E> predicate;
-        private boolean hasNext;
-        private E next;
-
-        private FilterIterator(Iterator<E> iterator, Predicate<? super E> predicate) {
-            this.iterator = Check.notNull(iterator, "iterator is null");
-            this.predicate = Check.notNull(predicate, "predicate is null");
-        }
-
-        @Override
-        public boolean hasNext() {
-            while (!hasNext && iterator.hasNext()) {
-                E next = iterator.next();
-                if (predicate.test(next)) {
-                    hasNext = true;
-                    this.next = next;
-                }
-            }
-            return hasNext;
-        }
-
-        @Override
-        public E next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            hasNext = false;
-            E result = next;
-            next = null;
-            return result;
-        }
-    }
-
-    private static final class FlatMapIterator<E, R> implements Iterator<R> {
-        private final Iterator<E> iterator;
-        private final Function<? super E, ? extends Iterable<? extends R>> mapper;
-        private Iterator<? extends R> itemIterator = Collections.emptyIterator();
-
-        private FlatMapIterator(Iterator<E> iterator, Function<? super E, ? extends Iterable<? extends R>> mapper) {
-            this.iterator = Check.notNull(iterator, "iterator is null");
-            this.mapper = Check.notNull(mapper, "mapper is null");
-        }
-
-        @Override
-        public boolean hasNext() {
-            while (true) {
-                if (itemIterator.hasNext()) {
-                    return true;
-                }
-                if (!iterator.hasNext()) {
-                    return false;
-                }
-                itemIterator = mapper.apply(iterator.next()).iterator();
-            }
-        }
-
-        @Override
-        public R next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            return itemIterator.next();
-        }
-    }
-
-    private static final class MapIterator<E, R> implements Iterator<R> {
-        private final Iterator<E> iterator;
-        private final Function<? super E, ? extends R> mapper;
-
-        private MapIterator(Iterator<E> iterator, Function<? super E, ? extends R> mapper) {
-            this.iterator = Check.notNull(iterator, "iterator is null");
-            this.mapper = Check.notNull(mapper, "mapper is null");
-        }
-
-        @Override
-        public boolean hasNext() {
-            return iterator.hasNext();
-        }
-
-        @Override
-        public R next() {
-            return mapper.apply(iterator.next());
-        }
-    }
-
-    private static final class TakeIterator<E> implements Iterator<E> {
-        private final Iterator<E> iterator;
-        private int count;
-
-        private TakeIterator(Iterator<E> iterator, int count) {
-            this.iterator = Check.notNull(iterator, "iterator is null");
-            this.count = count;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return count > 0 && iterator.hasNext();
-        }
-
-        @Override
-        public E next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            count--;
-            return iterator.next();
-        }
-    }
-
-    // endregion
 
 }

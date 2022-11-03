@@ -22,7 +22,7 @@ public class ResultTest {
         assertThat(result.isSuccess()).isTrue();
         assertThat(result.isFailure()).isFalse();
 
-        assertThat(result.getResult()).isEqualTo("success");
+        assertThat(result.get()).isEqualTo("success");
         assertThatExceptionOfType(NoSuchElementException.class)
             .isThrownBy(result::getCause);
 
@@ -37,7 +37,7 @@ public class ResultTest {
         assertThat(result.isFailure()).isTrue();
 
         assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(result::getResult);
+            .isThrownBy(result::get);
         assertThat(result.getCause())
             .isInstanceOf(Exception.class)
             .hasMessage("failure");
