@@ -62,6 +62,14 @@ public interface Seq<T> extends Iterable<T> {
         return ((Seq<T>) stream::iterator).once();
     }
 
+    default Stream<T> asStream() {
+        return StreamSupport.stream(
+            () -> Spliterators.spliteratorUnknownSize(iterator(), Spliterator.ORDERED),
+            Spliterator.ORDERED,
+            false
+        );
+    }
+
     /**
      * Returns a sequence containing only distinct elements from this sequence.
      * The elements are compared using {@link Object#equals(Object)}.
@@ -85,7 +93,7 @@ public interface Seq<T> extends Iterable<T> {
         if (count == 0) {
             return this;
         }
-        return () -> new DropItr<>(iterator(), count);
+        return () -> new Iterators.Drop<>(iterator(), count);
     }
 
     /**
@@ -97,7 +105,7 @@ public interface Seq<T> extends Iterable<T> {
     default Seq<T> dropWhile(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
 
-        return () -> new DropWhileItr<>(iterator(), predicate);
+        return () -> new Iterators.DropWhile<>(iterator(), predicate);
     }
 
     /**
@@ -109,7 +117,7 @@ public interface Seq<T> extends Iterable<T> {
     default Seq<T> filter(Predicate<? super T> predicate) {
         Check.notNull(predicate, "predicate");
 
-        return () -> new FilterItr<>(iterator(), predicate);
+        return () -> new Iterators.Filter<>(iterator(), predicate);
     }
 
     /**
@@ -168,7 +176,7 @@ public interface Seq<T> extends Iterable<T> {
     default <R> Seq<R> flatMap(Function<? super T, ? extends Iterable<? extends R>> mapper) {
         Check.notNull(mapper, "mapper");
 
-        return () -> new FlatMapItr<>(iterator(), mapper);
+        return () -> new Iterators.FlatMap<>(iterator(), mapper);
     }
 
     /**
@@ -206,7 +214,7 @@ public interface Seq<T> extends Iterable<T> {
     default <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
         Check.notNull(mapper, "mapper");
 
-        return () -> new MapItr<>(iterator(), mapper);
+        return () -> new Iterators.Map<>(iterator(), mapper);
     }
 
     /**
@@ -229,7 +237,10 @@ public interface Seq<T> extends Iterable<T> {
      * @return The new sequence.
      */
     default Seq<T> once() {
-        return this instanceof OnceSeq ? this : new OnceSeq<>(this);
+        if (this instanceof Seqs.Once) {
+            return this;
+        }
+        return new Seqs.Once<>(this);
     }
 
     /**
@@ -299,7 +310,12 @@ public interface Seq<T> extends Iterable<T> {
         if (count == 0) {
             return of();
         }
-        return () -> new TakeItr<>(iterator(), count);
+        return () -> new Iterators.Take<>(iterator(), count);
+    }
+
+    default Seq<T> takeWhile(Predicate<? super T> predicate) {
+        Check.notNull(predicate, "predicate");
+        return () -> new Iterators.TakeWhile<>(iterator(), predicate);
     }
 
     default boolean all(Predicate<? super T> predicate) {

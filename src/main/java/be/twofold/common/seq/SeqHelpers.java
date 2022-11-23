@@ -43,7 +43,7 @@ final class SeqHelpers {
         return sum / count;
     }
 
-    static <E, R> R fold(Iterator<E> iterator, R initial, BiFunction<R, ? super E, ? extends R> operation) {
+    static <E, R> R fold(Iterator<E> iterator, R initial, BiFunction<? super R, ? super E, ? extends R> operation) {
         Check.notNull(operation, "operation");
 
         R accumulator = initial;
@@ -114,18 +114,16 @@ final class SeqHelpers {
 
     static <T> Iterator<T> nonEmpty(Seq<T> seq) {
         Iterator<T> iterator = seq.iterator();
-        if (iterator.hasNext()) {
-            return iterator;
+        if (!iterator.hasNext()) {
+            throw new NoSuchElementException("Sequence contains no elements");
         }
-        throw new NoSuchElementException("Sequence contains no elements");
+        return iterator;
     }
 
     static <T> Optional<Iterator<T>> optional(Seq<T> seq) {
-        Iterator<T> iterator = seq.iterator();
-        if (iterator.hasNext()) {
-            return Optional.of(iterator);
-        }
-        return Optional.empty();
+        return Optional
+            .of(seq.iterator())
+            .filter(Iterator::hasNext);
     }
 
     static <E> E reduce(Iterator<E> iterator, BinaryOperator<E> operator) {
