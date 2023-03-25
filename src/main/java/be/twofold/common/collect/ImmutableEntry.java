@@ -25,7 +25,7 @@ final class ImmutableEntry<K, V> implements Map.Entry<K, V> {
 
     @Override
     public V setValue(V value) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("setValue");
     }
 
     @Override

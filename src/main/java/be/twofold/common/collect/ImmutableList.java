@@ -80,37 +80,37 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
     @Override
     @Deprecated
     public final void add(int index, E element) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("add");
     }
 
     @Override
     @Deprecated
     public final boolean addAll(int index, Collection<? extends E> c) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("addAll");
     }
 
     @Override
     @Deprecated
     public final E remove(int index) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("remove");
     }
 
     @Override
     @Deprecated
     public final void replaceAll(UnaryOperator<E> operator) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("replaceAll");
     }
 
     @Override
     @Deprecated
     public final E set(int index, E element) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("set");
     }
 
     @Override
     @Deprecated
     public final void sort(Comparator<? super E> c) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("sort");
     }
 
 
@@ -241,18 +241,21 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
         }
 
         @Override
+        @Deprecated
         public void add(E e) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("add");
         }
 
         @Override
+        @Deprecated
         public void remove() {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("remove");
         }
 
         @Override
+        @Deprecated
         public void set(E e) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("set");
         }
     }
 

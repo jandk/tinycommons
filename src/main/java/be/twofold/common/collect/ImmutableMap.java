@@ -88,79 +88,79 @@ public abstract class ImmutableMap<K, V> extends AbstractMap<K, V> {
     @Override
     @Deprecated
     public final void clear() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("clear");
     }
 
     @Override
     @Deprecated
     public final V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("compute");
     }
 
     @Override
     @Deprecated
     public final V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("computeIfAbsent");
     }
 
     @Override
     @Deprecated
     public final V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("computeIfPresent");
     }
 
     @Override
     @Deprecated
     public final V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("merge");
     }
 
     @Override
     @Deprecated
     public final V put(K key, V value) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("put");
     }
 
     @Override
     @Deprecated
     public final void putAll(Map<? extends K, ? extends V> m) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("putAll");
     }
 
     @Override
     @Deprecated
     public final V putIfAbsent(K key, V value) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("putIfAbsent");
     }
 
     @Override
     @Deprecated
     public final V remove(Object key) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("remove");
     }
 
     @Override
     @Deprecated
     public final boolean remove(Object key, Object value) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("remove");
     }
 
     @Override
     @Deprecated
     public final V replace(K key, V value) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("replace");
     }
 
     @Override
     @Deprecated
     public final boolean replace(K key, V oldValue, V newValue) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("replace");
     }
 
     @Override
     @Deprecated
     public final void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("replaceAll");
     }
 
 }
