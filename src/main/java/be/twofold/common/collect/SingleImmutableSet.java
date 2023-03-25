@@ -4,10 +4,10 @@ import be.twofold.common.*;
 
 import java.util.*;
 
-final class SingletonSet<E> extends ImmutableSet<E> {
+final class SingleImmutableSet<E> extends ImmutableSet<E> {
     private final E element;
 
-    SingletonSet(E element) {
+    SingleImmutableSet(E element) {
         this.element = Check.notNull(element);
     }
 

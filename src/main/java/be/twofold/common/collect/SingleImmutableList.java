@@ -2,10 +2,10 @@ package be.twofold.common.collect;
 
 import be.twofold.common.*;
 
-final class SingletonList<E> extends ImmutableList<E> {
+final class SingleImmutableList<E> extends ImmutableList<E> {
     private final E element;
 
-    SingletonList(E element) {
+    SingleImmutableList(E element) {
         this.element = Check.notNull(element);
     }
 

@@ -17,7 +17,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
     }
 
     public static <E> ImmutableList<E> of(E e) {
-        return new SingletonList<>(e);
+        return new SingleImmutableList<>(e);
     }
 
     public static <E> ImmutableList<E> of(E e1, E e2) {

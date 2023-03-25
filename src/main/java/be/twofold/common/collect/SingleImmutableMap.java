@@ -4,11 +4,11 @@ import be.twofold.common.*;
 
 import java.util.*;
 
-final class SingletonMap<K, V> extends ImmutableMap<K, V> {
+final class SingleImmutableMap<K, V> extends ImmutableMap<K, V> {
     private final K key;
     private final V value;
 
-    SingletonMap(K key, V value) {
+    SingleImmutableMap(K key, V value) {
         this.key = Check.notNull(key);
         this.value = Check.notNull(value);
     }
