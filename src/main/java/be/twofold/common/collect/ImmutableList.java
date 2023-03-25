@@ -188,9 +188,9 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
 
 
     static class Itr<E> implements Iterator<E> {
-        protected final List<E> list;
-        protected final int size;
-        protected int index;
+        final List<E> list;
+        final int size;
+        int index;
 
         Itr(List<E> list, int size, int index) {
             this.list = list;
