@@ -1,6 +1,8 @@
 package be.twofold.common;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * Operations on arrays, mostly primitive arrays.
@@ -1091,165 +1093,39 @@ public final class ArrayUtils {
 
 
     public static boolean equals(byte[] a, int aFromIndex, int aToIndex, byte[] b, int bFromIndex, int bToIndex) {
-        Check.fromToIndex(aFromIndex, aToIndex, a.length);
-        Check.fromToIndex(bFromIndex, bToIndex, b.length);
-
-        int aLength = aToIndex - aFromIndex;
-        int bLength = bToIndex - bFromIndex;
-        if (aLength != bLength) {
-            return false;
-        }
-
-        for (int i = 0; i < aLength; i++) {
-            if (!(a[aFromIndex + i] == b[bFromIndex + i])) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex);
     }
 
     public static boolean equals(short[] a, int aFromIndex, int aToIndex, short[] b, int bFromIndex, int bToIndex) {
-        Check.fromToIndex(aFromIndex, aToIndex, a.length);
-        Check.fromToIndex(bFromIndex, bToIndex, b.length);
-
-        int aLength = aToIndex - aFromIndex;
-        int bLength = bToIndex - bFromIndex;
-        if (aLength != bLength) {
-            return false;
-        }
-
-        for (int i = 0; i < aLength; i++) {
-            if (!(a[aFromIndex + i] == b[bFromIndex + i])) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex);
     }
 
     public static boolean equals(int[] a, int aFromIndex, int aToIndex, int[] b, int bFromIndex, int bToIndex) {
-        Check.fromToIndex(aFromIndex, aToIndex, a.length);
-        Check.fromToIndex(bFromIndex, bToIndex, b.length);
-
-        int aLength = aToIndex - aFromIndex;
-        int bLength = bToIndex - bFromIndex;
-        if (aLength != bLength) {
-            return false;
-        }
-
-        for (int i = 0; i < aLength; i++) {
-            if (!(a[aFromIndex + i] == b[bFromIndex + i])) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex);
     }
 
     public static boolean equals(long[] a, int aFromIndex, int aToIndex, long[] b, int bFromIndex, int bToIndex) {
-        Check.fromToIndex(aFromIndex, aToIndex, a.length);
-        Check.fromToIndex(bFromIndex, bToIndex, b.length);
-
-        int aLength = aToIndex - aFromIndex;
-        int bLength = bToIndex - bFromIndex;
-        if (aLength != bLength) {
-            return false;
-        }
-
-        for (int i = 0; i < aLength; i++) {
-            if (!(a[aFromIndex + i] == b[bFromIndex + i])) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex);
     }
 
     public static boolean equals(float[] a, int aFromIndex, int aToIndex, float[] b, int bFromIndex, int bToIndex) {
-        Check.fromToIndex(aFromIndex, aToIndex, a.length);
-        Check.fromToIndex(bFromIndex, bToIndex, b.length);
-
-        int aLength = aToIndex - aFromIndex;
-        int bLength = bToIndex - bFromIndex;
-        if (aLength != bLength) {
-            return false;
-        }
-
-        for (int i = 0; i < aLength; i++) {
-            if (!(Float.floatToIntBits(a[aFromIndex + i]) == Float.floatToIntBits(b[bFromIndex + i]))) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex);
     }
 
     public static boolean equals(double[] a, int aFromIndex, int aToIndex, double[] b, int bFromIndex, int bToIndex) {
-        Check.fromToIndex(aFromIndex, aToIndex, a.length);
-        Check.fromToIndex(bFromIndex, bToIndex, b.length);
-
-        int aLength = aToIndex - aFromIndex;
-        int bLength = bToIndex - bFromIndex;
-        if (aLength != bLength) {
-            return false;
-        }
-
-        for (int i = 0; i < aLength; i++) {
-            if (!(Double.doubleToLongBits(a[aFromIndex + i]) == Double.doubleToLongBits(b[bFromIndex + i]))) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex);
     }
 
     public static boolean equals(char[] a, int aFromIndex, int aToIndex, char[] b, int bFromIndex, int bToIndex) {
-        Check.fromToIndex(aFromIndex, aToIndex, a.length);
-        Check.fromToIndex(bFromIndex, bToIndex, b.length);
-
-        int aLength = aToIndex - aFromIndex;
-        int bLength = bToIndex - bFromIndex;
-        if (aLength != bLength) {
-            return false;
-        }
-
-        for (int i = 0; i < aLength; i++) {
-            if (!(a[aFromIndex + i] == b[bFromIndex + i])) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex);
     }
 
     public static boolean equals(boolean[] a, int aFromIndex, int aToIndex, boolean[] b, int bFromIndex, int bToIndex) {
-        Check.fromToIndex(aFromIndex, aToIndex, a.length);
-        Check.fromToIndex(bFromIndex, bToIndex, b.length);
-
-        int aLength = aToIndex - aFromIndex;
-        int bLength = bToIndex - bFromIndex;
-        if (aLength != bLength) {
-            return false;
-        }
-
-        for (int i = 0; i < aLength; i++) {
-            if (!(a[aFromIndex + i] == b[bFromIndex + i])) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex);
     }
 
     public static boolean equals(Object[] a, int aFromIndex, int aToIndex, Object[] b, int bFromIndex, int bToIndex) {
-        Check.fromToIndex(aFromIndex, aToIndex, a.length);
-        Check.fromToIndex(bFromIndex, bToIndex, b.length);
-
-        int aLength = aToIndex - aFromIndex;
-        int bLength = bToIndex - bFromIndex;
-        if (aLength != bLength) {
-            return false;
-        }
-
-        for (int i = 0; i < aLength; i++) {
-            if (!Objects.equals(a[aFromIndex + i], b[bFromIndex + i])) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(a, aFromIndex, aToIndex, b, bFromIndex, bToIndex);
     }
 
 
