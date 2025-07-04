@@ -1,11 +1,12 @@
 package be.twofold.common.func;
 
-import nl.jqno.equalsverifier.*;
-import org.junit.jupiter.api.*;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class ResultTest {
 
@@ -36,8 +37,9 @@ public class ResultTest {
         assertThat(result.isSuccess()).isFalse();
         assertThat(result.isFailure()).isTrue();
 
-        assertThatExceptionOfType(NoSuchElementException.class)
-            .isThrownBy(result::get);
+        assertThatExceptionOfType(Exception.class)
+            .isThrownBy(result::get)
+            .withMessage("failure");
         assertThat(result.getCause())
             .isInstanceOf(Exception.class)
             .hasMessage("failure");
