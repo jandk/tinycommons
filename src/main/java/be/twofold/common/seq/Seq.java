@@ -1,7 +1,6 @@
 package be.twofold.common.seq;
 
 import be.twofold.common.*;
-import be.twofold.common.collect.*;
 import be.twofold.common.tuple.*;
 
 import java.util.*;
@@ -816,11 +815,11 @@ public interface Seq<T> extends Iterable<T> {
     }
 
     default List<T> toImmutableList() {
-        return ImmutableList.copyOf(toList());
+        return List.copyOf(toList());
     }
 
     default Set<T> toImmutableSet() {
-        return ImmutableSet.copyOf(toList());
+        return Set.copyOf(toList());
     }
 
     default <K, V, M extends Map<K, V>> M toMap(Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends V> valueMapper, M destination) {
